@@ -1,6 +1,6 @@
-# TemplateSpringBoot
+# Self service AI service
 
-_A concise description of what this Spring Boot microservice does._
+_The service orchestrates sessions and questions posted to an AI ​​assistant who answers questions about a customer's invoices, consumption, etc._
 
 ## Getting Started
 
@@ -17,13 +17,13 @@ _A concise description of what this Spring Boot microservice does._
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Sundsvallskommun/YOUR-PROJECT-ID.git
-   cd YOUR-PROJECT-ID
+   git clone https://github.com/Sundsvallskommun/api-service-self-service-ai.git
+   cd api-service-self-service-ai
    ```
 2. **Configure the application:**
 
    Before running the application, you need to set up configuration settings.
-   See [Configuration](#Configuration)
+   See [Configuration](#configuration)
 
    **Note:** Ensure all required configurations are set; otherwise, the application may fail to start.
 
@@ -48,10 +48,32 @@ _A concise description of what this Spring Boot microservice does._
 
 This microservice depends on the following services:
 
-- **Service Name**
-  - **Purpose:** Brief description of what the dependent service does.
-  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/service_name)
+- **Customer**
+  - **Purpose:** Provides service with customer information.
+  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/api-service-customer)
   - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
+- **Agreement**
+  - **Purpose:** Provides service with customer agreement information.
+  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/api-service-agreement)
+  - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
+- **Installedbase**
+  - **Purpose:** Provides service with customers installed base.
+  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/api-service-installedbase)
+  - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
+- **MeasurementData**
+  - **Purpose:** Provides service with measurement data for customer facilities.
+  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/api-service-measurement-data)
+  - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
+- **Invoices**
+  - **Purpose:** Provides service with customer invoice information.
+  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/api-service-invoices)
+  - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
+- **Intric**
+  - **Purpose:** Handles logic for AI assistants.
+  - **Repsitory:** External service.
+- **Lime**
+  - **Purpose:** Stores chat logs for historical purposes.
+  - **Repsitory:** External service.
 
 Ensure that these services are running and properly configured before starting this microservice.
 
@@ -61,7 +83,7 @@ Access the API documentation via Swagger UI:
 
 - **Swagger UI:** [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
 
-Alternatively, refer to the `openapi.yml` file located in the project's root directory for the OpenAPI specification.
+Alternatively, refer to the `openapi.yml` file located in directory `/src/test/resources/api` for the OpenAPI specification.
 
 ## Usage
 
@@ -72,7 +94,7 @@ Refer to the [API Documentation](#api-documentation) for detailed information on
 ### Example Request
 
 ```bash
-curl -X GET http://localhost:8080/api/resource
+curl -X POST 'http://localhost:8080/2281/session
 ```
 
 ## Configuration
@@ -100,15 +122,76 @@ Configuration is crucial for the application to run successfully. Ensure all nec
 
   ```yaml
   integration:
-    service:
+    customer:
       url: http://dependency_service_url
-      oauth2:
-        client-id: some-client-id
-        client-secret: some-client-secret
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
+    agreement:
+      url: http://dependency_service_url
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
+    installedbase:
+      url: http://dependency_service_url
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
+    measurement-data:
+      url: http://dependency_service_url
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
+    invoices:
+      url: http://dependency_service_url
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
+    intric:
+      url: http://dependency_service_url
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
+    lime:
+      url: http://dependency_service_url
+      connect-timeout: connect_timeout_in_seconds
+      read-timeout: read_timeout_in_seconds
 
-  service:
-    oauth2:
-      token-url: http://dependecy_service_token_url
+  spring:
+    security:
+      oauth2:
+        client:
+          provider:
+            customer:
+              token-uri: https://token_url
+            agreement:
+              token-uri: https://token_url
+            installedbase:
+              token-uri: https://token_url
+            measurement-data:
+              token-uri: https://token_url
+            invoices:
+              token-uri: https://token_url
+            intric:
+              token-uri: https://token_url
+            lime:
+              token-uri: https://token_url
+          registration:
+            customer:
+              client-id: client_id
+              client-secret: client_secret
+            agreement:
+              client-id: client_id
+              client-secret: client_secret
+            installedbase:
+              client-id: client_id
+              client-secret: client_secret
+            measurement-data:
+              client-id: client_id
+              client-secret: client_secret
+            invoices:
+              client-id: client_id
+              client-secret: client_secret
+            intric:
+              client-id: client_id
+              client-secret: client_secret
+            lime:
+              client-id: client_id
+              client-secret: client_secret
   ```
 
 ### Database Initialization
@@ -143,13 +226,13 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Code status
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=reliability_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=security_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=sqale_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=bugs)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-self-service-ai&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-self-service-ai)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-self-service-ai&metric=reliability_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-self-service-ai)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-self-service-ai&metric=security_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-self-service-ai)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-self-service-ai&metric=sqale_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-self-service-ai)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-self-service-ai&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-self-service-ai)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-self-service-ai&metric=bugs)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_api-service-self-service-ai)
 
 ---
 
-© 2024 Sundsvalls kommun
+&copy; 2024 Sundsvalls kommun
