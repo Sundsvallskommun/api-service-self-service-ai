@@ -22,9 +22,9 @@ public class IntricIntegration {
 	/**
 	 * Asks and initial question to a given assistant
 	 *
-	 * @param assistantId The ID of the assistant to ask
-	 * @param input The question to ask
-	 * @return The response from the assistant
+	 * @param  assistantId The ID of the assistant to ask
+	 * @param  input       The question to ask
+	 * @return             The response from the assistant
 	 */
 	public AskResponse askAssistant(final String assistantId, final String input) {
 		try {
@@ -46,10 +46,10 @@ public class IntricIntegration {
 	/**
 	 * Asks a followup question to a given assistant
 	 *
-	 * @param assistantId The ID of the assistant to ask
-	 * @param sessionId The ID of the session to ask in
-	 * @param input The question to ask
-	 * @return The response from the assistant
+	 * @param  assistantId The ID of the assistant to ask
+	 * @param  sessionId   The ID of the session to ask in
+	 * @param  input       The question to ask
+	 * @return             The response from the assistant
 	 */
 	public AskResponse askFollowUp(final String assistantId, final String sessionId, final String input) {
 		try {
@@ -71,8 +71,8 @@ public class IntricIntegration {
 	/**
 	 * Uploads a file to Intric
 	 *
-	 * @param multipartFile The file to upload
-	 * @return The ID of the uploaded file
+	 * @param  multipartFile The file to upload
+	 * @return               The ID of the uploaded file
 	 */
 	public UUID uploadFile(final MultipartFile multipartFile) {
 		try {
