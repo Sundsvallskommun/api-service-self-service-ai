@@ -4,3 +4,13 @@
 logging:
   level:
     root: INFO
+
+integration:
+  intric:
+    base-url: http://localhost:${wiremock.server.port}/intric
+    oauth2:
+      username: override
+      password: override
+      token-url: http://localhost:${wiremock.server.port}/intric/token
+    read-timeout-in-seconds: 15
+    connect-timeout-in-seconds: 5

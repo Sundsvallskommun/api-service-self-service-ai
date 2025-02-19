@@ -12,7 +12,11 @@
 	<artifactId>api-service-self-service-ai</artifactId>
 	<version>1.0</version>
 	<name>api-service-self-service-ai</name>
-	<properties />
+	<properties>
+		<auth0.java-jwt.version>4.4.0</auth0.java-jwt.version>
+		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
+		<generated-sources-java-path>src/main/java</generated-sources-java-path>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -25,11 +29,20 @@
 			<artifactId>dept44-common-validators</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>se.sundsvall.dept44</groupId>
+			<artifactId>dept44-starter-feign</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<!-- Other -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>${auth0.java-jwt.version}</version>
+		</dependency>
 		<!-- Test -->
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
@@ -40,6 +53,33 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.openapitools</groupId>
+					<artifactId>openapi-generator-maven-plugin</artifactId>
+					<configuration>
+						<output>${generated-sources-path}</output>
+						<generatorName>spring</generatorName>
+						<generateApis>false</generateApis>
+						<skipValidateSpec>true</skipValidateSpec>
+						<configOptions>
+							<sourceFolder>${generated-sources-java-path}</sourceFolder>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
+							<generatePom>false</generatePom>
+							<library>spring-boot</library>
+							<dateLibrary>java8</dateLibrary>
+							<apiPackage>generated</apiPackage>
+							<openApiNullable>false</openApiNullable>
+							<useSwaggerUi>false</useSwaggerUi>
+							<useBeanValidation>true</useBeanValidation>
+							<useSwaggerAnnotations>true</useSwaggerAnnotations>
+							<hideGenerationTimestamp>true</hideGenerationTimestamp>
+							<interfaceOnly>true</interfaceOnly>
+							<useJakartaEe>true</useJakartaEe>
+							<useSpringBoot3>true</useSpringBoot3>
+						</configOptions>
+					</configuration>
+				</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
