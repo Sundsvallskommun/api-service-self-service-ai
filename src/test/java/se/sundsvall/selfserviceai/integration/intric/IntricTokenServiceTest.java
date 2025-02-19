@@ -24,7 +24,7 @@ class IntricTokenServiceTest {
 
 	@Test
 	void constructor() {
-		var properties = new IntricProperties("baseUrl", "apiKey",
+		var properties = new IntricProperties(
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
 		var result = new IntricTokenService(properties);
@@ -47,7 +47,7 @@ class IntricTokenServiceTest {
 	 */
 	@Test
 	void getToken_1() {
-		var properties = new IntricProperties("baseUrl", "apiKey",
+		var properties = new IntricProperties(
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
 		var service = new IntricTokenService(properties);
@@ -78,7 +78,7 @@ class IntricTokenServiceTest {
 	 */
 	@Test
 	void getToken_2() {
-		var properties = new IntricProperties("baseUrl", "apiKey",
+		var properties = new IntricProperties(
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
 		var service = new IntricTokenService(properties);
