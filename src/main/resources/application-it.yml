@@ -8,7 +8,6 @@ logging:
 integration:
   intric:
     base-url: http://localhost:${wiremock.server.port}/intric
-    api-key: some-api-key
     oauth2:
       username: override
       password: override
