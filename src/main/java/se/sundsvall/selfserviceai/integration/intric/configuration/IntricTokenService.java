@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.integration.intric;
+package se.sundsvall.selfserviceai.integration.intric.configuration;
 
 import static java.time.Instant.now;
 import static java.util.Optional.ofNullable;
@@ -29,7 +29,7 @@ class IntricTokenService {
 
 	IntricTokenService(final IntricProperties properties) {
 		restClient = RestClient.builder()
-			.baseUrl(properties.oauth2().tokenUrl())
+			.baseUrl(properties.oauth2().url())
 			.defaultHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE)
 			.defaultHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_FORM_URLENCODED_VALUE)
 			.defaultStatusHandler(HttpStatusCode::isError, (request, response) -> {
@@ -49,14 +49,14 @@ class IntricTokenService {
 	String getToken() {
 		// If we don't have a token at all, or if it's expired - get a new one
 		if (token == null || (tokenExpiration != null && tokenExpiration.isBefore(now()))) {
-			var tokenResponse = retrieveToken();
+			final var tokenResponse = retrieveToken();
 
 			token = ofNullable(tokenResponse.getBody())
 				.map(AccessToken::accessToken)
 				.orElseThrow(() -> Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Unable to extract access token"));
 
 			// Decode the token to extract the expiresAt instant
-			var jwt = JWT.decode(token);
+			final var jwt = JWT.decode(token);
 			tokenExpiration = jwt.getExpiresAtAsInstant();
 		}
 

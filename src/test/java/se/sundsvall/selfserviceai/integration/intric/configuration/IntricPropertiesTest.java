@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.integration.intric;
+package se.sundsvall.selfserviceai.integration.intric.configuration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -17,10 +17,10 @@ class IntricPropertiesTest {
 
 	@Test
 	void testProperties() {
-		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(5);
-		assertThat(properties.readTimeoutInSeconds()).isEqualTo(15);
+		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(9);
+		assertThat(properties.readTimeoutInSeconds()).isEqualTo(10);
 		assertThat(properties.oauth2()).satisfies(oauth -> {
-			assertThat(oauth.tokenUrl()).isEqualTo("http://localhost:8080/intric/token");
+			assertThat(oauth.url()).isEqualTo("intric-token-url");
 			assertThat(oauth.username()).isEqualTo("override");
 			assertThat(oauth.password()).isEqualTo("override");
 		});

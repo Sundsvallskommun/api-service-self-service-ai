@@ -11,3 +11,37 @@ openapi:
 spring:
   application:
     name: self-service-ai
+  security:
+    oauth2:
+      client:
+        registration:
+          agreement:
+            authorization-grant-type: client_credentials
+            provider: agreement
+          installedbase:
+            authorization-grant-type: client_credentials
+            provider: installedbase
+          invoices:
+            authorization-grant-type: client_credentials
+            provider: invoices
+          measurement-data:
+            authorization-grant-type: client_credentials
+            provider: measurement-data
+
+integration:
+  agreement:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 60
+  installedbase:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 60
+  invoices:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 60
+  measurement-data:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 60
+  intric:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 60
+    

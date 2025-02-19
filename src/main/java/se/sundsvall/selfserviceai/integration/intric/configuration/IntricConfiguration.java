@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.integration.intric;
+package se.sundsvall.selfserviceai.integration.intric.configuration;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -11,7 +11,7 @@ import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 
 @Import(FeignConfiguration.class)
 @EnableConfigurationProperties(IntricProperties.class)
-class IntricConfiguration {
+public class IntricConfiguration {
 
 	public static final String CLIENT_ID = "intric";
 

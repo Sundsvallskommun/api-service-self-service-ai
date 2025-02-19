@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.integration.intric;
+package se.sundsvall.selfserviceai.integration.intric.configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,13 +23,14 @@ import se.sundsvall.selfserviceai.integration.intric.model.AccessToken;
 class IntricTokenServiceTest {
 
 	@Test
+	@SuppressWarnings("unchecked")
 	void constructor() {
-		var properties = new IntricProperties("baseUrl",
+		final var properties = new IntricProperties("baseUrl",
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
-		var result = new IntricTokenService(properties);
+		final var result = new IntricTokenService(properties);
 
-		var accessTokenRequestData = (MultiValueMap<String, String>) ReflectionTestUtils.getField(result, "accessTokenRequestData");
+		final var accessTokenRequestData = (MultiValueMap<String, String>) ReflectionTestUtils.getField(result, "accessTokenRequestData");
 
 		assertThat(accessTokenRequestData)
 			.containsEntry("grant_type", List.of("password"))
@@ -47,28 +48,28 @@ class IntricTokenServiceTest {
 	 */
 	@Test
 	void getToken_1() {
-		var properties = new IntricProperties("baseUrl",
+		final var properties = new IntricProperties("baseUrl",
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
-		var service = new IntricTokenService(properties);
+		final var service = new IntricTokenService(properties);
 
-		var mockClient = Mockito.mock(RestClient.class);
+		final var mockClient = Mockito.mock(RestClient.class);
 		ReflectionTestUtils.setField(service, "restClient", mockClient, RestClient.class);
 
-		var requestBodyUriSpecMock = Mockito.mock(RestClient.RequestBodyUriSpec.class);
-		var requestBodySpecMock = Mockito.mock(RestClient.RequestBodySpec.class);
-		var responseSpecMock = Mockito.mock(RestClient.ResponseSpec.class);
+		final var requestBodyUriSpecMock = Mockito.mock(RestClient.RequestBodyUriSpec.class);
+		final var requestBodySpecMock = Mockito.mock(RestClient.RequestBodySpec.class);
+		final var responseSpecMock = Mockito.mock(RestClient.ResponseSpec.class);
 		when(mockClient.post()).thenReturn(requestBodyUriSpecMock);
 		when(requestBodyUriSpecMock.body(any(MultiValueMap.class))).thenReturn(requestBodySpecMock);
 		when(requestBodySpecMock.retrieve()).thenReturn(responseSpecMock);
 		when(responseSpecMock.toEntity(AccessToken.class)).thenReturn(ResponseEntity.ok(AccessToken.builder().withAccessToken("token").withTokenType("type").build()));
 
-		var jwtMock = mockStatic(JWT.class);
-		var decodedJwt = Mockito.mock(DecodedJWT.class);
+		final var jwtMock = mockStatic(JWT.class);
+		final var decodedJwt = Mockito.mock(DecodedJWT.class);
 		when(decodedJwt.getExpiresAtAsInstant()).thenReturn(Instant.MAX);
 		jwtMock.when(() -> JWT.decode("token")).thenReturn(decodedJwt);
 
-		var result = service.getToken();
+		final var result = service.getToken();
 
 		assertThat(result).isEqualTo("token");
 	}
@@ -78,13 +79,13 @@ class IntricTokenServiceTest {
 	 */
 	@Test
 	void getToken_2() {
-		var properties = new IntricProperties("baseUrl",
+		final var properties = new IntricProperties("baseUrl",
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
-		var service = new IntricTokenService(properties);
+		final var service = new IntricTokenService(properties);
 		ReflectionTestUtils.setField(service, "token", "token", String.class);
 
-		var result = service.getToken();
+		final var result = service.getToken();
 
 		assertThat(result).isEqualTo("token");
 	}

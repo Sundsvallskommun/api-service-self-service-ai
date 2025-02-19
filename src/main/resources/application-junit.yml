@@ -5,12 +5,59 @@ logging:
   level:
     root: INFO
 
+spring:
+  security:
+    oauth2:
+      common:
+        token-url: token-url
+        client-id: client-id
+        client-secret: client-secret
+      client:
+        provider:
+          agreement:
+            token-uri: ${spring.security.ouauth2.common.token-url}
+          installedbase:
+            token-uri: ${spring.security.ouauth2.common.token-url}
+          invoices:
+            token-uri: ${spring.security.ouauth2.common.token-url}
+          measurement-data:
+            token-uri: ${spring.security.ouauth2.common.token-url}
+        registration:
+          agreement:
+            client-id: ${spring.security.ouauth2.common.client-id}
+            client-secret: ${spring.security.ouauth2.common.client-secret}
+          installedbase:
+            client-id: ${spring.security.ouauth2.common.client-id}
+            client-secret: ${spring.security.ouauth2.common.client-secret}
+          invoices:
+            client-id: ${spring.security.ouauth2.common.client-id}
+            client-secret: ${spring.security.ouauth2.common.client-secret}
+          measurement-data:
+            client-id: ${spring.security.ouauth2.common.client-id}
+            client-secret: ${spring.security.ouauth2.common.client-secret}
+
 integration:
+  agreement:
+    connect-timeout-in-seconds: 1
+    read-timeout-in-seconds: 2
+    url: agreement-integration-url
+  installedbase:
+    connect-timeout-in-seconds: 3
+    read-timeout-in-seconds: 4
+    url: installedbase-integration-url
+  invoices:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 6
+    url: invoices-integration-url
+  measurement-data:
+    connect-timeout-in-seconds: 7
+    read-timeout-in-seconds: 8
+    url: measurement-data-integration-url
   intric:
-    base-url: http://localhost:${wiremock.server.port}/intric
+    connect-timeout-in-seconds: 9
+    read-timeout-in-seconds: 10
+    url: intric-integration-url
     oauth2:
       username: override
       password: override
-      token-url: http://localhost:${wiremock.server.port}/intric/token
-    read-timeout-in-seconds: 15
-    connect-timeout-in-seconds: 5
+      url: intric-token-url
