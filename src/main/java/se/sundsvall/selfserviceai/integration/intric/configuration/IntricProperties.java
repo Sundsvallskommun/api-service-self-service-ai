@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "integration.intric")
-public record IntricProperties(
+record IntricProperties(
 
 	@NotBlank String url,
 
