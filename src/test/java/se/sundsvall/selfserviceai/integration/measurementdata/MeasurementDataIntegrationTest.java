@@ -5,10 +5,6 @@ import static generated.se.sundsvall.measurementdata.Category.ELECTRICITY;
 import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum.MONTH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -27,6 +23,10 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.EnumSource.Mode;
+import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -56,80 +56,93 @@ class MeasurementDataIntegrationTest {
 	}
 
 	@Test
-	void getMeasurementDataWhenCategoryMatches() {
+	void getMeasurementDataWithProcessableCategories() {
 
 		// Arrange
-		final var agreement1 = new Agreement().facilityId("facilityId1").category(Category.DISTRICT_HEATING);
-		final var agreement2 = new Agreement().facilityId("facilityId2").category(Category.ELECTRICITY);
+		final var facilityId1 = "facilityId1";
+		final var facilityId2 = "facilityId2";
+		final var fromDate = Date.from(LocalDate.now().minusMonths(12).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		final var toDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		final var agreement1 = new Agreement().facilityId(facilityId1).category(Category.DISTRICT_HEATING);
+		final var agreement2 = new Agreement().facilityId(facilityId2).category(Category.ELECTRICITY);
 		final var data1 = new Data().category(DISTRICT_HEATING);
 		final var data2 = new Data().category(ELECTRICITY);
 
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), argThat(arg -> arg.getCategory() == CategoryEnum.DISTRICT_HEATING))).thenReturn(data1);
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), argThat(arg -> arg.getCategory() == CategoryEnum.ELECTRICITY))).thenReturn(data2);
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1)).thenReturn(data1);
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId2)).thenReturn(data2);
 
 		// Act
 		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of(agreement1, agreement2));
 
 		// Assert and verify
-		verify(clientMock, times(2)).getMeasurementData(eq(MUNICIPALITY_ID), parameterCaptor.capture());
 		assertThat(result).containsExactlyInAnyOrder(data1, data2);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId2);
+	}
 
-		// Assert request for each call
-		assertRequest(0, CategoryEnum.DISTRICT_HEATING, "facilityId1");
-		assertRequest(1, CategoryEnum.ELECTRICITY, "facilityId2");
+	@ParameterizedTest
+	@EnumSource(value = Category.class, mode = Mode.EXCLUDE, names = {
+		"DISTRICT_HEATING", "ELECTRICITY", "COMMUNICATION", "WASTE_MANAGEMENT"
+	})
+	@NullSource
+	void getMeasurementDataWithNonProcessableCategory(Category category) {
+		final var agreement = new Agreement().category(category);
+
+		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of(agreement));
+
+		// Assert and verify
+		assertThat(result).isEmpty();
 	}
 
 	@Test
-	void getMeasurementDataWhenCategoryNotImplemented() {
+	void getMeasurementDataWithMixedProcessableCategoriesWhereSomeNotImplementedInMeasurementData() {
 
 		// Arrange
-		final var agreement1 = new Agreement().facilityId("facilityId1").category(Category.DISTRICT_HEATING);
-		final var agreement2 = new Agreement().facilityId("facilityId2").category(Category.ELECTRICITY);
-		final var agreement3 = new Agreement().facilityId("facilityId3").category(Category.COMMUNICATION);
-		final var agreement4 = new Agreement().facilityId("facilityId4").category(Category.WASTE_MANAGEMENT);
+		final var facilityId1 = "facilityId1";
+		final var facilityId2 = "facilityId2";
+		final var facilityId3 = "facilityId3";
+		final var facilityId4 = "facilityId4";
+		final var fromDate = Date.from(LocalDate.now().minusMonths(12).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		final var toDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		final var agreement1 = new Agreement().facilityId(facilityId1).category(Category.DISTRICT_HEATING);
+		final var agreement2 = new Agreement().facilityId(facilityId2).category(Category.ELECTRICITY);
+		final var agreement3 = new Agreement().facilityId(facilityId3).category(Category.COMMUNICATION);
+		final var agreement4 = new Agreement().facilityId(facilityId4).category(Category.WASTE_MANAGEMENT);
 		final var data1 = new Data().category(DISTRICT_HEATING);
 		final var data2 = new Data().category(ELECTRICITY);
 
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), argThat(arg -> arg.getCategory() == CategoryEnum.DISTRICT_HEATING))).thenReturn(data1);
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), argThat(arg -> arg.getCategory() == CategoryEnum.ELECTRICITY))).thenReturn(data2);
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), argThat(arg -> arg.getCategory() == CategoryEnum.COMMUNICATION))).thenThrow(Problem.valueOf(NOT_IMPLEMENTED));
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), argThat(arg -> arg.getCategory() == CategoryEnum.WASTE_MANAGEMENT))).thenThrow(Problem.valueOf(NOT_IMPLEMENTED));
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1)).thenReturn(data1);
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId2)).thenReturn(data2);
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.COMMUNICATION, facilityId3)).thenThrow(Problem.valueOf(NOT_IMPLEMENTED));
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.WASTE_MANAGEMENT, facilityId4)).thenThrow(Problem.valueOf(NOT_IMPLEMENTED));
 
 		// Act
 		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of(agreement1, agreement2, agreement3, agreement4));
 
 		// Assert and verify
-		verify(clientMock, times(4)).getMeasurementData(eq(MUNICIPALITY_ID), parameterCaptor.capture());
 		assertThat(result).containsExactlyInAnyOrder(data1, data2);
-
-		// Assert request for each call
-		assertRequest(0, CategoryEnum.DISTRICT_HEATING, "facilityId1");
-		assertRequest(1, CategoryEnum.ELECTRICITY, "facilityId2");
-		assertRequest(2, CategoryEnum.COMMUNICATION, "facilityId3");
-		assertRequest(3, CategoryEnum.WASTE_MANAGEMENT, "facilityId4");
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId2);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.COMMUNICATION, facilityId3);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.WASTE_MANAGEMENT, facilityId4);
 	}
 
 	@Test
 	void getMeasurementDataWhenCategoryThrowsException() {
 
 		// Arrange
-		final var agreements = List.of(new Agreement().facilityId("facilityId1").category(Category.DISTRICT_HEATING));
+		final var facilityId1 = "facilityId1";
+		final var fromDate = Date.from(LocalDate.now().minusMonths(12).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		final var toDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		final var agreements = List.of(new Agreement().facilityId(facilityId1).category(Category.DISTRICT_HEATING));
 
-		when(clientMock.getMeasurementData(eq(MUNICIPALITY_ID), any(MeasurementDataSearchParameters.class))).thenThrow(Problem.valueOf(BAD_GATEWAY, "Bad to the bone"));
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1)).thenThrow(Problem.valueOf(BAD_GATEWAY, "Bad to the bone"));
 
 		// Act
 		final var exception = assertThrows(ThrowableProblem.class, () -> integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, agreements));
 
-		verify(clientMock).getMeasurementData(eq(MUNICIPALITY_ID), any(MeasurementDataSearchParameters.class));
+		// Assert and verify
 		assertThat(exception.getStatus()).isEqualTo(BAD_GATEWAY);
-	}
-
-	private void assertRequest(int position, CategoryEnum expectedCategory, String exepectedFacilityId) {
-		assertThat(parameterCaptor.getAllValues().get(position).getAggregateOn()).isEqualTo(MONTH);
-		assertThat(parameterCaptor.getAllValues().get(position).getCategory()).isEqualTo(expectedCategory);
-		assertThat(parameterCaptor.getAllValues().get(position).getFacilityId()).isEqualTo(exepectedFacilityId);
-		assertThat(parameterCaptor.getAllValues().get(position).getFromDate()).isEqualTo(Date.from(LocalDate.now().minusMonths(12).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-		assertThat(parameterCaptor.getAllValues().get(position).getToDate()).isEqualTo(Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-		assertThat(parameterCaptor.getAllValues().get(position).getPartyId()).isEqualTo(PARTY_ID);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1);
 	}
 }

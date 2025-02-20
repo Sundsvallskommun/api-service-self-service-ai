@@ -15,27 +15,27 @@ spring:
       client:
         provider:
           agreement:
-            token-uri: ${spring.security.ouauth2.common.token-url}
+            token-uri: ${spring.security.oauth2.common.token-url}
           installedbase:
-            token-uri: ${spring.security.ouauth2.common.token-url}
+            token-uri: ${spring.security.oauth2.common.token-url}
           invoices:
-            token-uri: ${spring.security.ouauth2.common.token-url}
+            token-uri: ${spring.security.oauth2.common.token-url}
           measurement-data:
-            token-uri: ${spring.security.ouauth2.common.token-url}
+            token-uri: ${spring.security.oauth2.common.token-url}
 
         registration:
           agreement:
-            client-id: ${spring.security.ouauth2.common.client-id}
-            client-secret: ${spring.security.ouauth2.common.client-secret}
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
           installedbase:
-            client-id: ${spring.security.ouauth2.common.client-id}
-            client-secret: ${spring.security.ouauth2.common.client-secret}
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
           invoices:
-            client-id: ${spring.security.ouauth2.common.client-id}
-            client-secret: ${spring.security.ouauth2.common.client-secret}
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
           measurement-data:
-            client-id: ${spring.security.ouauth2.common.client-id}
-            client-secret: ${spring.security.ouauth2.common.client-secret}
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
 
 integration:
   agreement:
