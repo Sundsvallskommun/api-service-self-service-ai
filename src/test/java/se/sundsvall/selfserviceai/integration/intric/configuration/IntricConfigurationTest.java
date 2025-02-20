@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.integration.intric;
+package se.sundsvall.selfserviceai.integration.intric.configuration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;

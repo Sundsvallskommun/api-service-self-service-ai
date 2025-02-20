@@ -2,7 +2,7 @@ package se.sundsvall.selfserviceai.integration.intric;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
-import static se.sundsvall.selfserviceai.integration.intric.IntricConfiguration.CLIENT_ID;
+import static se.sundsvall.selfserviceai.integration.intric.configuration.IntricConfiguration.CLIENT_ID;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
+import se.sundsvall.selfserviceai.integration.intric.configuration.IntricConfiguration;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
@@ -18,7 +19,7 @@ import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
 @FeignClient(
 	name = CLIENT_ID,
 	configuration = IntricConfiguration.class,
-	url = "${integration.intric.base-url}")
+	url = "${integration.intric.url}")
 @CircuitBreaker(name = CLIENT_ID)
 interface IntricClient {
 

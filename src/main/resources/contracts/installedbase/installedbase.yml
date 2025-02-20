@@ -1,67 +1,22 @@
 openapi: 3.0.1
 info:
-  title: self-service-ai
+  title: installedbase
   contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "1.0"
-servers:
-- url: http://localhost:8080
-  description: Generated server url
+  version: "3.0"
 tags:
-- name: Assistant session resources
-  description: "Resources for creating, interacting with and removing assistant sessions"
+- name: Installed base
+  description: Installed base operations
 paths:
-  /{municipalityId}/session:
-    post:
-      tags:
-      - Assistant session resources
-      summary: Create assistant session
-      description: Resource for creating a new session towards the assistant
-      operationId: createAssistantSession
-      parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SessionRequest"
-        required: true
-      responses:
-        "201":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SessionResponse"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-  /{municipalityId}/session/{id}:
+  /{municipalityId}/installedbase/{organizationNumber}:
     get:
       tags:
-      - Assistant session resources
-      summary: Interact with assistant
-      description: Resource for interacting with the assistant by asking a question
-      operationId: askAssistant
+      - Installed base
+      summary: Get installed base at company matching organization number for customer
+        matching provided party-ID
+      operationId: getInstalledBase
       parameters:
       - name: municipalityId
         in: path
@@ -70,34 +25,38 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: id
+      - name: organizationNumber
         in: path
-        description: Session id
+        description: Organization number
         required: true
         schema:
           type: string
-        example: f5211067-b3c7-4394-b84a-aa3fa65507e3
-      - name: question
+        example: 5565112233
+      - name: partyId
         in: query
-        description: The question to ask
+        description: Party-ID
         required: true
         schema:
+          type: array
+          items:
+            type: string
+        example: 81471222-5798-11e9-ae24-57fa13b361e1
+      - name: modifiedFrom
+        in: query
+        description: Optional date for filtering on installed bases modified at provided
+          date or later
+        required: false
+        schema:
           type: string
-        example: "What is the answer to the ultimate question of life, the universe,\
-          \ and everything?"
+          format: date
+        example: 2023-06-01
       responses:
-        "404":
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "200":
           description: Successful Operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuestionResponse"
+                $ref: "#/components/schemas/InstalledBaseResponse"
         "400":
           description: Bad Request
           content:
@@ -106,102 +65,20 @@ paths:
                 oneOf:
                 - $ref: "#/components/schemas/Problem"
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-    delete:
-      tags:
-      - Assistant session resources
-      summary: Remove assistant session
-      description: Resource for removing the assistant session matching sent in id
-      operationId: deleteAssistantSession
-      parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Session id
-        required: true
-        schema:
-          type: string
-        example: f5211067-b3c7-4394-b84a-aa3fa65507e3
-      responses:
         "404":
-          description: Not found
+          description: Not Found
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-        "204":
-          description: Successful Operation
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/session/{id}/ready:
-    get:
-      tags:
-      - Assistant session resources
-      summary: Ask if assistant is ready for interaction
-      description: Resource for checking if the assistant is ready to answer questions
-        (i.e. has been fully initialized with data)
-      operationId: isAssistantReady
-      parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Session id
-        required: true
-        schema:
-          type: string
-        example: f5211067-b3c7-4394-b84a-aa3fa65507e3
-      responses:
-        "404":
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                type: boolean
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
+        "502":
+          description: Bad Gateway
           content:
             application/problem+json:
               schema:
@@ -224,23 +101,6 @@ paths:
       x-wso2-mutual-ssl: Optional
 components:
   schemas:
-    SessionRequest:
-      required:
-      - customerEngagementOrgId
-      - partyId
-      type: object
-      properties:
-        partyId:
-          type: string
-          description: The id of the party to use when retrieving the information
-            that will form the basis of the assistant's answers
-          example: 5a6c3e4e-c320-4006-b448-1fd4121df828
-        customerEngagementOrgId:
-          type: string
-          description: Organization id to the counterparty for the customer's engagements
-            that will form the basis of the assistant's answers
-          example: "5566123456"
-      description: Model for session initiation request
     Problem:
       type: object
       properties:
@@ -256,9 +116,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
@@ -391,9 +251,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array
@@ -435,21 +295,136 @@ components:
           type: string
         message:
           type: string
-    SessionResponse:
+    InstalledBaseCustomer:
       type: object
       properties:
-        sessionId:
+        customerNumber:
           type: string
-          description: The id of the session to be used when interacting with the
-            assistant
-          example: 9406e9e3-e2bf-4b5a-9237-2925b396f096
-      description: Model for session initiation response
-    QuestionResponse:
+          description: Customer number
+          readOnly: true
+          example: "10007"
+        partyId:
+          type: string
+          description: Party-ID
+          readOnly: true
+          example: cf9892ad-69d5-420f-ae98-9631dd1664fe
+        items:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstalledBaseItem"
+      description: Installed base owner model
+      readOnly: true
+    InstalledBaseItem:
       type: object
       properties:
-        answer:
+        type:
           type: string
-          description: Answer to asked question
-          example: "42"
-      description: Model for question response
+          description: Type
+          readOnly: true
+          example: Fjärrvärme
+        facilityId:
+          type: string
+          description: Facility id
+          readOnly: true
+          example: "735999109270751042"
+        placementId:
+          type: integer
+          description: Placement id
+          format: int32
+          readOnly: true
+          example: 5263
+        facilityCommitmentStartDate:
+          type: string
+          description: Facility commitment start date
+          format: date
+          readOnly: true
+          example: 2020-04-01
+        facilityCommitmentEndDate:
+          type: string
+          description: Facility commitment end date
+          format: date
+          readOnly: true
+          example: 2020-09-30
+        lastModifiedDate:
+          type: string
+          description: Last date for modification of item (or null if no modification
+            has been done)
+          format: date
+          readOnly: true
+          example: 2020-06-01
+        address:
+          $ref: "#/components/schemas/InstalledBaseItemAddress"
+        metaData:
+          maxItems: 1000
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstalledBaseItemMetaData"
+      description: Installed base item model
+      readOnly: true
+    InstalledBaseItemAddress:
+      type: object
+      properties:
+        propertyDesignation:
+          type: string
+          description: Property designation
+          readOnly: true
+          example: Södermalm 1:27
+        careOf:
+          type: string
+          description: Care of address
+          readOnly: true
+          example: Agatha Malm
+        street:
+          type: string
+          description: Street
+          readOnly: true
+          example: Storgatan 9
+        postalCode:
+          type: string
+          description: Postal code
+          readOnly: true
+          example: "85230"
+        city:
+          type: string
+          description: City
+          readOnly: true
+          example: Sundsvall
+      description: Installed base item address model
+      readOnly: true
+    InstalledBaseItemMetaData:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Key
+          readOnly: true
+          example: netarea
+        value:
+          type: string
+          description: Value
+          readOnly: true
+          example: Sundsvall tätort
+        type:
+          type: string
+          description: Type
+          readOnly: true
+          example: location
+        displayName:
+          type: string
+          description: Displayname
+          readOnly: true
+          example: Nätområde
+      description: Installed base item metadata model
+      readOnly: true
+    InstalledBaseResponse:
+      type: object
+      properties:
+        installedBaseCustomers:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstalledBaseCustomer"
+      description: Installed base response model
   securitySchemes: {}

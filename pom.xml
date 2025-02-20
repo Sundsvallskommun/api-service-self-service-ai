@@ -118,6 +118,116 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>agreement</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/contracts/agreement/agreement.yml</inputSpec>
+							<output>${generated-sources-path}</output>
+							<generatorName>spring</generatorName>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<configOptions>
+								<!-- Cannot use java8 since Employee API doesn't
+								return dates on correct format -->
+								<dateLibrary>legacy</dateLibrary>
+								<generatePom>false</generatePom>
+								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>models</sourceFolder>
+								<modelPackage>generated.se.sundsvall.agreement</modelPackage>
+								<openApiNullable>false</openApiNullable>
+								<useBeanValidation>false</useBeanValidation>
+								<useSwaggerAnnotations>false</useSwaggerAnnotations>
+								<useSpringBoot3>true</useSpringBoot3>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>installedbase</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/contracts/installedbase/installedbase.yml</inputSpec>
+							<output>${generated-sources-path}</output>
+							<generatorName>spring</generatorName>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<configOptions>
+								<!-- Cannot use java8 since Employee API doesn't
+								return dates on correct format -->
+								<dateLibrary>legacy</dateLibrary>
+								<generatePom>false</generatePom>
+								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>models</sourceFolder>
+								<modelPackage>generated.se.sundsvall.installedbase</modelPackage>
+								<openApiNullable>false</openApiNullable>
+								<useBeanValidation>false</useBeanValidation>
+								<useSwaggerAnnotations>false</useSwaggerAnnotations>
+								<useSpringBoot3>true</useSpringBoot3>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>invoices</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/contracts/invoices/invoices.yml</inputSpec>
+							<output>${generated-sources-path}</output>
+							<generatorName>spring</generatorName>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<configOptions>
+								<!-- Cannot use java8 since Employee API doesn't
+								return dates on correct format -->
+								<dateLibrary>legacy</dateLibrary>
+								<generatePom>false</generatePom>
+								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>models</sourceFolder>
+								<modelPackage>generated.se.sundsvall.invoices</modelPackage>
+								<openApiNullable>false</openApiNullable>
+								<useBeanValidation>false</useBeanValidation>
+								<useSwaggerAnnotations>false</useSwaggerAnnotations>
+								<useSpringBoot3>true</useSpringBoot3>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>measurement-data</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/contracts/measurement-data/measurement-data.yml</inputSpec>
+							<output>${generated-sources-path}</output>
+							<generatorName>spring</generatorName>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<configOptions>
+								<!-- Cannot use java8 since Employee API doesn't
+								return dates on correct format -->
+								<dateLibrary>legacy</dateLibrary>
+								<generatePom>false</generatePom>
+								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>models</sourceFolder>
+								<modelPackage>generated.se.sundsvall.measurementdata</modelPackage>
+								<openApiNullable>false</openApiNullable>
+								<useBeanValidation>false</useBeanValidation>
+								<useSwaggerAnnotations>false</useSwaggerAnnotations>
+								<useSpringBoot3>true</useSpringBoot3>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

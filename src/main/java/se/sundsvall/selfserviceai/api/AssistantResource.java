@@ -73,7 +73,7 @@ class AssistantResource {
 		return status(CREATED).body(SessionResponse.builder().withSessionId(sessionId.toString()).build());
 	}
 
-	@Operation(summary = "Ask if assistant is ready", description = "Resource for checking if the assistant is ready to answer questions (i.e. has been fully initialized with data)", responses = {
+	@Operation(summary = "Ask if assistant is ready for interaction", description = "Resource for checking if the assistant is ready to answer questions (i.e. has been fully initialized with data)", responses = {
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
 		@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true)
 	})
