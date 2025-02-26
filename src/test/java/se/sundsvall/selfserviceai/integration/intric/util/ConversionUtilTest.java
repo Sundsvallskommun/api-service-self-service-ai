@@ -69,6 +69,7 @@ class ConversionUtilTest {
 			case 3 -> assertThat(result).isEqualTo(new BigDecimal("123.457"));
 			case 4 -> assertThat(result).isEqualTo(new BigDecimal("123.4568"));
 			case 5 -> assertThat(result).isEqualTo(new BigDecimal("123.45678"));
+			default -> throw new RuntimeException("Scale value %s is not handled".formatted(scale));
 		}
 	}
 
