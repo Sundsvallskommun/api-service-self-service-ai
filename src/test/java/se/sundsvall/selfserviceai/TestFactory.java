@@ -57,12 +57,12 @@ public class TestFactory {
 	public static final String IB1_AGREEMENT1_MEASUREMENT1_TYPE = "measurementType1";
 	public static final String IB1_AGREEMENT1_MEASUREMENT1_UNIT = "unit1";
 	public static final Date IB1_AGREEMENT1_MEASUREMENT1_TIMESTAMP = Date.from(LocalDate.of(2020, 1, 17).atStartOfDay(ZoneId.systemDefault()).toInstant());
-	public static final BigDecimal IB1_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal(123.45);
+	public static final BigDecimal IB1_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal("123.456789");
 	public static final generated.se.sundsvall.measurementdata.Category IB1_AGREEMENT1_MEASUREMENT2_CATEGORY = generated.se.sundsvall.measurementdata.Category.ELECTRICITY;
 	public static final String IB1_AGREEMENT1_MEASUREMENT2_TYPE = "measurementType2";
 	public static final String IB1_AGREEMENT1_MEASUREMENT2_UNIT = "unit2";
 	public static final Date IB1_AGREEMENT1_MEASUREMENT2_TIMESTAMP = Date.from(LocalDate.of(2024, 2, 15).atStartOfDay(ZoneId.systemDefault()).toInstant());
-	public static final BigDecimal IB1_AGREEMENT1_MEASUREMENT2_VALUE = new BigDecimal(234.56);
+	public static final BigDecimal IB1_AGREEMENT1_MEASUREMENT2_VALUE = new BigDecimal("234.567890");
 	public static final String IB1_INVOICE1_AMOUNT_VAT_EXCLUDED = "1000.00";
 	public static final String IB1_INVOICE1_AMOUNT_VAT_INCLUDED = "1250.00";
 	public static final String IB1_INVOICE1_CURRENCY = "currency1";
@@ -89,7 +89,7 @@ public class TestFactory {
 	public static final String IB1_INVOICE1_ROUNDING = "-0.35";
 	public static final String IB1_INVOICE1_TOTAL_AMOUNT = "1250.35";
 	public static final String IB1_INVOICE1_VAT = "0.25";
-	public static final String IB1_INVOICE1_VAT_ELIGABLE_AMOUNT = "456.78";
+	public static final String IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT = "456.78";
 	public static final String IB1_INVOICE2_DESCRIPTION = "invoiceDescription2";
 	public static final String IB1_INVOICE2_NAME = "invoiceName2";
 	public static final String IB1_INVOICE2_NUMBER = "invoiceNumber2";
@@ -101,7 +101,7 @@ public class TestFactory {
 	public static final String IB1_INVOICE2_ROUNDING = "0.49";
 	public static final String IB1_INVOICE2_TOTAL_AMOUNT = "2999.51";
 	public static final String IB1_INVOICE2_VAT = "0.25";
-	public static final String IB1_INVOICE2_VAT_ELIGABLE_AMOUNT = "123.65";
+	public static final String IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT = "123.65";
 
 	public static final String IB2_FACILITY_ID = "facilityId2";
 	public static final int IB2_PLACEMENT_ID = 222;
@@ -125,7 +125,7 @@ public class TestFactory {
 	public static final String IB2_AGREEMENT1_MEASUREMENT1_TYPE = "measurementTYpe3";
 	public static final String IB2_AGREEMENT1_MEASUREMENT1_UNIT = "unit3";
 	public static final Date IB2_AGREEMENT1_MEASUREMENT1_TIMESTAMP = Date.from(LocalDate.of(2024, 6, 15).atStartOfDay(ZoneId.systemDefault()).toInstant());
-	public static final BigDecimal IB2_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal(500);
+	public static final BigDecimal IB2_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal("500");
 
 	public static InstalledBaseCustomer createCustomer() {
 		return new InstalledBaseCustomer()
@@ -252,7 +252,7 @@ public class TestFactory {
 				.rounding(Float.valueOf(IB1_INVOICE1_ROUNDING))
 				.totalAmount(Float.valueOf(IB1_INVOICE1_TOTAL_AMOUNT))
 				.vat(Float.valueOf(IB1_INVOICE1_VAT))
-				.vatEligibleAmount(Float.valueOf(IB1_INVOICE1_VAT_ELIGABLE_AMOUNT)),
+				.vatEligibleAmount(Float.valueOf(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT)),
 			new Invoice()
 				.facilityId(IB1_FACILITY_ID)
 				.amountVatExcluded(Float.valueOf(IB1_INVOICE2_AMOUNT_VAT_EXCLUDED))
@@ -271,7 +271,7 @@ public class TestFactory {
 				.rounding(Float.valueOf(IB1_INVOICE2_ROUNDING))
 				.totalAmount(Float.valueOf(IB1_INVOICE2_TOTAL_AMOUNT))
 				.vat(Float.valueOf(IB1_INVOICE2_VAT))
-				.vatEligibleAmount(Float.valueOf(IB1_INVOICE2_VAT_ELIGABLE_AMOUNT))
+				.vatEligibleAmount(Float.valueOf(IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT))
 
 		) : List.of(new Invoice().facilityId(NO_MATCH));
 

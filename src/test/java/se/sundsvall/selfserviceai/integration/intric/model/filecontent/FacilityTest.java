@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.service.model;
+package se.sundsvall.selfserviceai.integration.intric.model.filecontent;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
@@ -32,6 +32,14 @@ class FacilityTest {
 			hasValidBeanHashCode(),
 			hasValidBeanEquals(),
 			hasValidBeanToString()));
+
+		MatcherAssert.assertThat(Facility.Metadata.class, allOf(
+			hasValidBeanConstructor(),
+			hasValidGettersAndSetters(),
+			hasValidBeanHashCode(),
+			hasValidBeanEquals(),
+			hasValidBeanToString()));
+
 	}
 
 	@Test
@@ -76,6 +84,25 @@ class FacilityTest {
 		assertThat(bean.getType()).isEqualTo(type);
 	}
 
+	void testBuilderMethodsForMetadata() {
+		final var displayName = "displayName";
+		final var name = "name";
+		final var type = "type";
+		final var value = "value";
+
+		final var bean = Facility.Metadata.builder()
+			.withDisplayName(displayName)
+			.withName(name)
+			.withType(type)
+			.withValue(value)
+			.build();
+
+		assertThat(bean.getDisplayName()).isEqualTo(displayName);
+		assertThat(bean.getName()).isEqualTo(name);
+		assertThat(bean.getType()).isEqualTo(type);
+		assertThat(bean.getValue()).isEqualTo(value);
+	}
+
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(Facility.builder().build()).hasAllNullFieldsOrPropertiesExcept("agreements", "measurements", "invoices")
@@ -86,5 +113,8 @@ class FacilityTest {
 			.hasFieldOrPropertyWithValue("agreements", emptyList())
 			.hasFieldOrPropertyWithValue("measurements", emptyList())
 			.hasFieldOrPropertyWithValue("invoices", emptyList());
+
+		assertThat(Facility.Metadata.builder().build()).hasAllNullFieldsOrProperties();
+		assertThat(new Facility.Metadata()).hasAllNullFieldsOrProperties();
 	}
 }

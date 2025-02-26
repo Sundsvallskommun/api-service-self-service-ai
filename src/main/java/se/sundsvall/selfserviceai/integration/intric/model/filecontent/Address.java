@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.service.model;
+package se.sundsvall.selfserviceai.integration.intric.model.filecontent;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;

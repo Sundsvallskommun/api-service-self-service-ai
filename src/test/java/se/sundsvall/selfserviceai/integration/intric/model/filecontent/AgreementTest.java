@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.service.model;
+package se.sundsvall.selfserviceai.integration.intric.model.filecontent;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;

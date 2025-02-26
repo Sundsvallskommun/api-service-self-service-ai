@@ -1,11 +1,13 @@
 package se.sundsvall.selfserviceai.integration.intric;
 
+import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toAskAssistant;
+
+import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 
 @Component
@@ -24,47 +26,36 @@ public class IntricIntegration {
 	 *
 	 * @param  assistantId The ID of the assistant to ask
 	 * @param  input       The question to ask
-	 * @return             The response from the assistant
+	 * @return             The response from the assistant or null if problems occurred during assistant interaction
 	 */
 	public AskResponse askAssistant(final String assistantId, final String input) {
 		try {
-			var question = AskAssistant.builder()
-				.withQuestion(input)
-				.build();
+			final var question = toAskAssistant(input);
 			LOG.debug("Asking assistant: '{}', question: '{}'", assistantId, input);
 			return client.askAssistant(assistantId, question);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOG.debug("Failed to ask assistant: '{}', question: '{}'", assistantId, input);
-			return AskResponse.builder()
-				.withSessionId(null)
-				.withQuestion(input)
-				.withAnswer("")
-				.build();
+			return null;
 		}
 	}
 
 	/**
 	 * Asks a followup question to a given assistant
 	 *
-	 * @param  assistantId The ID of the assistant to ask
-	 * @param  sessionId   The ID of the session to ask in
-	 * @param  input       The question to ask
-	 * @return             The response from the assistant
+	 * @param  assistantId    The ID of the assistant to ask
+	 * @param  sessionId      The ID of the session to ask in
+	 * @param  input          The question to ask
+	 * @param  fileReferences List references to files that the assistant shall base its answer on
+	 * @return                The response from the assistant or null if problems occurred during assistant interaction
 	 */
-	public AskResponse askFollowUp(final String assistantId, final String sessionId, final String input) {
+	public AskResponse askFollowUp(final String assistantId, final String sessionId, final String input, List<String> fileReferences) {
 		try {
-			var question = AskAssistant.builder()
-				.withQuestion(input)
-				.build();
+			final var question = toAskAssistant(input, fileReferences);
 			LOG.debug("Ask followup for assistant: '{}', session: '{}', question: '{}'", assistantId, sessionId, input);
 			return client.askFollowUp(assistantId, sessionId, question);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOG.debug("Failed to ask followup for assistant: '{}', session: '{}', question: '{}'", assistantId, sessionId, input);
-			return AskResponse.builder()
-				.withSessionId(UUID.fromString(sessionId))
-				.withQuestion(input)
-				.withAnswer("")
-				.build();
+			return null;
 		}
 	}
 
@@ -72,13 +63,13 @@ public class IntricIntegration {
 	 * Uploads a file to Intric
 	 *
 	 * @param  multipartFile The file to upload
-	 * @return               The ID of the uploaded file
+	 * @return               The ID of the uploaded file or null if problems occurred during upload
 	 */
 	public UUID uploadFile(final MultipartFile multipartFile) {
 		try {
 			LOG.debug("Uploading file");
 			return client.uploadFile(multipartFile).id();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOG.debug("Failed to upload file");
 			return null;
 		}
@@ -87,15 +78,18 @@ public class IntricIntegration {
 	/**
 	 * Deletes a file from Intric
 	 *
-	 * @param id The ID of the file to delete
+	 * @param  id The ID of the file to delete
+	 * @return    Signal if the file was successfully deleted or not
 	 */
-	public void deleteFile(final String id) {
+	public boolean deleteFile(final String id) {
 		try {
 			LOG.debug("Deleting file: '{}'", id);
 			client.deleteFile(id);
 			LOG.debug("File deleted: '{}'", id);
-		} catch (Exception e) {
+			return true;
+		} catch (final Exception e) {
 			LOG.debug("Failed to delete file: '{}'", id);
+			return false;
 		}
 	}
 
