@@ -1,15 +1,13 @@
 package se.sundsvall.selfserviceai.integration.intric.mapper;
 
-import static java.time.ZoneId.systemDefault;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toLocalDate;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
 import generated.se.sundsvall.installedbase.InstalledBaseItemMetaData;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
@@ -103,12 +101,6 @@ public class IntricMapper {
 				.withPostalCode(a.getPostalCode())
 				.withStreet(a.getStreet())
 				.build())
-			.orElse(null);
-	}
-
-	private static LocalDate toLocalDate(Date date) {
-		return ofNullable(date)
-			.map(d -> date.toInstant().atZone(systemDefault()).toLocalDate())
 			.orElse(null);
 	}
 }
