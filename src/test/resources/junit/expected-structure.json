@@ -1,0 +1,149 @@
+{
+	"customerNumber": "123",
+	"partyId": "8e46e6be-eaaf-40dd-b5c5-be3dbe858999",
+	"facilities": [
+		{
+			"facilityId": "facilityId1",
+			"type": "type1",
+			"placementId": 111,
+			"commitmentStartDate": "2020-01-10",
+			"commitmentEndDate": "2025-01-10",
+			"lastModifiedDate": "2024-01-09",
+			"address": {
+				"careOf": "careOf1",
+				"street": "street1",
+				"postalCode": "postalCode1",
+				"city": "city1"
+			},
+			"information": [
+				{
+					"name": "key1",
+					"displayName": "displayName1",
+					"type": "metaType1",
+					"value": "value1"
+				}
+			],
+			"agreements": [
+				{
+					"agreementId": "agreementId1",
+					"description": "description1",
+					"category": "ELECTRICITY",
+					"fromDate": "2020-01-18",
+					"bound": true,
+					"bindingRule": "bindingRule1"
+				},
+				{
+					"agreementId": "agreementId2",
+					"description": "description2",
+					"category": "ELECTRICITY_TRADE",
+					"fromDate": "2020-01-12",
+					"bound": false
+				}
+			],
+			"measurements": [
+				{
+					"category": "ELECTRICITY",
+					"measurementType": "measurementType1",
+					"value": 123.4568,
+					"unit": "unit1",
+					"timestamp": "2020-01-17T00:00:00+01:00"
+				},
+				{
+					"category": "ELECTRICITY",
+					"measurementType": "measurementType2",
+					"value": 234.5679,
+					"unit": "unit2",
+					"timestamp": "2024-02-15T00:00:00+01:00"
+				}
+			],
+			"invoices": [
+				{
+					"amountVatIncluded": 1250.00,
+					"amountVatExcluded": 1000.00,
+					"currency": "currency1",
+					"description": "invoiceDescription1",
+					"dueDate": "2020-02-28",
+					"invoiceAddress": {
+						"careOf": "invoiceCareOf1",
+						"street": "invoiceStreet1",
+						"postalCode": "invoicePostalCode1",
+						"city": "invoiceCity1"
+					},
+					"invoicingDate": "2020-02-01",
+					"invoiceName": "invoiceName1",
+					"invoiceNumber": "invoiceNumber1",
+					"invoiceType": "INVOICE",
+					"ocrNumber": "invoiceOcrNumber1",
+					"organizationNumber": "organizationNumber1",
+					"pdfAvailable": true,
+					"reversedVat": false,
+					"rounding": -0.35,
+					"status": "SENT",
+					"totalAmount": 1250.35,
+					"vat": 0.25,
+					"vatEligibleAmount": 456.78
+				},
+				{
+					"amountVatIncluded": 3000.00,
+					"amountVatExcluded": 2500.00,
+					"currency": "currency2",
+					"description": "invoiceDescription2",
+					"dueDate": "2024-02-13",
+					"invoicingDate": "2024-02-28",
+					"invoiceName": "invoiceName2",
+					"invoiceNumber": "invoiceNumber2",
+					"invoiceType": "CONSOLIDATED_INVOICE",
+					"ocrNumber": "invoiceOcrNumber2",
+					"organizationNumber": "organizationNumber2",
+					"pdfAvailable": false,
+					"reversedVat": true,
+					"rounding": 0.49,
+					"status": "REMINDER",
+					"totalAmount": 2999.51,
+					"vat": 0.25,
+					"vatEligibleAmount": 123.65
+				}
+			]
+		},
+		{
+			"facilityId": "facilityId2",
+			"type": "type2",
+			"placementId": 222,
+			"commitmentStartDate": "2021-05-15",
+			"lastModifiedDate": "2024-06-30",
+			"address": {
+				"careOf": "careOf2",
+				"street": "street2",
+				"postalCode": "postalCode2",
+				"city": "city2"
+			},
+			"information": [
+				{
+					"name": "key2",
+					"displayName": "displayName2",
+					"type": "metaType2",
+					"value": "value2"
+				}
+			],
+			"agreements": [
+				{
+					"agreementId": "agreementId3",
+					"description": "description3",
+					"category": "WASTE_MANAGEMENT",
+					"fromDate": "2024-05-24",
+					"bound": false
+				}
+			],
+			"measurements": [
+				{
+					"category": "WASTE_MANAGEMENT",
+					"measurementType": "measurementTYpe3",
+					"value": 500.0000,
+					"unit": "unit3",
+					"timestamp": "2024-06-14T23:00:00+01:00"
+				}
+			],
+			"invoices": []
+		}
+	]
+}
