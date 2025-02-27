@@ -2,7 +2,6 @@ package se.sundsvall.selfserviceai.integration.db.model;
 
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -56,7 +55,7 @@ public class SessionEntity {
 	private String initiationStatus;
 
 	@Builder.Default
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "session_id", referencedColumnName = "sessionId", nullable = false, foreignKey = @ForeignKey(name = "fk_session_file"))
 	private List<FileEntity> files = new ArrayList<>();
 
