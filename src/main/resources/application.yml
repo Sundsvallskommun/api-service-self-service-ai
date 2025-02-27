@@ -11,6 +11,21 @@ openapi:
 spring:
   application:
     name: self-service-ai
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        auto_quote_keyword: true
+      jakarta:
+        persistence:
+          schema-generation:
+            database:
+              action: none
+  flyway:
+    baseline-on-migrate: true
+    enabled: false
   security:
     oauth2:
       client:
