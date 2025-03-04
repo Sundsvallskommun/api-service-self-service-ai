@@ -81,6 +81,7 @@ integration:
   intric:
     connect-timeout-in-seconds: 9
     read-timeout-in-seconds: 10
+    assistantId: intric-assistant-uuid
     url: intric-integration-url
     oauth2:
       username: override
