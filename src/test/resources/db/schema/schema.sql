@@ -1,7 +1,7 @@
 
     create table file (
         file_id varchar(255) not null,
-        session_id varchar(255) not null,
+        session_id varchar(255),
         primary key (file_id)
     ) engine=InnoDB;
 

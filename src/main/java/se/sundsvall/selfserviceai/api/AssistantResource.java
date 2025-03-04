@@ -1,5 +1,6 @@
 package se.sundsvall.selfserviceai.api;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -87,15 +88,17 @@ class AssistantResource {
 
 	@Operation(summary = "Interact with assistant", description = "Resource for interacting with the assistant by asking a question", responses = {
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
-		@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true)
+		@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "204", description = "If no answer could be retrieved")
 	})
 	@GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
 	ResponseEntity<QuestionResponse> askAssistant(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @PathVariable @ValidMunicipalityId final String municipalityId,
 		@Parameter(name = "id", description = "Session id", example = "f5211067-b3c7-4394-b84a-aa3fa65507e3") @PathVariable("id") @ValidUuid final String sessionId,
-		@Parameter(name = "question", description = "The question to ask", example = "What is the answer to the ultimate question of life, the universe, and everything?") @RequestParam @NotBlank final String question) {
+		@Parameter(name = "question", description = "The question to ask", example = "What is the answer to the ultimate question of life, the universe and everything?") @RequestParam @NotBlank final String question) {
 
-		return ok(assistantService.askQuestion(municipalityId, UUID.fromString(sessionId), question));
+		final var response = assistantService.askQuestion(municipalityId, UUID.fromString(sessionId), question);
+		return nonNull(response) ? ok(response) : status(NO_CONTENT).header(CONTENT_TYPE, ALL_VALUE).build();
 	}
 
 	@Operation(summary = "Remove assistant session", description = "Resource for removing the assistant session matching sent in id", responses = {

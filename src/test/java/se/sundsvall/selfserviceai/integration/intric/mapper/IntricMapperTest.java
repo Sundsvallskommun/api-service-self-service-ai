@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
@@ -13,6 +15,52 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 class IntricMapperTest {
 
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+
+	@Test
+	void toAskAssistantWithoutFiles() {
+		// Arrange
+		final var input = "input";
+
+		// Act
+		final var result = IntricMapper.toAskAssistant(input);
+
+		// Assert
+		assertThat(result.files()).isEmpty();
+		assertThat(result.question()).isEqualTo(input);
+	}
+
+	@Test
+	void toAskAssistantWithFiles() {
+		// Arrange
+		final var input = "question";
+		final var files = List.of("fileId1", "fileId2");
+
+		// Act
+		final var result = IntricMapper.toAskAssistant(input, files);
+
+		// Assert
+		assertThat(result.files()).containsExactlyInAnyOrder("fileId1", "fileId2");
+		assertThat(result.question()).isEqualTo(input);
+	}
+
+	@Test
+	void toInformationFile() throws Exception {
+		// Arrange
+		final var data = "{\"key\":\"value\"}";
+
+		// Act
+		final var result = IntricMapper.toInformationFile(data);
+
+		// Assert
+		assertThat(result.getBytes()).isEqualTo(data.getBytes(Charset.defaultCharset()));
+		assertThat(result.getContentType()).isEqualTo("application/json");
+		assertThat(result.getInputStream()).isNotNull();
+		assertThat(result.getName()).isEqualTo("selfservice-ai-data.json");
+		assertThat(result.getOriginalFilename()).isEqualTo("selfservice-ai-data.json");
+		assertThat(result.getResource()).isNotNull();
+		assertThat(new String(result.getBytes(), Charset.defaultCharset())).isEqualTo(data);
+		assertThat(result.getSize()).isEqualTo(data.getBytes(Charset.defaultCharset()).length);
+	}
 
 	@Test
 	void toInstalledBase() {

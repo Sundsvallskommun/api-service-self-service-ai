@@ -2,7 +2,6 @@ package se.sundsvall.selfserviceai.integration.db;
 
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 import java.time.LocalDateTime;
@@ -17,7 +16,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
@@ -166,28 +164,14 @@ class SessionRepositoryTest {
 	void deleteOfSessionAndFilesSuccessful() {
 		final var sessionId = "b72af369-1764-486d-8d4d-17158318f6dd";
 		final var session = sessionRepository.getReferenceById(sessionId);
+		final var fileIds = session.getFiles().stream().map(FileEntity::getFileId).toList();
 
-		// To be able to delete session, no files can be attached to entity and must be deleted in database
 		session.getFiles().forEach(file -> fileRepository.deleteById(file.getFileId()));
 		session.getFiles().clear();
-
 		sessionRepository.delete(session);
+
+		assertThat(fileRepository.findAllById(fileIds)).isEmpty();
 		assertThat(sessionRepository.existsById(sessionId)).isFalse();
-	}
-
-	@Test
-	void deleteOfSessionAndFilesFails() { // Test to verify that cascading delete is not turned on
-		final var sessionId = "158cfabe-1c3d-433c-b71f-1c909beaa291";
-		final var fileId = "811bcd0e-fe12-448e-85c5-2248a4a12e6d";
-
-		assertThat(fileRepository.existsById(fileId)).isTrue();
-
-		assertThrows(DataIntegrityViolationException.class, () -> { // NOSONAR - we need to flush to trigger deletion as test is executed in a transactional environment
-			sessionRepository.deleteBySessionIdAndMunicipalityId(sessionId, MUNICIPALITY);
-			sessionRepository.flush();
-		});
-
-		assertThat(fileRepository.existsById(fileId)).isTrue();
 	}
 
 	@Test

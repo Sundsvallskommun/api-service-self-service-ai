@@ -4,7 +4,6 @@ import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -55,8 +54,8 @@ public class SessionEntity {
 	private String initiationStatus;
 
 	@Builder.Default
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "session_id", referencedColumnName = "sessionId", nullable = false, foreignKey = @ForeignKey(name = "fk_session_file"))
+	@OneToMany
+	@JoinColumn(name = "session_id", referencedColumnName = "sessionId", foreignKey = @ForeignKey(name = "fk_session_file"))
 	private List<FileEntity> files = new ArrayList<>();
 
 	@PrePersist

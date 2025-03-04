@@ -1,0 +1,34 @@
+{
+	"session_id": "33b52702-d27b-4737-948b-29d6f51fdc29",
+	"question": "Påbörjar session",
+	"files": [],
+	"answer": "Självklart! Jag är här för att hjälpa dig med dina fakturor. För att kunna ge dig bästa möjliga stöd, kan du vänligen ge mig din anläggningsid, adress eller fastighet samt typ av tjänst? Här är en tabell för att hjälpa dig att organisera informationen:\n\n| AnläggningsID | Adress/Fastighet | Typ av tjänst        |\n|---------------|------------------|----------------------|\n|               |                  |                      |\n\nHur kan jag hjälpa dig idag?",
+	"references": [],
+	"model": {
+		"created_at": "2025-01-09T19:02:55.223252Z",
+		"updated_at": "2025-02-28T08:18:48.155036Z",
+		"id": "f2794da6-abe0-42c1-b1d8-351bc05a63e6",
+		"name": "gpt-4o-mini-azure",
+		"nickname": "GPT-4o mini (Azure)",
+		"family": "azure",
+		"token_limit": 128000,
+		"is_deprecated": false,
+		"nr_billion_parameters": null,
+		"hf_link": null,
+		"stability": "stable",
+		"hosting": "swe",
+		"open_source": null,
+		"description": "GPT-4o mini hosted by azure.",
+		"deployment_name": "gpt-4o-mini",
+		"org": "Microsoft",
+		"vision": true,
+		"reasoning": false,
+		"is_org_enabled": false,
+		"is_org_default": false,
+		"can_access": false,
+		"is_locked": true
+	},
+	"tools": {
+		"assistants": []
+	}
+}

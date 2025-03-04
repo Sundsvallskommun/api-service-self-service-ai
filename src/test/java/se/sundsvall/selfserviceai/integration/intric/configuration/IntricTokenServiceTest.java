@@ -1,6 +1,7 @@
 package se.sundsvall.selfserviceai.integration.intric.configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
+import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.intric.model.AccessToken;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,7 +29,7 @@ class IntricTokenServiceTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	void constructor() {
-		final var properties = new IntricProperties("baseUrl",
+		final var properties = new IntricProperties("baseUrl", "assistantId",
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
 		final var result = new IntricTokenService(properties);
@@ -48,7 +52,7 @@ class IntricTokenServiceTest {
 	 */
 	@Test
 	void getToken_1() {
-		final var properties = new IntricProperties("baseUrl",
+		final var properties = new IntricProperties("baseUrl", "assistantId",
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
 		final var service = new IntricTokenService(properties);
@@ -79,7 +83,7 @@ class IntricTokenServiceTest {
 	 */
 	@Test
 	void getToken_2() {
-		final var properties = new IntricProperties("baseUrl",
+		final var properties = new IntricProperties("baseUrl", "assistantId",
 			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
 
 		final var service = new IntricTokenService(properties);
@@ -90,4 +94,52 @@ class IntricTokenServiceTest {
 		assertThat(result).isEqualTo("token");
 	}
 
+	/**
+	 * Test scenario where the token endpoint returns empty token
+	 */
+	@Test
+	void getToken_3() {
+		final var properties = new IntricProperties("baseUrl", "assistantId",
+			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
+
+		final var service = new IntricTokenService(properties);
+
+		final var mockClient = Mockito.mock(RestClient.class);
+		ReflectionTestUtils.setField(service, "restClient", mockClient, RestClient.class);
+
+		final var requestBodyUriSpecMock = Mockito.mock(RestClient.RequestBodyUriSpec.class);
+		final var requestBodySpecMock = Mockito.mock(RestClient.RequestBodySpec.class);
+		final var responseSpecMock = Mockito.mock(RestClient.ResponseSpec.class);
+
+		when(mockClient.post()).thenReturn(requestBodyUriSpecMock);
+		when(requestBodyUriSpecMock.body(any(MultiValueMap.class))).thenReturn(requestBodySpecMock);
+		when(requestBodySpecMock.retrieve()).thenReturn(responseSpecMock);
+		when(responseSpecMock.toEntity(AccessToken.class)).thenReturn(ResponseEntity.ok(AccessToken.builder().build()));
+
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.getToken());
+
+		assertThat(exception.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);
+		assertThat(exception.getDetail()).isEqualTo("Unable to extract access token");
+	}
+
+	/**
+	 * Test scenario where the token endpoint throws exception
+	 */
+	@Test
+	void getToken_4() {
+		final var properties = new IntricProperties("baseUrl", "assistantId",
+			new IntricProperties.Oauth2("tokenUrl", "username", "password"), 5, 15);
+
+		final var service = new IntricTokenService(properties);
+
+		final var mockClient = Mockito.mock(RestClient.class);
+		ReflectionTestUtils.setField(service, "restClient", mockClient, RestClient.class);
+
+		when(mockClient.post()).thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
+
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.getToken());
+
+		assertThat(exception.getStatus()).isEqualTo(Status.I_AM_A_TEAPOT);
+		assertThat(exception.getDetail()).isEqualTo("Big and stout");
+	}
 }

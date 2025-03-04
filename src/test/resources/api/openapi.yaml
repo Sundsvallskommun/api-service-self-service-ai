@@ -83,7 +83,7 @@ paths:
         required: true
         schema:
           type: string
-        example: "What is the answer to the ultimate question of life, the universe,\
+        example: "What is the answer to the ultimate question of life, the universe\
           \ and everything?"
       responses:
         "404":
@@ -94,6 +94,12 @@ paths:
                 $ref: "#/components/schemas/Problem"
         "200":
           description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionResponse"
+        "204":
+          description: If no answer could be retrieved
           content:
             application/json:
               schema:
@@ -256,9 +262,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
@@ -391,9 +397,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
@@ -120,6 +121,28 @@ class SessionResourceTest {
 
 		// Assert and verify
 		assertThat(response).isNotNull().extracting(QuestionResponse::getAnswer).isEqualTo(answer);
+		verify(mockService).askQuestion(MUNICIPALITY_ID, sessionId, question);
+	}
+
+	@Test
+	void askAssistantWhenNoAnswer() {
+		// Arrange
+		final var sessionId = UUID.randomUUID();
+		final var question = "question?";
+
+		// Act
+		webTestClient.get()
+			.uri(builder -> builder
+				.path("/{municipalityId}/session/{sessionId}")
+				.queryParam("question", question)
+				.build(Map.of("municipalityId", MUNICIPALITY_ID, "sessionId", sessionId.toString())))
+			.exchange()
+			.expectStatus().isNoContent()
+			.expectHeader().contentType(ALL)
+			.expectBody().isEmpty()
+			.getResponseBody();
+
+		// Assert and verify
 		verify(mockService).askQuestion(MUNICIPALITY_ID, sessionId, question);
 	}
 
