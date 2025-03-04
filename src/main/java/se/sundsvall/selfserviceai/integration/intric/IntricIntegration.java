@@ -3,16 +3,13 @@ package se.sundsvall.selfserviceai.integration.intric;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toAskAssistant;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInformationFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
