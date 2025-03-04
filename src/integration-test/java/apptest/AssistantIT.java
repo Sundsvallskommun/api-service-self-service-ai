@@ -17,15 +17,19 @@ import java.util.List;
 import java.util.UUID;
 
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.selfserviceai.Application;
+import se.sundsvall.selfserviceai.integration.db.FileRepository;
+import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 
 @WireMockAppTestSuite(files = "classpath:/AssistantIT/", classes = Application.class)
 @Sql({
@@ -39,7 +43,20 @@ class AssistantIT extends AbstractAppTest {
 	private static final String RESPONSE_FILE = "response.json";
 
 	@Autowired
-	private WebTestClient webTestClient;
+	private PlatformTransactionManager transactionManager;
+
+	@Autowired
+	private SessionRepository sessionRepository;
+
+	@Autowired
+	private FileRepository fileRepository;
+
+	private TransactionTemplate transactionTemplate;
+
+	@BeforeEach
+	void setUp() {
+		transactionTemplate = new TransactionTemplate(transactionManager);
+	}
 
 	@Test
 	void test01_createSession() {
@@ -103,15 +120,15 @@ class AssistantIT extends AbstractAppTest {
 	@Test
 	void test06_deleteSession() {
 		final var sessionId = "158cfabe-1c3d-433c-b71f-1c909beaa291";
+		final var fileId = "811bcd0e-fe12-448e-85c5-2248a4a12e6d";
+		
+		transactionTemplate.executeWithoutResult(status -> {
+			final var session = sessionRepository.getReferenceById(sessionId);
 
-		// Verify that the session exists and is ready for interaction
-		assertThat(webTestClient.get()
-			.uri(PATH + "/" + sessionId + "/ready")
-			.exchange()
-			.expectStatus().isOk()
-			.expectBody(Boolean.class)
-			.returnResult()
-			.getResponseBody()).isTrue();
+			// Verify that the session exists and is ready for interaction
+			assertThat(session.getInitialized()).isNotNull();
+			assertThat(session.getFiles()).hasSize(1);
+		});
 
 		// Delete session (asynchronously)
 		setupCall()
@@ -123,13 +140,13 @@ class AssistantIT extends AbstractAppTest {
 
 		// Verify that the session is no longer ready (i.e. is deleted)
 		Awaitility.await()
-			.atMost(Duration.ofSeconds(3l))
-			.until(() -> webTestClient.get()
-				.uri(PATH + "/" + sessionId + "/ready")
-				.exchange()
-				.expectStatus().isOk()
-				.expectBody(Boolean.class)
-				.returnResult()
-				.getResponseBody() == false);
+			.atMost(Duration.ofSeconds(3))
+			.ignoreExceptions()
+			.until(() -> transactionTemplate.execute(status -> {
+				assertThat(sessionRepository.findById(sessionId)).isNotPresent();
+				assertThat(fileRepository.findById(fileId)).isEmpty();
+
+				return true;
+			}));
 	}
 }
