@@ -8,12 +8,14 @@ import static se.sundsvall.selfserviceai.service.AssistantMapper.toQuestionRespo
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
+
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
@@ -55,7 +57,7 @@ public class AssistantService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
 		try {
-			final var fileId = intricIntegration.uploadFile(InstalledBase.builder().withPartyId(sessionRequest.getPartyId()).build()); // TODO: Add real data here in later task
+			final var fileId = intricIntegration.uploadFile(InstalledBase.builder().withPartyId(sessionRequest.getPartyId()).build()); // Real data will be added here in task UF-14557
 
 			final var file = fileRepository.save(toFileEntity(fileId));
 

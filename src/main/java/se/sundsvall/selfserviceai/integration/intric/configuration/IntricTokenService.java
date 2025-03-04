@@ -5,9 +5,9 @@ import static java.util.Optional.ofNullable;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.auth0.jwt.JWT;
 import java.time.Instant;
 import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -19,13 +19,15 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
-import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
+
+import com.auth0.jwt.JWT;
+
 import se.sundsvall.selfserviceai.integration.intric.model.AccessToken;
 
 @Component
 class IntricTokenService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IntricIntegration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IntricTokenService.class);
 
 	private final MultiValueMap<String, String> accessTokenRequestData;
 	private final RestClient restClient;
