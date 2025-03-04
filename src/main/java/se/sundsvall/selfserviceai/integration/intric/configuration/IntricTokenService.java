@@ -7,6 +7,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +19,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
+import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
 import se.sundsvall.selfserviceai.integration.intric.model.AccessToken;
 
 @Component
 class IntricTokenService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(IntricIntegration.class);
 
 	private final MultiValueMap<String, String> accessTokenRequestData;
 	private final RestClient restClient;
@@ -53,7 +59,11 @@ class IntricTokenService {
 
 			token = ofNullable(tokenResponse.getBody())
 				.map(AccessToken::accessToken)
-				.orElseThrow(() -> Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Unable to extract access token"));
+				.filter(Objects::nonNull)
+				.orElseThrow(() -> {
+					LOG.error("Unable to extract access token from response :{}", tokenResponse);
+					return Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Unable to extract access token");
+				});
 
 			// Decode the token to extract the expiresAt instant
 			final var jwt = JWT.decode(token);
@@ -64,9 +74,14 @@ class IntricTokenService {
 	}
 
 	ResponseEntity<AccessToken> retrieveToken() {
-		return restClient.post()
-			.body(accessTokenRequestData)
-			.retrieve()
-			.toEntity(AccessToken.class);
+		try {
+			return restClient.post()
+				.body(accessTokenRequestData)
+				.retrieve()
+				.toEntity(AccessToken.class);
+		} catch (final Exception e) { // NOSONAR, this is needed as no automatic logging is made if something goes wrong during call to token url
+			LOG.error("Exception thrown when retrieving token from server", e);
+			throw e;
+		}
 	}
 }

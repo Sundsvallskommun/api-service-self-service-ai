@@ -10,6 +10,7 @@ import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
 import generated.se.sundsvall.installedbase.InstalledBaseItemMetaData;
 import java.util.List;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
+import se.sundsvall.selfserviceai.integration.intric.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
 
@@ -23,7 +24,7 @@ public class IntricMapper {
 	 * @return       AskAssistant object with provided data
 	 */
 	public static AskAssistant toAskAssistant(String input) {
-		return toAskAssistant(input, null);
+		return toAskAssistant(input, emptyList());
 	}
 
 	/**
@@ -38,6 +39,18 @@ public class IntricMapper {
 			.withQuestion(input)
 			.withFiles(fileReferences)
 			.build();
+	}
+
+	/**
+	 * Maps incoming data to a InformationFile object implementing the MultipartFile interface
+	 *
+	 * @param  data string of json data that is to be the content of the file
+	 * @return      a InformationFile object representing the provided data
+	 */
+	public static InformationFile toInformationFile(String data) {
+		return InformationFile
+			.create()
+			.withData(data);
 	}
 
 	/**
