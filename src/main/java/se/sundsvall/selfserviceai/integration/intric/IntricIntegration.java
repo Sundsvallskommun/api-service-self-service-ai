@@ -36,7 +36,7 @@ public class IntricIntegration {
 	 * @return             The response from the assistant or null if problems occurred during assistant interaction
 	 */
 	public AskResponse askAssistant(final String assistantId, final String input) {
-		LOG.debug("Asking assistant: '{}', question: '{}'", assistantId, input);
+		LOG.debug("Asking assistant initial question");
 		final var question = toAskAssistant(input);
 		return client.askAssistant(assistantId, question);
 	}
@@ -54,7 +54,7 @@ public class IntricIntegration {
 	public Optional<AskResponse> askFollowUp(final String assistantId, final String sessionId, final String input, List<String> fileReferences) {
 		try {
 			final var question = toAskAssistant(input, fileReferences);
-			LOG.debug("Ask followup for assistant: '{}', session: '{}', question: '{}'", assistantId, sessionId, input);
+			LOG.debug("Asking assistant followup question");
 			return Optional.of(client.askFollowUp(assistantId, sessionId, question));
 		} catch (final Exception e) { // Swallow exception here and let frontend decide how to handle problem
 			LOG.warn("Exception when interacting with assistant", e);
@@ -71,9 +71,9 @@ public class IntricIntegration {
 	 */
 	public boolean deleteSession(final String assistantId, final String sessionId) {
 		try {
-			LOG.debug("Deleting session: '{}' for assistant: '{}", sessionId, assistantId);
+			LOG.debug("Deleting assistant session");
 			client.deleteSession(assistantId, sessionId);
-			LOG.debug("Session deleted: '{}'", sessionId);
+			LOG.debug("Session deleted");
 			return true;
 		} catch (final Exception e) {
 			LOG.warn("Exception when deleting assistant session", e);
@@ -102,9 +102,9 @@ public class IntricIntegration {
 	 */
 	public boolean deleteFile(final String id) {
 		try {
-			LOG.debug("Deleting file: '{}'", id);
+			LOG.debug("Deleting file");
 			client.deleteFile(id);
-			LOG.debug("File deleted: '{}'", id);
+			LOG.debug("File deleted");
 			return true;
 		} catch (final Exception e) {
 			LOG.warn("Exception when deleting file", e);
