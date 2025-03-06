@@ -7,15 +7,12 @@ import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementPoints;
 import generated.se.sundsvall.measurementdata.MeasurementSerie;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.MeasurementData;
 
 public class MeasurementDecorator {
-	private static final int DECIMAL_POINTS = 4;
-
 	private MeasurementDecorator() {}
 
 	public static InstalledBase addMeasurements(InstalledBase installedBase, List<Data> measurementDatas) {
@@ -56,7 +53,7 @@ public class MeasurementDecorator {
 			.withMeasurementType(serie.getMeasurementType())
 			.withTimestamp(toOffsetDateTime(measurementPoint.getTimestamp()))
 			.withUnit(serie.getUnit())
-			.withValue(measurementPoint.getValue().setScale(DECIMAL_POINTS, RoundingMode.HALF_DOWN))
+			.withValue(measurementPoint.getValue())
 			.build();
 	}
 

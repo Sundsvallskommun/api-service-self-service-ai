@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
@@ -31,6 +32,9 @@ class IntricIntegrationTest {
 	@Mock
 	private IntricClient intricClientMock;
 
+	@Mock
+	private JsonBuilder jsonBuilderMock;
+
 	@InjectMocks
 	private IntricIntegration integration;
 
@@ -39,7 +43,7 @@ class IntricIntegrationTest {
 
 	@AfterEach
 	void verifyNoMoreMockInteraction() {
-		verifyNoMoreInteractions(intricClientMock);
+		verifyNoMoreInteractions(intricClientMock, jsonBuilderMock);
 	}
 
 	/**
@@ -155,6 +159,7 @@ class IntricIntegrationTest {
 
 		assertThat(result).isEqualTo(UUID.fromString(id));
 
+		verify(jsonBuilderMock).toJsonString(installedBase);
 		verify(intricClientMock).uploadFile(any(MultipartFile.class));
 	}
 
@@ -170,6 +175,7 @@ class IntricIntegrationTest {
 		final var e = assertThrows(RuntimeException.class, () -> integration.uploadFile(installedBase));
 
 		assertThat(e).isSameAs(exception);
+		verify(jsonBuilderMock).toJsonString(installedBase);
 		verify(intricClientMock).uploadFile(any(MultipartFile.class));
 	}
 

@@ -1,0 +1,39 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/measurementdata/2281/measurement-data",
+		"queryParameters": {
+			"facilityId": {
+				"equalTo": "735999109260428039"
+			},
+			"category": {
+				"equalTo": "ELECTRICITY"
+			},
+			"partyId": {
+				"equalTo": "5a6c3e4e-c320-4006-b448-1fd4121df828"
+			},
+			"aggregateOn": {
+				"equalTo": "MONTH"
+			},
+			"fromDate": {
+				"matches": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}$"
+			},
+			"toDate": {
+				"matches": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}$"
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test01_createSession/responses/api-measurementdata-read-measurements-735999109260428039-response.json"
+	},
+	"name": "api-measurementdata-read-measurements-735999109260428039"
+}

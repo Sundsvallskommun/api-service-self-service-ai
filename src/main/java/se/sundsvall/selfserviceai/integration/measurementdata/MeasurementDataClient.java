@@ -7,7 +7,6 @@ import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum;
 import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import java.util.Date;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +26,8 @@ public interface MeasurementDataClient {
 	Data getMeasurementData(
 		@PathVariable("municipalityId") final String municipalityId,
 		@RequestParam("aggregateOn") final AggregateOnEnum aggregateOn,
-		@RequestParam("fromDate") final Date fromDate,
-		@RequestParam("toDate") final Date toDate,
+		@RequestParam("fromDate") final String fromDate,
+		@RequestParam("toDate") final String toDate,
 		@RequestParam("partyId") final String partyId,
 		@RequestParam("category") final CategoryEnum category,
 		@RequestParam("facilityId") final String facilityId);
