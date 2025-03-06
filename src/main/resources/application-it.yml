@@ -59,6 +59,7 @@ integration:
   measurement-data:
     url: http://localhost:${wiremock.server.port}/measurementdata
   intric:
+    assistantId: intric-assistant-uuid
     url: http://localhost:${wiremock.server.port}/intric
     oauth2:
       username: intric-client-id

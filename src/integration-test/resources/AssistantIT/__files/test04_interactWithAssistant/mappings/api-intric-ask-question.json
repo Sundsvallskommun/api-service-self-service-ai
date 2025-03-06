@@ -1,0 +1,31 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDEwNzg1MzQsImV4cCI6MTc0MTA4MjEzNCwiYXVkIjoid3d3Lml0dGVzdC5jb20iLCJzdWIiOiJpdHRlc3RAbm9yZXBseS5jb20ifQ.HQXOaHq4VNHpGxyfYKYOsSxpvScMgvqqhd702MlJ0YM"
+			}
+		},
+		"method": "POST",
+		"bodyPatterns": [
+			{
+				"equalToJson": {
+					"question": "What is the answer to the ultimate question of life%2C the universe and everything%3F",
+					"files": [
+						"5ef193cd-96a7-4861-a33d-e01528618f2e",
+						"2f60ca4c-828b-4f4e-818f-432d53d61f83"
+					]
+				},
+				"ignoreArrayOrder": true
+			}
+		],
+		"urlPath": "/intric/assistants/intric-assistant-uuid/sessions/4dc21d5e-8a70-45fb-b225-367fcd383a2e/"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test04_interactWithAssistant/responses/api-intric-ask-question-response.json"
+	},
+	"name": "api-intric-ask-question"
+}

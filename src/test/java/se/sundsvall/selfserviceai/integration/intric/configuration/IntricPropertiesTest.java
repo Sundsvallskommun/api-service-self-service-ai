@@ -17,6 +17,8 @@ class IntricPropertiesTest {
 
 	@Test
 	void testProperties() {
+		assertThat(properties.assistantId()).isEqualTo("intric-assistant-uuid");
+		assertThat(properties.url()).isEqualTo("intric-integration-url");
 		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(9);
 		assertThat(properties.readTimeoutInSeconds()).isEqualTo(10);
 		assertThat(properties.oauth2()).satisfies(oauth -> {
