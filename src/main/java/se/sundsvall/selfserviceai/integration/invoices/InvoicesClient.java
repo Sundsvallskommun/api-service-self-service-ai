@@ -6,7 +6,6 @@ import static se.sundsvall.selfserviceai.integration.invoices.configuration.Invo
 import generated.se.sundsvall.invoices.InvoiceOrigin;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import java.time.LocalDate;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +29,6 @@ public interface InvoicesClient {
 		@RequestParam("limit") final int limit,
 		@RequestParam("partyId") final String partyId,
 		@RequestParam("organizationGroup") final String organizationGroup,
-		@RequestParam("invoiceDateFrom") final LocalDate invoiceDateFrom,
-		@RequestParam("invoiceDateTo") final LocalDate invoiceDateTo);
+		@RequestParam("invoiceDateFrom") final String invoiceDateFrom,
+		@RequestParam("invoiceDateTo") final String invoiceDateTo);
 }
