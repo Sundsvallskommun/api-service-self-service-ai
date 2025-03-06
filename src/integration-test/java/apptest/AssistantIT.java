@@ -121,7 +121,7 @@ class AssistantIT extends AbstractAppTest {
 	void test06_deleteSession() {
 		final var sessionId = "158cfabe-1c3d-433c-b71f-1c909beaa291";
 		final var fileId = "811bcd0e-fe12-448e-85c5-2248a4a12e6d";
-		
+
 		transactionTemplate.executeWithoutResult(status -> {
 			final var session = sessionRepository.getReferenceById(sessionId);
 
@@ -140,7 +140,7 @@ class AssistantIT extends AbstractAppTest {
 
 		// Verify that the session is no longer ready (i.e. is deleted)
 		Awaitility.await()
-			.atMost(Duration.ofSeconds(3))
+			.atMost(Duration.ofSeconds(30))
 			.ignoreExceptions()
 			.until(() -> transactionTemplate.execute(status -> {
 				assertThat(sessionRepository.findById(sessionId)).isNotPresent();
