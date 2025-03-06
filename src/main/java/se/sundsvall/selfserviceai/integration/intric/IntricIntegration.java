@@ -88,7 +88,7 @@ public class IntricIntegration {
 	public UUID uploadFile(final InstalledBase installedBase) {
 		final var content = jsonBuilder.toJsonString(installedBase);
 
-		LOG.debug("Uploading file with content '{}", content);
+		LOG.debug("Uploading file with content '{}'", content);
 		return client.uploadFile(toInformationFile(content)).id();
 	}
 

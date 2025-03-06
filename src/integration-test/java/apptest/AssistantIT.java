@@ -41,7 +41,6 @@ class AssistantIT extends AbstractAppTest {
 	private static final String PATH = "/2281/session";
 	private static final String REQUEST_FILE = "request.json";
 	private static final String RESPONSE_FILE = "response.json";
-	private static final int MAX_VERIFICATION_DELAY_IN_SECONDS = 30;
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
@@ -69,7 +68,6 @@ class AssistantIT extends AbstractAppTest {
 			.withExpectedResponseStatus(CREATED)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponse(RESPONSE_FILE)
-			.withMaxVerificationDelayInSeconds(MAX_VERIFICATION_DELAY_IN_SECONDS)
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -81,7 +79,6 @@ class AssistantIT extends AbstractAppTest {
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponse(RESPONSE_FILE)
-			.withMaxVerificationDelayInSeconds(MAX_VERIFICATION_DELAY_IN_SECONDS)
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -93,7 +90,6 @@ class AssistantIT extends AbstractAppTest {
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponse(RESPONSE_FILE)
-			.withMaxVerificationDelayInSeconds(MAX_VERIFICATION_DELAY_IN_SECONDS)
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -106,7 +102,6 @@ class AssistantIT extends AbstractAppTest {
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
-			.withMaxVerificationDelayInSeconds(MAX_VERIFICATION_DELAY_IN_SECONDS)
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -119,7 +114,6 @@ class AssistantIT extends AbstractAppTest {
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
-			.withMaxVerificationDelayInSeconds(MAX_VERIFICATION_DELAY_IN_SECONDS)
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -127,7 +121,7 @@ class AssistantIT extends AbstractAppTest {
 	void test06_deleteSession() {
 		final var sessionId = "158cfabe-1c3d-433c-b71f-1c909beaa291";
 		final var fileId = "811bcd0e-fe12-448e-85c5-2248a4a12e6d";
-
+		
 		transactionTemplate.executeWithoutResult(status -> {
 			final var session = sessionRepository.getReferenceById(sessionId);
 
@@ -142,7 +136,6 @@ class AssistantIT extends AbstractAppTest {
 			.withHttpMethod(DELETE)
 			.withExpectedResponseStatus(NO_CONTENT)
 			.withExpectedResponseBodyIsNull()
-			.withMaxVerificationDelayInSeconds(MAX_VERIFICATION_DELAY_IN_SECONDS)
 			.sendRequestAndVerifyResponse();
 
 		// Verify that the session is no longer ready (i.e. is deleted)

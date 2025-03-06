@@ -7,6 +7,7 @@ import static org.zalando.problem.Status.NOT_FOUND;
 
 import generated.se.sundsvall.invoices.Invoice;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class InvoicesIntegration {
 
 	private List<Invoice> getInvoices(String municipalityId, String partyId, LocalDate fromDate, LocalDate toDate, int page, List<Invoice> invoices) {
 
-		final var response = invoicesClient.getInvoices(municipalityId, COMMERCIAL, page, 100, partyId, ORGANIZATION_GROUP, fromDate, toDate);
+		final var response = invoicesClient.getInvoices(municipalityId, COMMERCIAL, page, 100, partyId, ORGANIZATION_GROUP, toString(fromDate), toString(toDate));
 		ofNullable(response.getInvoices()).ifPresent(invoices::addAll);
 
 		if (response.getMeta().getPage() < response.getMeta().getTotalPages()) {
@@ -47,5 +48,11 @@ public class InvoicesIntegration {
 		}
 
 		return invoices;
+	}
+
+	private String toString(LocalDate date) {
+		return ofNullable(date)
+			.map(d -> d.format(DateTimeFormatter.ISO_LOCAL_DATE))
+			.orElse(null);
 	}
 }
