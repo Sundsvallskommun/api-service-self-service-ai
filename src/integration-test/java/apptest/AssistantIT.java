@@ -140,7 +140,7 @@ class AssistantIT extends AbstractAppTest {
 
 		// Verify that the session is no longer ready (i.e. is deleted)
 		Awaitility.await()
-			.atMost(Duration.ofSeconds(30))
+			.atMost(Duration.ofSeconds(3))
 			.ignoreExceptions()
 			.until(() -> transactionTemplate.execute(status -> {
 				assertThat(sessionRepository.findById(sessionId)).isNotPresent();

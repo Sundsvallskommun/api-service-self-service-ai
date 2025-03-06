@@ -3,6 +3,7 @@ package se.sundsvall.selfserviceai.integration.intric;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toAskAssistant;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInformationFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
