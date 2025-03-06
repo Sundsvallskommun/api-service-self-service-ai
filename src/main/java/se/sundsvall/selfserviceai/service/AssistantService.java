@@ -81,12 +81,15 @@ public class AssistantService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
 		try {
+			final var municipalityId = session.getMunicipalityId();
+			final var partyId = sessionRequest.getPartyId();
+
 			// Collect all information regarding customers installed base from different backends
-			final var agreements = agreementIntegration.getAgreements(session.getMunicipalityId(), sessionRequest.getPartyId());
-			final var installedBase = Optional.of(toInstalledBase(installedbaseIntegration.getInstalledbase(session.getMunicipalityId(), sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgId())))
+			final var agreements = agreementIntegration.getAgreements(municipalityId, partyId);
+			final var installedBase = Optional.of(toInstalledBase(installedbaseIntegration.getInstalledbase(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgId())))
 				.map(ib -> AgreementDecorator.addAgreements(ib, agreements))
-				.map(ib -> InvoiceDecorator.addInvoices(ib, invoicesIntegration.getInvoices(session.getMunicipalityId(), sessionRequest.getPartyId())))
-				.map(ib -> MeasurementDecorator.addMeasurements(ib, measurementDataIntegration.getMeasurementData(session.getMunicipalityId(), sessionRequest.getPartyId(), agreements)))
+				.map(ib -> InvoiceDecorator.addInvoices(ib, invoicesIntegration.getInvoices(municipalityId, partyId)))
+				.map(ib -> MeasurementDecorator.addMeasurements(ib, measurementDataIntegration.getMeasurementData(municipalityId, partyId, agreements)))
 				.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, "Installed base is not present after information collection")); // This should not be possible though
 
 			// Save information in intric and update database with id of stored file
