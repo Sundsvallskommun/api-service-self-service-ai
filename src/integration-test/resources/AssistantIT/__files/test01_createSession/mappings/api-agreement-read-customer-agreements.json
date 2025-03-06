@@ -1,0 +1,24 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/agreement/2281/agreements/5a6c3e4e-c320-4006-b448-1fd4121df828",
+		"queryParameters": {
+			"onlyActive": {
+				"equalTo": "true"
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test01_createSession/responses/api-agreement-read-customer-agreements-response.json"
+	},
+	"name": "api-agreement-read-customer-agreements"
+}

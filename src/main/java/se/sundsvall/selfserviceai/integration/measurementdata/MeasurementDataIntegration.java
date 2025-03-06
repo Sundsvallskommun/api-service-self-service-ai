@@ -5,12 +5,12 @@ import static java.time.LocalDate.now;
 import static java.time.ZoneId.systemDefault;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.NOT_IMPLEMENTED;
+import static org.zalando.problem.Status.BAD_GATEWAY;
 
 import generated.se.sundsvall.agreement.Agreement;
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
@@ -38,14 +38,14 @@ public class MeasurementDataIntegration {
 			return measurementDataClient.getMeasurementData(
 				municipalityId,
 				MONTH,
-				Date.from(now().minusMonths(12).atStartOfDay(systemDefault()).toInstant()), // Fetch data from 12 month back
-				Date.from(now().plusDays(1).atStartOfDay(systemDefault()).toInstant()), // Fetch data to midnight of today
+				now().minusMonths(12).atStartOfDay(systemDefault()).toOffsetDateTime().format(DateTimeFormatter.ISO_DATE_TIME), // Fetch data from 12 month back
+				now().plusDays(1).atStartOfDay(systemDefault()).toOffsetDateTime().format(DateTimeFormatter.ISO_DATE_TIME), // Fetch data to midnight of today
 				partyId,
 				CategoryEnum.fromValue(agreement.getCategory().toString()),
 				agreement.getFacilityId());
 
 		} catch (final ThrowableProblem e) {
-			if (Objects.equals(NOT_IMPLEMENTED, e.getStatus())) {
+			if (Objects.equals(BAD_GATEWAY, e.getStatus()) && e.getDetail().contains("category '%s', status=501 Not Implemented".formatted(CategoryEnum.fromValue(agreement.getCategory().toString())))) {
 				return null;
 			}
 
