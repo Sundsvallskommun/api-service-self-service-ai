@@ -1,0 +1,68 @@
+{
+	"agreementParties": [
+		{
+			"customerId": "123456",
+			"agreements": [
+				{
+					"agreementId": "41291",
+					"billingId": "2046159",
+					"category": "ELECTRICITY",
+					"description": "Säkringsabonnemang",
+					"facilityId": "735999109260428015",
+					"mainAgreement": true,
+					"binding": false,
+					"bindingRule": "B00-U00",
+					"fromDate": "2016-11-08",
+					"active": true
+				},
+				{
+					"agreementId": "41292",
+					"billingId": "2046160",
+					"category": "ELECTRICITY",
+					"description": "Säkringsabonnemang Lägenhet",
+					"facilityId": "735999109260428039",
+					"mainAgreement": true,
+					"binding": false,
+					"bindingRule": "B00-U00",
+					"fromDate": "2016-11-08",
+					"active": true
+				},
+				{
+					"agreementId": "99694",
+					"billingId": "2105263",
+					"category": "ELECTRICITY",
+					"description": "Säkringsabonnemang",
+					"facilityId": "735999109220207025",
+					"mainAgreement": true,
+					"binding": false,
+					"bindingRule": "B00-U00",
+					"fromDate": "2010-11-01",
+					"active": true
+				},
+				{
+					"agreementId": "99696",
+					"billingId": "2105265",
+					"category": "ELECTRICITY",
+					"description": "Säkringsabonnemang",
+					"facilityId": "735999109321708018",
+					"mainAgreement": true,
+					"binding": false,
+					"bindingRule": "B00-U00",
+					"fromDate": "2007-02-01",
+					"active": true
+				},
+				{
+					"agreementId": "3018",
+					"billingId": "2004350",
+					"category": "DISTRICT_HEATING",
+					"description": "Fjärrvärme villa",
+					"facilityId": "9220207022",
+					"mainAgreement": true,
+					"binding": false,
+					"fromDate": "2010-11-01",
+					"active": true
+				}
+			]
+		}
+	]
+}

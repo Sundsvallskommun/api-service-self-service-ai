@@ -1,0 +1,300 @@
+{
+	"installedBaseCustomers": [
+		{
+			"customerNumber": "104033",
+			"partyId": "6f187a4c-158e-4f35-8c35-45b9a07ca17e",
+			"items": [
+				{
+					"type": "El",
+					"facilityId": "735999109220207025",
+					"placementId": 24031,
+					"facilityCommitmentStartDate": "2010-11-01",
+					"lastModifiedDate": "2024-03-01",
+					"address": {
+						"careOf": "Sjöström Lars",
+						"street": "Västergatan 16",
+						"postalCode": "85641",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "6727",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "0802705",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "20",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109252268018",
+					"placementId": 25797,
+					"facilityCommitmentStartDate": "2003-04-30",
+					"facilityCommitmentEndDate": "2011-01-10",
+					"lastModifiedDate": "2024-03-01",
+					"address": {
+						"careOf": "Sjöström Lars",
+						"street": "Bågevägen 218",
+						"postalCode": "85652",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "5081",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "9504528",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109260428015",
+					"placementId": -14132,
+					"facilityCommitmentStartDate": "2016-11-08",
+					"lastModifiedDate": "2024-03-01",
+					"address": {
+						"careOf": "Sjöström Lars",
+						"street": "Jaktstigen 12",
+						"postalCode": "85641",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "10458",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "3385472",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "25",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109260428039",
+					"placementId": -14133,
+					"facilityCommitmentStartDate": "2016-11-08",
+					"lastModifiedDate": "2024-03-01",
+					"address": {
+						"careOf": "Sjöström Lars",
+						"street": "Jaktstigen 12",
+						"postalCode": "85641",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "2579",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "3381825",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109321708018",
+					"placementId": 30225,
+					"facilityCommitmentStartDate": "2007-02-01",
+					"lastModifiedDate": "2024-03-01",
+					"address": {
+						"careOf": "Sjöström Lars",
+						"street": "Näsudden 176"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "1931",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "4216129",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Näsudden 1:55",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				}
+			]
+		}
+	]
+}
