@@ -4,15 +4,13 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
+import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
-
-import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
