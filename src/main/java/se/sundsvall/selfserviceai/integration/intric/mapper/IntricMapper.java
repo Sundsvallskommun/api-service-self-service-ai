@@ -9,7 +9,10 @@ import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
 import generated.se.sundsvall.installedbase.InstalledBaseItemMetaData;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
+import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
 import se.sundsvall.selfserviceai.integration.intric.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
@@ -37,8 +40,24 @@ public class IntricMapper {
 	public static AskAssistant toAskAssistant(String input, List<String> fileReferences) {
 		return AskAssistant.builder()
 			.withQuestion(input)
-			.withFiles(fileReferences)
+			.withFiles(toFilesPublic(fileReferences))
 			.build();
+	}
+
+	private static List<FilePublic> toFilesPublic(List<String> fileReferences) {
+		return ofNullable(fileReferences).orElse(emptyList()).stream()
+			.map(IntricMapper::toFilePublic)
+			.filter(Objects::nonNull)
+			.toList();
+	}
+
+	private static FilePublic toFilePublic(String fileId) {
+		return ofNullable(fileId)
+			.map(UUID::fromString)
+			.map(id -> FilePublic.builder()
+				.withId(id)
+				.build())
+			.orElse(null);
 	}
 
 	/**

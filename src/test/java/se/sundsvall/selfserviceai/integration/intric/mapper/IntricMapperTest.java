@@ -4,11 +4,15 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
-import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
+
+import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
@@ -33,14 +37,23 @@ class IntricMapperTest {
 	void toAskAssistantWithFiles() {
 		// Arrange
 		final var input = "question";
-		final var files = List.of("fileId1", "fileId2");
+		final var fileId1 = UUID.randomUUID().toString();
+		final var fileId2 = UUID.randomUUID().toString();
+		final var files = new ArrayList<>(List.of(fileId1, fileId2));
+		files.add(null); // To verify that null values are filtered out in result
 
 		// Act
 		final var result = IntricMapper.toAskAssistant(input, files);
 
 		// Assert
-		assertThat(result.files()).containsExactlyInAnyOrder("fileId1", "fileId2");
 		assertThat(result.question()).isEqualTo(input);
+		assertThat(result.files()).hasSize(2).allSatisfy(fp -> {
+			assertThat(fp).hasAllNullFieldsOrPropertiesExcept("id");
+		}).satisfiesExactlyInAnyOrder(fp -> {
+			assertThat(fp.id()).isEqualTo(UUID.fromString(fileId1));
+		}, fp -> {
+			assertThat(fp.id()).isEqualTo(UUID.fromString(fileId2));
+		});
 	}
 
 	@Test

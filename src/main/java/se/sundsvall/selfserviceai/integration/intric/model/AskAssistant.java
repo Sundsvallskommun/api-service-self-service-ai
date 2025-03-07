@@ -7,5 +7,5 @@ import lombok.Builder;
 public record AskAssistant(
 
 	String question,
-	List<String> files) {
+	List<FilePublic> files) {
 }
