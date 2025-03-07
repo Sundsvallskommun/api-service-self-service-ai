@@ -3,7 +3,6 @@ package se.sundsvall.selfserviceai.integration.intric;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toAskAssistant;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInformationFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,9 +19,11 @@ public class IntricIntegration {
 	private static final Logger LOG = LoggerFactory.getLogger(IntricIntegration.class);
 
 	private final IntricClient client;
+	private final JsonBuilder jsonBuilder;
 
-	IntricIntegration(final IntricClient client) {
+	IntricIntegration(final IntricClient client, final JsonBuilder jsonBuilder) {
 		this.client = client;
+		this.jsonBuilder = jsonBuilder;
 	}
 
 	/**
@@ -81,14 +82,14 @@ public class IntricIntegration {
 	/**
 	 * Uploads a file to Intric
 	 *
-	 * @param  installedBase           The file content in the form of a installedBase object to store in intric
-	 * @return                         The ID of the uploaded file
-	 * @throws JsonProcessingException if json serialization goes south
+	 * @param  installedBase The file content in the form of a installedBase object to store in intric
+	 * @return               The ID of the uploaded file
 	 */
-	public UUID uploadFile(final InstalledBase installedBase) throws JsonProcessingException {
-		LOG.debug("Uploading file");
-		final var multipartFile = toInformationFile(JsonBuilder.toJsonString(installedBase));
-		return client.uploadFile(multipartFile).id();
+	public UUID uploadFile(final InstalledBase installedBase) {
+		final var content = jsonBuilder.toJsonString(installedBase);
+
+		LOG.debug("Uploading file with content '{}'", content);
+		return client.uploadFile(toInformationFile(content)).id();
 	}
 
 	/**

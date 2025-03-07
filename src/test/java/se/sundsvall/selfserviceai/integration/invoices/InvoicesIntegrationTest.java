@@ -15,6 +15,7 @@ import generated.se.sundsvall.invoices.Invoice;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import generated.se.sundsvall.invoices.MetaData;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,8 @@ class InvoicesIntegrationTest {
 	private static final String MUNICIPALITY_ID = "municipalityId";
 	private static final String PARTY_ID = "partyId";
 	private static final String ORGANIZATION_GROUP = "stadsbacken";
-	private static final LocalDate TO_DATE = LocalDate.now();
-	private static final LocalDate FROM_DATE = LocalDate.now().withDayOfMonth(1).minusMonths(6);
+	private static final String TO_DATE = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+	private static final String FROM_DATE = LocalDate.now().withDayOfMonth(1).minusMonths(6).format(DateTimeFormatter.ISO_LOCAL_DATE);
 
 	@Mock
 	private InvoicesClient clientMock;

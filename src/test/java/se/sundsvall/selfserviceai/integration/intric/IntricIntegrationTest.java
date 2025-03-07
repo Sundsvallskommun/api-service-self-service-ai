@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
@@ -31,6 +32,9 @@ class IntricIntegrationTest {
 	@Mock
 	private IntricClient intricClientMock;
 
+	@Mock
+	private JsonBuilder jsonBuilderMock;
+
 	@InjectMocks
 	private IntricIntegration integration;
 
@@ -39,7 +43,7 @@ class IntricIntegrationTest {
 
 	@AfterEach
 	void verifyNoMoreMockInteraction() {
-		verifyNoMoreInteractions(intricClientMock);
+		verifyNoMoreInteractions(intricClientMock, jsonBuilderMock);
 	}
 
 	/**
@@ -94,8 +98,8 @@ class IntricIntegrationTest {
 	void askFollowUp_1() {
 		final var assistantId = "assistantId";
 		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+		final var fileId = "9c55c2be-9739-4af4-89dd-201a507ce261";
 		final var input = "input";
-		final var fileReferences = List.of("fileId");
 		final var response = AskResponse.builder()
 			.withSessionId(UUID.fromString(sessionId))
 			.withQuestion(input)
@@ -104,11 +108,13 @@ class IntricIntegrationTest {
 
 		when(intricClientMock.askFollowUp(eq(assistantId), eq(sessionId), askAssistantCaptor.capture())).thenReturn(response);
 
-		final var result = integration.askFollowUp(assistantId, sessionId, input, fileReferences);
+		final var result = integration.askFollowUp(assistantId, sessionId, input, List.of(fileId));
 
 		final var askAssistant = askAssistantCaptor.getValue();
 		assertThat(askAssistant.question()).isEqualTo(input);
-		assertThat(askAssistant.files()).isEqualTo(fileReferences);
+		assertThat(askAssistant.files()).hasSize(1).satisfiesExactly(fp -> {
+			assertThat(fp.id()).isEqualTo(UUID.fromString(fileId));
+		});
 
 		assertThat(result).isPresent().hasValue(response);
 		verify(intricClientMock).askFollowUp(assistantId, sessionId, askAssistant);
@@ -121,16 +127,18 @@ class IntricIntegrationTest {
 	void askFollowUp_2() {
 		final var assistantId = "assistantId";
 		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+		final var fileId = "9c55c2be-9739-4af4-89dd-201a507ce261";
 		final var input = "input";
-		final var fileReferences = List.of("fileId");
 
 		when(intricClientMock.askFollowUp(eq(assistantId), eq(sessionId), askAssistantCaptor.capture())).thenThrow(new RuntimeException("Something went wrong"));
 
-		final var result = integration.askFollowUp(assistantId, sessionId, input, fileReferences);
+		final var result = integration.askFollowUp(assistantId, sessionId, input, List.of(fileId));
 
 		final var askAssistant = askAssistantCaptor.getValue();
 		assertThat(askAssistant.question()).isEqualTo(input);
-		assertThat(askAssistant.files()).isEqualTo(fileReferences);
+		assertThat(askAssistant.files()).hasSize(1).satisfiesExactly(fp -> {
+			assertThat(fp.id()).isEqualTo(UUID.fromString(fileId));
+		});
 
 		assertThat(result).isEmpty();
 		verify(intricClientMock).askFollowUp(assistantId, sessionId, askAssistant);
@@ -155,6 +163,7 @@ class IntricIntegrationTest {
 
 		assertThat(result).isEqualTo(UUID.fromString(id));
 
+		verify(jsonBuilderMock).toJsonString(installedBase);
 		verify(intricClientMock).uploadFile(any(MultipartFile.class));
 	}
 
@@ -170,6 +179,7 @@ class IntricIntegrationTest {
 		final var e = assertThrows(RuntimeException.class, () -> integration.uploadFile(installedBase));
 
 		assertThat(e).isSameAs(exception);
+		verify(jsonBuilderMock).toJsonString(installedBase);
 		verify(intricClientMock).uploadFile(any(MultipartFile.class));
 	}
 

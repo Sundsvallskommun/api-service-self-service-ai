@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
 
-import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
@@ -16,8 +15,6 @@ class MeasurementDecoratorTest {
 
 	@Test
 	void addMeasurements() {
-		// Arrange
-		final var scale = 4;
 		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
 		final var measurements = new ArrayList<>(createMeasurements(true));
 		measurements.add(null);
@@ -32,13 +29,13 @@ class MeasurementDecoratorTest {
 				assertThat(m.getMeasurementType()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_TYPE);
 				assertThat(m.getTimestamp()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_TIMESTAMP.toInstant().atOffset(OffsetDateTime.now(systemDefault()).getOffset()));
 				assertThat(m.getUnit()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_UNIT);
-				assertThat(m.getValue()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_VALUE.setScale(scale, RoundingMode.HALF_DOWN));
+				assertThat(m.getValue()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_VALUE);
 			}, m -> {
 				assertThat(m.getCategory()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT2_CATEGORY.name());
 				assertThat(m.getMeasurementType()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT2_TYPE);
 				assertThat(m.getTimestamp()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT2_TIMESTAMP.toInstant().atOffset(OffsetDateTime.now(systemDefault()).getOffset()));
 				assertThat(m.getUnit()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT2_UNIT);
-				assertThat(m.getValue()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT2_VALUE.setScale(scale, RoundingMode.HALF_DOWN));
+				assertThat(m.getValue()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT2_VALUE);
 			});
 		}, f -> {
 			assertThat(f.getMeasurements()).hasSize(1).satisfiesExactlyInAnyOrder(m -> {
@@ -46,7 +43,7 @@ class MeasurementDecoratorTest {
 				assertThat(m.getMeasurementType()).isEqualTo(TestFactory.IB2_AGREEMENT1_MEASUREMENT1_TYPE);
 				assertThat(m.getTimestamp()).isEqualTo(TestFactory.IB2_AGREEMENT1_MEASUREMENT1_TIMESTAMP.toInstant().atOffset(OffsetDateTime.now(systemDefault()).getOffset()));
 				assertThat(m.getUnit()).isEqualTo(TestFactory.IB2_AGREEMENT1_MEASUREMENT1_UNIT);
-				assertThat(m.getValue()).isEqualTo(TestFactory.IB2_AGREEMENT1_MEASUREMENT1_VALUE.setScale(scale, RoundingMode.HALF_DOWN));
+				assertThat(m.getValue()).isEqualTo(TestFactory.IB2_AGREEMENT1_MEASUREMENT1_VALUE);
 			});
 		});
 	}

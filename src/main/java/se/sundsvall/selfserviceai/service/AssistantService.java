@@ -1,12 +1,15 @@
 package se.sundsvall.selfserviceai.service;
 
 import static java.util.Objects.isNull;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
+import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInstalledBase;
 import static se.sundsvall.selfserviceai.service.AssistantMapper.toQuestionResponse;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
+import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
+import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
 import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
 import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.mapper.AgreementDecorator;
+import se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator;
+import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator;
+import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
+import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
 
 @Service
 public class AssistantService {
@@ -29,14 +38,31 @@ public class AssistantService {
 	private static final Logger LOG = LoggerFactory.getLogger(AssistantService.class);
 	private static final String ERROR_SESSION_NOT_FOUND = "Session with id '%s' could not be found";
 
-	private final IntricIntegration intricIntegration;
 	private final IntricProperties intricProperties;
+	private final AgreementIntegration agreementIntegration;
+	private final InstalledbaseIntegration installedbaseIntegration;
+	private final IntricIntegration intricIntegration;
+	private final InvoicesIntegration invoicesIntegration;
+	private final MeasurementDataIntegration measurementDataIntegration;
 	private final SessionRepository sessionRepository;
 	private final FileRepository fileRepository;
 
-	public AssistantService(IntricProperties intricProperties, IntricIntegration intricIntegration, SessionRepository sessionRepository, FileRepository fileRepository) {
+	public AssistantService(
+		IntricProperties intricProperties,
+		AgreementIntegration agreementIntegration,
+		InstalledbaseIntegration installedbaseIntegration,
+		IntricIntegration intricIntegration,
+		InvoicesIntegration invoicesIntegration,
+		MeasurementDataIntegration measurementDataIntegration,
+		SessionRepository sessionRepository,
+		FileRepository fileRepository) {
+
 		this.intricProperties = intricProperties;
+		this.agreementIntegration = agreementIntegration;
+		this.installedbaseIntegration = installedbaseIntegration;
 		this.intricIntegration = intricIntegration;
+		this.invoicesIntegration = invoicesIntegration;
+		this.measurementDataIntegration = measurementDataIntegration;
 		this.sessionRepository = sessionRepository;
 		this.fileRepository = fileRepository;
 	}
@@ -55,15 +81,29 @@ public class AssistantService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
 		try {
-			final var fileId = intricIntegration.uploadFile(InstalledBase.builder().withPartyId(sessionRequest.getPartyId()).build()); // Real data will be added here in task UF-14557
+			final var municipalityId = session.getMunicipalityId();
+			final var partyId = sessionRequest.getPartyId();
 
+			// Collect all information regarding customers installed base from different backends
+			final var agreements = agreementIntegration.getAgreements(municipalityId, partyId);
+			final var installedBase = Optional.of(toInstalledBase(installedbaseIntegration.getInstalledbase(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgId())))
+				.map(ib -> AgreementDecorator.addAgreements(ib, agreements))
+				.map(ib -> InvoiceDecorator.addInvoices(ib, invoicesIntegration.getInvoices(municipalityId, partyId)))
+				.map(ib -> MeasurementDecorator.addMeasurements(ib, measurementDataIntegration.getMeasurementData(municipalityId, partyId, agreements)))
+				.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, "Installed base is not present after information collection")); // This should not be possible though
+
+			// Save information in intric and update database with id of stored file
+			final var fileId = intricIntegration.uploadFile(installedBase);
 			final var file = fileRepository.save(toFileEntity(fileId));
 
+			// Add file to session, update with success information
 			session.getFiles().add(file);
 			session.setInitialized(OffsetDateTime.now());
 			session.setInitiationStatus("Successfully initialized");
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when populating session with customer information", e);
+			// Update with failed information
+			session.setInitialized(null);
 			session.setInitiationStatus("Initialization failed");
 		} finally {
 			sessionRepository.save(session);

@@ -44,14 +44,14 @@
 				{
 					"category": "ELECTRICITY",
 					"measurementType": "measurementType1",
-					"value": 123.4568,
+					"value": 123.456789,
 					"unit": "unit1",
 					"timestamp": "2020-01-17T00:00:00+01:00"
 				},
 				{
 					"category": "ELECTRICITY",
 					"measurementType": "measurementType2",
-					"value": 234.5679,
+					"value": 234.567890,
 					"unit": "unit2",
 					"timestamp": "2024-02-15T00:00:00+01:00"
 				}
@@ -138,7 +138,7 @@
 				{
 					"category": "WASTE_MANAGEMENT",
 					"measurementType": "measurementTYpe3",
-					"value": 500.0000,
+					"value": 500,
 					"unit": "unit3",
 					"timestamp": "2024-06-14T23:00:00+01:00"
 				}
