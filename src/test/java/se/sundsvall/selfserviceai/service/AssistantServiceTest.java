@@ -488,7 +488,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSession(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -512,7 +512,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSession(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -537,7 +537,7 @@ class AssistantServiceTest {
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 
 		// Act
-		assistantService.deleteSession(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -558,7 +558,7 @@ class AssistantServiceTest {
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 
 		// Act
-		assistantService.deleteSession(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -576,7 +576,7 @@ class AssistantServiceTest {
 			.build();
 
 		// Act
-		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.deleteSession(MUNICIPALITY_ID, SESSION_ID));
+		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID));
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);

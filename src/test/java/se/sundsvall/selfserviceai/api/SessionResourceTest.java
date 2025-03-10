@@ -159,6 +159,6 @@ class SessionResourceTest {
 			.expectBody().isEmpty();
 
 		// Assert and verify
-		verify(mockService).deleteSession(MUNICIPALITY_ID, sessionId);
+		verify(mockService).deleteSessionById(MUNICIPALITY_ID, sessionId);
 	}
 }

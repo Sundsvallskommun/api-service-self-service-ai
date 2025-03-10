@@ -65,3 +65,10 @@ integration:
       username: intric-client-id
       password: intric-client-secret
       url: http://localhost:${wiremock.server.port}/intric/token
+
+scheduler:
+  session:
+    cron: '-'
+    name: cleanUpExpiredSessions
+    shedlock-lock-at-most-for: PT3M
+    maximum-execution-time: PT3M
