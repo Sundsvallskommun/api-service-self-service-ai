@@ -44,7 +44,6 @@ spring:
             provider: measurement-data
 
 integration:
-  municipality-ids: 2281
   agreement:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60

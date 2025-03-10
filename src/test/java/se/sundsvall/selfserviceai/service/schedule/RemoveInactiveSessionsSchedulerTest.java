@@ -9,24 +9,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.selfserviceai.service.AssistantService;
 
 @ExtendWith(MockitoExtension.class)
-class SessionSchedulerTest {
+class RemoveInactiveSessionsSchedulerTest {
 
 	@Mock
 	private AssistantService assistantServiceMock;
 
 	@InjectMocks
-	private SessionScheduler sessionScheduler;
+	private RemoveInactiveSessionsScheduler removeInactiveSessionsScheduler;
 
 	@Test
-	void cleanUpExpiredSessions() {
-		doNothing().when(assistantServiceMock).cleanUpExpiredSessions();
+	void cleanUpInactiveSessions() {
+		var inactivityThresholdInMinutes = 60;
+		ReflectionTestUtils.setField(removeInactiveSessionsScheduler, "inactivityThresholdInMinutes", inactivityThresholdInMinutes);
+		doNothing().when(assistantServiceMock).cleanUpInactiveSessions(inactivityThresholdInMinutes);
 
-		sessionScheduler.cleanUpExpiredSessions();
+		removeInactiveSessionsScheduler.cleanUpInactiveSessions();
 
-		verify(assistantServiceMock).cleanUpExpiredSessions();
+		verify(assistantServiceMock).cleanUpInactiveSessions(inactivityThresholdInMinutes);
 		verifyNoMoreInteractions(assistantServiceMock);
 	}
 

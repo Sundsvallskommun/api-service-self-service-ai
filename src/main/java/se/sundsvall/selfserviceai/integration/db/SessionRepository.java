@@ -24,5 +24,5 @@ public interface SessionRepository extends JpaRepository<SessionEntity, String> 
 
 	List<SessionEntity> findAllByMunicipalityIdAndInitializedIsNull(String municipalityId); // Method to return all currently non initialized sessions within a municipality
 
-	List<SessionEntity> findAllByMunicipalityIdAndLastAccessedBeforeOrLastAccessedIsNull(String municipalityId, OffsetDateTime timestamp); // Method for returning dangling sessions (not used after provided timestamp) within a municipality
+	List<SessionEntity> findAllByLastAccessedBeforeOrLastAccessedIsNull(OffsetDateTime timestamp); // Method for returning dangling sessions (not used after provided timestamp) within all municipalities
 }

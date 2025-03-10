@@ -89,8 +89,9 @@ integration:
       url: intric-token-url
 
 scheduler:
-  session:
+  remove-inactive-sessions:
+    inactivity-threshold-in-minutes: 60
     cron: '-'
-    name: cleanUpExpiredSessions
+    name: cleanUpInactiveSessions
     shedlock-lock-at-most-for: PT3M
     maximum-execution-time: PT3M

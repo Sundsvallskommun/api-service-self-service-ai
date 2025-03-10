@@ -9,12 +9,10 @@ import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.
 import static se.sundsvall.selfserviceai.service.AssistantMapper.toQuestionResponse;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +39,6 @@ public class AssistantService {
 	private static final Logger LOG = LoggerFactory.getLogger(AssistantService.class);
 	private static final String ERROR_SESSION_NOT_FOUND = "Session with id '%s' could not be found";
 
-	private final List<String> municipalityIds;
 	private final IntricProperties intricProperties;
 	private final AgreementIntegration agreementIntegration;
 	private final InstalledbaseIntegration installedbaseIntegration;
@@ -52,7 +49,6 @@ public class AssistantService {
 	private final FileRepository fileRepository;
 
 	public AssistantService(
-		@Value("${integration.municipality-ids}") final List<String> municipalityIds,
 		final IntricProperties intricProperties,
 		final AgreementIntegration agreementIntegration,
 		final InstalledbaseIntegration installedbaseIntegration,
@@ -61,7 +57,6 @@ public class AssistantService {
 		final MeasurementDataIntegration measurementDataIntegration,
 		final SessionRepository sessionRepository,
 		final FileRepository fileRepository) {
-		this.municipalityIds = municipalityIds;
 
 		this.intricProperties = intricProperties;
 		this.agreementIntegration = agreementIntegration;
@@ -146,15 +141,10 @@ public class AssistantService {
 	}
 
 	@Transactional
-	public void cleanUpExpiredSessions() {
-		for (var municipalityId : municipalityIds) {
-			LOG.info("Cleaning up expired sessions for municipalityId: {}", municipalityId);
-			var timestamp = OffsetDateTime.now().minusHours(1);
-
-			var expiredSessions = sessionRepository.findAllByMunicipalityIdAndLastAccessedBeforeOrLastAccessedIsNull(municipalityId, timestamp);
-
-			expiredSessions.forEach(this::deleteSession);
-		}
+	public void cleanUpInactiveSessions(final Integer inactivityThreshold) {
+		var timestamp = OffsetDateTime.now().minusMinutes(inactivityThreshold);
+		var expiredSessions = sessionRepository.findAllByLastAccessedBeforeOrLastAccessedIsNull(timestamp);
+		expiredSessions.forEach(this::deleteSession);
 	}
 
 	void deleteSession(final SessionEntity sessionEntity) {
