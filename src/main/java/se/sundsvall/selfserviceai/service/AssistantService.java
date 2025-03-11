@@ -9,6 +9,7 @@ import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.
 import static se.sundsvall.selfserviceai.service.AssistantMapper.toQuestionResponse;
 
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -142,9 +143,23 @@ public class AssistantService {
 
 	@Transactional
 	public void cleanUpInactiveSessions(final Integer inactivityThreshold) {
-		var timestamp = OffsetDateTime.now().minusMinutes(inactivityThreshold);
-		var expiredSessions = sessionRepository.findAllByLastAccessedBeforeOrLastAccessedIsNull(timestamp);
-		expiredSessions.forEach(this::deleteSession);
+		final var timestamp = OffsetDateTime.now().minusMinutes(inactivityThreshold);
+
+		sessionRepository.findAllByLastAccessedBeforeOrLastAccessedIsNull(timestamp).stream()
+			.filter(session -> isSubjectForRemoval(timestamp, session))
+			.forEach(this::deleteSession);
+	}
+
+	/**
+	 * To be subject for removal the session must either have a last accessed timestamp, or a
+	 * created timestamp that is before the defined threshold for inactivity
+	 *
+	 * @param  timestamp timestamp when session is interpreted as inactive
+	 * @param  session   session to evaluate
+	 * @return           true if session is inactive and subject for removal, false otherwise
+	 */
+	private boolean isSubjectForRemoval(final OffsetDateTime timestamp, final SessionEntity session) {
+		return Objects.nonNull(session.getLastAccessed()) || session.getCreated().isBefore(timestamp);
 	}
 
 	void deleteSession(final SessionEntity sessionEntity) {

@@ -90,19 +90,6 @@ class SessionRepositoryTest {
 		assertThat(sessionRepository.findBySessionIdAndMunicipalityId(UUID.randomUUID().toString(), MUNICIPALITY)).isEmpty();
 	}
 
-	@Test
-	@Sql(scripts = {
-		"/db/scripts/truncate.sql",
-		"/db/scripts/testdata-junit.sql"
-	})
-	void findAllByMunicipalityIdAndInitializedIsNull() {
-		final var matches = sessionRepository.findAllByMunicipalityIdAndInitializedIsNull(MUNICIPALITY);
-
-		assertThat(matches).hasSize(2)
-			.extracting(SessionEntity::getSessionId)
-			.containsExactlyInAnyOrder("8212c515-6f7a-4e1c-a6b4-a2e265f018ed", "a6602aba-0b21-4abf-a869-60c583570129");
-	}
-
 	@ParameterizedTest
 	@MethodSource("danglingSessionProvider")
 	@Sql(scripts = {
