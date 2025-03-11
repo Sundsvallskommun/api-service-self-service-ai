@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -583,5 +584,50 @@ class AssistantServiceTest {
 
 		assertThat(exception.getStatus()).isEqualTo(Status.NOT_FOUND);
 		assertThat(exception.getMessage()).isEqualTo("Not Found: Session with id '%s' could not be found".formatted(SESSION_ID));
+	}
+
+	@Test
+	void testNullValuesInLastAccessedOnCleanUpInactiveSessions() {
+		final var inactiveThreshold = 10;
+		final var sessionId = UUID.randomUUID();
+		final var fileId = UUID.randomUUID();
+
+		// Arrange
+		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(intricIntegrationMock.deleteFile(any())).thenReturn(true);
+		when(intricIntegrationMock.deleteSession(any(), any())).thenReturn(true);
+		when(sessionRepositoryMock.findAllByLastAccessedBeforeOrLastAccessedIsNull(any())).thenReturn(List.of(
+			// Session that is never accessed and has reached threshold level
+			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), null),
+			// Session that is never accessed but has not reached threshold level (should not be purged)
+			createSession(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now().minusMinutes(inactiveThreshold).plusSeconds(10), null)));
+
+		// Act
+		assistantService.cleanUpInactiveSessions(inactiveThreshold);
+
+		// Assert and verify
+		verify(sessionRepositoryMock).findAllByLastAccessedBeforeOrLastAccessedIsNull(argThat(timestamp -> {
+			assertThat(timestamp).isCloseTo(OffsetDateTime.now().minusMinutes(inactiveThreshold), within(2, SECONDS));
+			return true;
+		}));
+
+		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, sessionId.toString());
+		verify(intricIntegrationMock).deleteFile(fileId.toString());
+		verify(fileRepositoryMock).delete(fileEntityCaptor.capture());
+		verify(sessionRepositoryMock).delete(sessionEntityCaptor.capture());
+		assertThat(fileEntityCaptor.getValue().getFileId()).isEqualTo(fileId.toString());
+		assertThat(sessionEntityCaptor.getValue().getSessionId()).isEqualTo(sessionId.toString());
+	}
+
+	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime lastAccessed) {
+		return SessionEntity.builder()
+			.withCreated(created)
+			.withLastAccessed(lastAccessed)
+			.withSessionId(sessionId.toString())
+			.withFiles(new ArrayList<>(List.of(
+				FileEntity.builder()
+					.withFileId(fileId.toString())
+					.build())))
+			.build();
 	}
 }
