@@ -110,7 +110,7 @@ class SessionRepositoryTest {
 		"/db/scripts/testdata-junit.sql"
 	})
 	void findAllByMunicipalityIdAndLastAccessedBeforeOrLastAccessedIsNull(OffsetDateTime timestamp, List<String> matchingSessionIds) {
-		final var matches = sessionRepository.findAllByMunicipalityIdAndLastAccessedBeforeOrLastAccessedIsNull(MUNICIPALITY, timestamp);
+		final var matches = sessionRepository.findAllByLastAccessedBeforeOrLastAccessedIsNull(timestamp);
 
 		assertThat(matches).hasSize(matchingSessionIds.size())
 			.extracting(SessionEntity::getSessionId)

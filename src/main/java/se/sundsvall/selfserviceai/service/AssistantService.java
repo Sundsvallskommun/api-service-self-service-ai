@@ -23,6 +23,7 @@ import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
+import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
 import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
 import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
@@ -48,14 +49,14 @@ public class AssistantService {
 	private final FileRepository fileRepository;
 
 	public AssistantService(
-		IntricProperties intricProperties,
-		AgreementIntegration agreementIntegration,
-		InstalledbaseIntegration installedbaseIntegration,
-		IntricIntegration intricIntegration,
-		InvoicesIntegration invoicesIntegration,
-		MeasurementDataIntegration measurementDataIntegration,
-		SessionRepository sessionRepository,
-		FileRepository fileRepository) {
+		final IntricProperties intricProperties,
+		final AgreementIntegration agreementIntegration,
+		final InstalledbaseIntegration installedbaseIntegration,
+		final IntricIntegration intricIntegration,
+		final InvoicesIntegration invoicesIntegration,
+		final MeasurementDataIntegration measurementDataIntegration,
+		final SessionRepository sessionRepository,
+		final FileRepository fileRepository) {
 
 		this.intricProperties = intricProperties;
 		this.agreementIntegration = agreementIntegration;
@@ -131,11 +132,23 @@ public class AssistantService {
 
 	@Async
 	@Transactional
-	public void deleteSession(String municipalityId, UUID sessionId) {
-		final var session = sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
+	public void deleteSessionById(final String municipalityId, final UUID sessionId) {
+		sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
+			.ifPresentOrElse(this::deleteSession,
+				() -> {
+					throw Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId));
+				});
+	}
 
-		session.getFiles().removeIf(file -> {
+	@Transactional
+	public void cleanUpInactiveSessions(final Integer inactivityThreshold) {
+		var timestamp = OffsetDateTime.now().minusMinutes(inactivityThreshold);
+		var expiredSessions = sessionRepository.findAllByLastAccessedBeforeOrLastAccessedIsNull(timestamp);
+		expiredSessions.forEach(this::deleteSession);
+	}
+
+	void deleteSession(final SessionEntity sessionEntity) {
+		sessionEntity.getFiles().removeIf(file -> {
 			final var isRemoved = intricIntegration.deleteFile(file.getFileId());
 			if (isRemoved) {
 				fileRepository.delete(file);
@@ -143,8 +156,10 @@ public class AssistantService {
 			return isRemoved;
 		});
 
-		if (session.getFiles().isEmpty() && intricIntegration.deleteSession(intricProperties.assistantId(), session.getSessionId())) {
-			sessionRepository.delete(session);
+		if (sessionEntity.getFiles().isEmpty() && intricIntegration.deleteSession(intricProperties.assistantId(), sessionEntity.getSessionId())) {
+			sessionRepository.delete(sessionEntity);
+			return;
 		}
+		LOG.info("Could not delete session: {}", sessionEntity.getSessionId());
 	}
 }

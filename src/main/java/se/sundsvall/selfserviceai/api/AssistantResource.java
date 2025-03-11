@@ -111,7 +111,7 @@ class AssistantResource {
 		@Parameter(name = "id", description = "Session id", example = "f5211067-b3c7-4394-b84a-aa3fa65507e3") @PathVariable("id") @ValidUuid final String sessionId) {
 
 		// Handle removal of session (asynchronously)
-		assistantService.deleteSession(municipalityId, UUID.fromString(sessionId));
+		assistantService.deleteSessionById(municipalityId, UUID.fromString(sessionId));
 
 		return status(NO_CONTENT).header(CONTENT_TYPE, ALL_VALUE).build();
 	}

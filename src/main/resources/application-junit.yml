@@ -87,3 +87,11 @@ integration:
       username: override
       password: override
       url: intric-token-url
+
+scheduler:
+  remove-inactive-sessions:
+    inactivity-threshold-in-minutes: 60
+    cron: '-'
+    name: cleanUpInactiveSessions
+    shedlock-lock-at-most-for: PT3M
+    maximum-execution-time: PT3M
