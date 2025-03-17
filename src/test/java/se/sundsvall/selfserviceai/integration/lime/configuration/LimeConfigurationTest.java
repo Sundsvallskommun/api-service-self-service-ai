@@ -1,13 +1,13 @@
 package se.sundsvall.selfserviceai.integration.lime.configuration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import feign.RequestInterceptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -49,12 +49,10 @@ class LimeConfigurationTest {
 
 			final var customizer = configuration.feignBuilderCustomizer(propertiesMock);
 
-			final ArgumentCaptor<RequestInterceptor> requestInterceptorCaptor = ArgumentCaptor.forClass(RequestInterceptor.class);
-
 			verify(propertiesMock).connectTimeoutInSeconds();
 			verify(propertiesMock).readTimeoutInSeconds();
 			verify(feignMultiCustomizerSpy).withRequestTimeoutsInSeconds(1, 2);
-			verify(feignMultiCustomizerSpy).withRequestInterceptor(requestInterceptorCaptor.capture());
+			verify(feignMultiCustomizerSpy).withRequestInterceptor(any(RequestInterceptor.class));
 			verify(feignMultiCustomizerSpy).composeCustomizersToOne();
 
 			assertThat(customizer).isSameAs(feignBuilderCustomizerMock);

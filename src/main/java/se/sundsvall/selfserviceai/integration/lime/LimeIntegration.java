@@ -2,6 +2,7 @@ package se.sundsvall.selfserviceai.integration.lime;
 
 import static se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper.toChatHistoryRequest;
 
+import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 
 public class LimeIntegration {
@@ -12,7 +13,7 @@ public class LimeIntegration {
 		this.limeClient = limeClient;
 	}
 
-	public Object getChatHistory(String sessionId) {
+	public ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse getChatHistory(String sessionId) {
 		return limeClient.getChatHistory(sessionId);
 	}
 
