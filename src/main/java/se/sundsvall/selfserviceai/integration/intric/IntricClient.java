@@ -7,6 +7,7 @@ import static se.sundsvall.selfserviceai.integration.intric.configuration.Intric
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import se.sundsvall.selfserviceai.integration.intric.configuration.IntricConfigu
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
+import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 
 @FeignClient(
 	name = CLIENT_ID,
@@ -35,6 +37,11 @@ interface IntricClient {
 		@PathVariable("sessionId") final String sessionId,
 		@RequestBody final AskAssistant askAssistant);
 
+	@GetMapping("/assistants/{assistantId}/sessions/{sessionId}/")
+	SessionPublic getSession(
+		@PathVariable("assistantId") final String assistantId,
+		@PathVariable("sessionId") final String sessionId);
+
 	@DeleteMapping("/assistants/{assistantId}/sessions/{sessionId}/")
 	void deleteSession(
 		@PathVariable("assistantId") final String assistantId,
@@ -45,5 +52,4 @@ interface IntricClient {
 
 	@DeleteMapping("/files/{id}/")
 	void deleteFile(@PathVariable("id") final String id);
-
 }

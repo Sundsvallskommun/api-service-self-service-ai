@@ -3,7 +3,6 @@ package se.sundsvall.selfserviceai.integration.intric.mapper;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBoolean;
-import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toLocalDate;
 
 import generated.se.sundsvall.agreement.Agreement;
 import java.util.List;
@@ -37,7 +36,7 @@ public class AgreementDecorator {
 			.withBindingRule(agreement.getBindingRule())
 			.withCategory(agreement.getCategory().name())
 			.withDescription(agreement.getDescription())
-			.withFromDate(toLocalDate(agreement.getFromDate()))
+			.withFromDate(agreement.getFromDate())
 			.build();
 	}
 

@@ -54,10 +54,6 @@ integration:
     url: http://localhost:${wiremock.server.port}/agreement
   installedbase:
     url: http://localhost:${wiremock.server.port}/installedbase
-  invoices:
-    url: http://localhost:${wiremock.server.port}/invoices
-  measurement-data:
-    url: http://localhost:${wiremock.server.port}/measurementdata
   intric:
     assistantId: intric-assistant-uuid
     url: http://localhost:${wiremock.server.port}/intric
@@ -65,6 +61,13 @@ integration:
       username: intric-client-id
       password: intric-client-secret
       url: http://localhost:${wiremock.server.port}/intric/token
+  invoices:
+    url: http://localhost:${wiremock.server.port}/invoices
+  lime:
+    apiKey: lime-api-key
+    url: http://localhost:${wiremock.server.port}/lime
+  measurement-data:
+    url: http://localhost:${wiremock.server.port}/measurementdata
 
 scheduler:
   remove-inactive-sessions:

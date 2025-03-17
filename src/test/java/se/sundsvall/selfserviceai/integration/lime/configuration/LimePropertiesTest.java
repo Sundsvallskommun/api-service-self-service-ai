@@ -1,4 +1,4 @@
-package se.sundsvall.selfserviceai.integration.measurementdata.configuration;
+package se.sundsvall.selfserviceai.integration.lime.configuration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -10,14 +10,15 @@ import se.sundsvall.selfserviceai.Application;
 
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("junit")
-class MeasurementDataPropertiesTest {
+class LimePropertiesTest {
 
 	@Autowired
-	private MeasurementDataProperties properties;
+	private LimeProperties properties;
 
 	@Test
 	void testProperties() {
-		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(11);
-		assertThat(properties.readTimeoutInSeconds()).isEqualTo(12);
+		assertThat(properties.apiKey()).isEqualTo("lime-api-key");
+		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(9);
+		assertThat(properties.readTimeoutInSeconds()).isEqualTo(10);
 	}
 }

@@ -4,15 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 class AgreementDecoratorTest {
-
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Test
 	void addAgreements() {
@@ -32,14 +29,14 @@ class AgreementDecoratorTest {
 				assertThat(a.getBindingRule()).isEqualTo(TestFactory.IB1_AGREEMENT1_BINDING_RULE);
 				assertThat(a.getCategory()).isEqualTo(TestFactory.IB1_AGREEMENT1_CATEGORY.name());
 				assertThat(a.getDescription()).isEqualTo(TestFactory.IB1_AGREEMENT1_DESCRIPTION);
-				assertThat(a.getFromDate()).isEqualTo(SDF.format(TestFactory.IB1_AGREEMENT1_START_DATE));
+				assertThat(a.getFromDate()).isEqualTo(TestFactory.IB1_AGREEMENT1_START_DATE);
 			}, a -> {
 				assertThat(a.getAgreementId()).isEqualTo(TestFactory.IB1_AGREEMENT2_ID);
 				assertThat(a.isBound()).isFalse();
 				assertThat(a.getBindingRule()).isNull();
 				assertThat(a.getCategory()).isEqualTo(TestFactory.IB1_AGREEMENT2_CATEGORY.name());
 				assertThat(a.getDescription()).isEqualTo(TestFactory.IB1_AGREEMENT2_DESCRIPTION);
-				assertThat(a.getFromDate()).isEqualTo(SDF.format(TestFactory.IB1_AGREEMENT2_START_DATE));
+				assertThat(a.getFromDate()).isEqualTo(TestFactory.IB1_AGREEMENT2_START_DATE);
 			});
 		}, f -> {
 			assertThat(f.getAgreements()).hasSize(1).satisfiesExactlyInAnyOrder(a -> {
@@ -48,7 +45,7 @@ class AgreementDecoratorTest {
 				assertThat(a.getBindingRule()).isNull();
 				assertThat(a.getCategory()).isEqualTo(TestFactory.IB2_AGREEMENT1_CATEGORY.name());
 				assertThat(a.getDescription()).isEqualTo(TestFactory.IB2_AGREEMENT1_DESCRIPTION);
-				assertThat(a.getFromDate()).isEqualTo(SDF.format(TestFactory.IB2_AGREEMENT1_START_DATE));
+				assertThat(a.getFromDate()).isEqualTo(TestFactory.IB2_AGREEMENT1_START_DATE);
 			});
 		});
 	}

@@ -17,7 +17,7 @@ class InvoicesPropertiesTest {
 
 	@Test
 	void testProperties() {
-		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(5);
-		assertThat(properties.readTimeoutInSeconds()).isEqualTo(6);
+		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(7);
+		assertThat(properties.readTimeoutInSeconds()).isEqualTo(8);
 	}
 }
