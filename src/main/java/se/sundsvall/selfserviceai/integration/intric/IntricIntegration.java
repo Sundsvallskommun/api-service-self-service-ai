@@ -87,7 +87,7 @@ public class IntricIntegration {
 			LOG.debug("Session deleted");
 			return true;
 		} catch (final Exception e) {
-			LOG.warn("Exception when deleting assistant session", e);
+			LOG.error("Exception when deleting assistant session, manual purge might be needed", e);
 			return false;
 		}
 	}
@@ -118,7 +118,7 @@ public class IntricIntegration {
 			LOG.debug("File deleted");
 			return true;
 		} catch (final Exception e) {
-			LOG.warn("Exception when deleting file", e);
+			LOG.error("Exception when deleting file, manual purge might be needed", e);
 			return false;
 		}
 	}

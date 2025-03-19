@@ -8,10 +8,10 @@ import lombok.Builder;
 @Builder(setterPrefix = "with")
 public record FilePublic(
 
-	@JsonProperty UUID id,
-	@JsonProperty String name,
-	@JsonProperty String mimeType,
-	@JsonProperty Integer size,
-	@JsonProperty OffsetDateTime createdAt,
-	@JsonProperty OffsetDateTime updatedAt) {
+	@JsonProperty("id") UUID id,
+	@JsonProperty("name") String name,
+	@JsonProperty("mime_type") String mimeType,
+	@JsonProperty("size") Integer size,
+	@JsonProperty("created_at") OffsetDateTime createdAt,
+	@JsonProperty("updated_at") OffsetDateTime updatedAt) {
 }

@@ -18,15 +18,25 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.UUID;
+import se.sundsvall.selfserviceai.integration.intric.model.Assistant;
+import se.sundsvall.selfserviceai.integration.intric.model.CompletionModel;
+import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
+import se.sundsvall.selfserviceai.integration.intric.model.Message;
+import se.sundsvall.selfserviceai.integration.intric.model.Metadata;
+import se.sundsvall.selfserviceai.integration.intric.model.Reference;
+import se.sundsvall.selfserviceai.integration.intric.model.SessionFeedback;
+import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.intric.model.Tools;
 
 public class TestFactory {
 	private TestFactory() {}
 
-	private static final String NO_MATCH = "NO_MATCH";
+	// Installedbase/Agreement/Measurement/Invoices test-object constants
 
+	private static final String NO_MATCH = "NO_MATCH";
 	public static final String CUSTOMER_NUMBER = "123";
 	public static final String PARTY_ID = "8e46e6be-eaaf-40dd-b5c5-be3dbe858999";
-
 	public static final String IB1_FACILITY_ID = "facilityId1";
 	public static final int IB1_PLACEMENT_ID = 111;
 	public static final String IB1_TYPE = "type1";
@@ -102,7 +112,6 @@ public class TestFactory {
 	public static final String IB1_INVOICE2_TOTAL_AMOUNT = "2999.51";
 	public static final String IB1_INVOICE2_VAT = "0.25";
 	public static final String IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT = "123.65";
-
 	public static final String IB2_FACILITY_ID = "facilityId2";
 	public static final int IB2_PLACEMENT_ID = 222;
 	public static final String IB2_TYPE = "type2";
@@ -126,6 +135,154 @@ public class TestFactory {
 	public static final String IB2_AGREEMENT1_MEASUREMENT1_UNIT = "unit3";
 	public static final OffsetDateTime IB2_AGREEMENT1_MEASUREMENT1_TIMESTAMP = LocalDate.of(2024, 6, 15).atStartOfDay().minusHours(1).atZone(ZoneId.systemDefault()).toOffsetDateTime();
 	public static final BigDecimal IB2_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal("500");
+
+	// Intric test-object constants
+
+	public static final UUID SESSION_ID = UUID.randomUUID();
+	public static final OffsetDateTime SESSION_CREATED = OffsetDateTime.now().minusHours(12);
+	public static final OffsetDateTime SESSION_UPDATED = OffsetDateTime.now().minusHours(11);
+	public static final String SESSION_NAME = "sessionName";
+	public static final UUID MESSAGE_ID = UUID.randomUUID();
+	public static final OffsetDateTime MESSAGE_CREATED = OffsetDateTime.now().minusHours(10);
+	public static final OffsetDateTime MESSAGE_UPDATED = OffsetDateTime.now().minusHours(9);
+	public static final UUID FILE_ID = UUID.randomUUID();
+	public static final OffsetDateTime FILE_CREATED = OffsetDateTime.now().minusHours(8);
+	public static final OffsetDateTime FILE_UPDATED = OffsetDateTime.now().minusHours(7);
+	public static final String FILE_MIME_TYPE = "mimeType";
+	public static final String FILE_NAME = "name";
+	public static final int FILE_SIZE = 123;
+	public static final String ANSWER = "answer";
+	public static final String QUESTION = "question";
+	public static final String TEXT = "text";
+	public static final int VALUE = 456;
+	public static final UUID ASSISTANT_ID = UUID.randomUUID();
+	public static final UUID REFERENCE_ID = UUID.randomUUID();
+	public static final UUID GROUP_ID = UUID.randomUUID();
+	public static final OffsetDateTime REFERENCE_CREATED = OffsetDateTime.now().minusHours(14);
+	public static final OffsetDateTime REFERENCE_UPDATED = OffsetDateTime.now().minusHours(13);
+	public static final UUID WEBSITE_ID = UUID.randomUUID();
+	public static final UUID EMBEDDING_MODEL_ID = UUID.randomUUID();
+	public static final int METADATA_SIZE = 789;
+	public static final String METADATA_TITLE = "metadataTitle";
+	public static final String METADATA_URL = "metadataUrl";
+	public static final String BASE_URL = "baseUrl";
+	public static final OffsetDateTime COMPLETION_MODEL_CREATED = OffsetDateTime.now().minusHours(14);
+	public static final OffsetDateTime COMPLETION_MODEL_UPDATED = OffsetDateTime.now().minusHours(13);
+	public static final UUID COMPLETION_MODEL_ID = UUID.randomUUID();
+	public static final String DEPLOYMENT_NAME = "deploymentName";
+	public static final String DESCRIPTION = "description";
+	public static final String FAMILY = "family";
+	public static final String HF_LINK = "hfLink";
+	public static final String HOSTING = "hosting";
+	public static final Boolean DEPRECATED = true;
+	public static final boolean ORG_DEFAULT = true;
+	public static final boolean ORG_ENABLED = true;
+	public static final String NAME = "name";
+	public static final String NICKNAME = "nickname";
+	public static final Integer NR_BILLION_PARAMETERS = 33;
+	public static final Boolean OPEN_SOURCE = true;
+	public static final String ORG = "org";
+	public static final boolean REASONING = true;
+	public static final String STABILITY = "stability";
+	public static final Integer TOKEN_LIMIT = 686;
+	public static final boolean VISION = true;
+
+	public static SessionPublic createSession() {
+		return SessionPublic.builder()
+			.withCreatedAt(SESSION_CREATED)
+			.withFeedback(createSessionFeedback())
+			.withId(SESSION_ID)
+			.withMessages(List.of(Message.builder()
+				.withAnswer(ANSWER)
+				.withCompletionModel(createCompletionModel())
+				.withCreatedAt(MESSAGE_CREATED)
+				.withFiles(List.of(createFilePublic()))
+				.withId(MESSAGE_ID)
+				.withQuestion(QUESTION)
+				.withReferences(List.of(createReference()))
+				.withTools(createTools())
+				.withUpdatedAt(MESSAGE_UPDATED)
+				.build()))
+			.withName(SESSION_NAME)
+			.withUpdatedAt(SESSION_UPDATED)
+			.build();
+	}
+
+	private static Tools createTools() {
+		return Tools.builder()
+			.withAssistants(List.of(createAssistant()))
+			.build();
+	}
+
+	public static Assistant createAssistant() {
+		return Assistant.builder()
+			.withId(ASSISTANT_ID)
+			.build();
+	}
+
+	public static Reference createReference() {
+		return Reference.builder()
+			.withCreatedAt(REFERENCE_CREATED)
+			.withGroupId(GROUP_ID)
+			.withId(REFERENCE_ID)
+			.withMetadata(createMetadata())
+			.withUpdatedAt(REFERENCE_UPDATED)
+			.withWebsiteId(WEBSITE_ID)
+			.build();
+	}
+
+	private static Metadata createMetadata() {
+		return Metadata.builder()
+			.withEmbeddingModelId(EMBEDDING_MODEL_ID)
+			.withSize(METADATA_SIZE)
+			.withTitle(METADATA_TITLE)
+			.withUrl(METADATA_URL)
+			.build();
+	}
+
+	private static CompletionModel createCompletionModel() {
+		return CompletionModel.builder()
+			.withBaseUrl(BASE_URL)
+			.withCreatedAt(COMPLETION_MODEL_CREATED)
+			.withDeploymentName(DEPLOYMENT_NAME)
+			.withDescription(DESCRIPTION)
+			.withFamily(FAMILY)
+			.withHfLink(HF_LINK)
+			.withHosting(HOSTING)
+			.withId(COMPLETION_MODEL_ID)
+			.withIsDeprecated(DEPRECATED)
+			.withIsOrgDefault(ORG_DEFAULT)
+			.withIsOrgEnabled(ORG_ENABLED)
+			.withName(NAME)
+			.withNickname(NICKNAME)
+			.withNrBillionParameters(NR_BILLION_PARAMETERS)
+			.withOpenSource(OPEN_SOURCE)
+			.withOrg(ORG)
+			.withReasoning(REASONING)
+			.withStability(STABILITY)
+			.withTokenLimit(TOKEN_LIMIT)
+			.withUpdatedAt(COMPLETION_MODEL_UPDATED)
+			.withVision(VISION)
+			.build();
+	}
+
+	public static SessionFeedback createSessionFeedback() {
+		return SessionFeedback.builder()
+			.withText(TEXT)
+			.withValue(VALUE)
+			.build();
+	}
+
+	public static FilePublic createFilePublic() {
+		return FilePublic.builder()
+			.withCreatedAt(FILE_CREATED)
+			.withId(FILE_ID)
+			.withMimeType(FILE_MIME_TYPE)
+			.withName(FILE_NAME)
+			.withSize(FILE_SIZE)
+			.withUpdatedAt(FILE_UPDATED)
+			.build();
+	}
 
 	public static InstalledBaseCustomer createCustomer() {
 		return new InstalledBaseCustomer()

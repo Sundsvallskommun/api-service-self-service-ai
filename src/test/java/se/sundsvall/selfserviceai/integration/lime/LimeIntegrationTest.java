@@ -26,8 +26,7 @@ import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 class LimeIntegrationTest {
 
 	private static final String PARTY_ID = "partyId";
-	private static final boolean IS_ORGANIZATION = true;
-	private static final int CUSTOMER_NUMBER = 121212;
+	private static final String CUSTOMER_NUMBER = "121212";
 	private static final String SESSION_ID = "sessionId";
 
 	@Mock
@@ -51,7 +50,7 @@ class LimeIntegrationTest {
 	void saveHistory() {
 
 		// Arrange and act
-		integration.saveChatHistory(PARTY_ID, IS_ORGANIZATION, CUSTOMER_NUMBER, SessionPublic.builder().build());
+		integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, SessionPublic.builder().build());
 
 		// Assert and verify
 		verify(clientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
@@ -67,7 +66,7 @@ class LimeIntegrationTest {
 			.thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
 
 		// Act
-		final var e = assertThrows(ThrowableProblem.class, () -> integration.saveChatHistory(PARTY_ID, IS_ORGANIZATION, CUSTOMER_NUMBER, session));
+		final var e = assertThrows(ThrowableProblem.class, () -> integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session));
 
 		// Assert and verify
 		verify(clientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));

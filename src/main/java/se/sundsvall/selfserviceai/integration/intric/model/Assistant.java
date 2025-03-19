@@ -5,9 +5,7 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder(setterPrefix = "with")
-public record AskResponse(
+public record Assistant(
 
-	@JsonProperty("session_id") UUID sessionId,
-	@JsonProperty("question") String question,
-	@JsonProperty("answer") String answer) {
+	@JsonProperty("id") UUID id) {
 }

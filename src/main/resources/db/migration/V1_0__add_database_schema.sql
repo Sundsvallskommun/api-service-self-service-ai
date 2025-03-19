@@ -22,9 +22,11 @@
         created datetime(6),
         initialized datetime(6),
         last_accessed datetime(6),
-        initiation_status mediumtext,
+        customer_nbr varchar(255),
         municipality_id varchar(255) not null,
+        party_id varchar(255) not null,
         session_id varchar(255) not null,
+        status mediumtext,
         primary key (session_id)
     ) engine=InnoDB;
 

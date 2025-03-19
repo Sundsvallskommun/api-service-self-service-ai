@@ -53,7 +53,7 @@ class SessionResourceTest {
 			.withPartyId(partyId)
 			.build();
 
-		when(mockService.createSession(MUNICIPALITY_ID)).thenReturn(sessionId);
+		when(mockService.createSession(MUNICIPALITY_ID, partyId)).thenReturn(sessionId);
 
 		// Act
 		final var response = webTestClient.post()
@@ -68,7 +68,7 @@ class SessionResourceTest {
 
 		// Assert and verify
 		assertThat(response).isNotNull().extracting(SessionResponse::getSessionId).isEqualTo(sessionId.toString());
-		verify(mockService).createSession(MUNICIPALITY_ID);
+		verify(mockService).createSession(MUNICIPALITY_ID, partyId);
 		verify(mockService).populateWithInformation(sessionId, body);
 	}
 

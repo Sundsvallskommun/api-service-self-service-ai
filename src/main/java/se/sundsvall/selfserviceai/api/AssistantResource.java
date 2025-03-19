@@ -65,7 +65,7 @@ class AssistantResource {
 		@RequestBody @Valid final SessionRequest request) {
 
 		// Create session
-		final var sessionId = assistantService.createSession(municipalityId);
+		final var sessionId = assistantService.createSession(municipalityId, request.getPartyId());
 
 		// Populate session with information (asynchronously)
 		assistantService.populateWithInformation(sessionId, request);

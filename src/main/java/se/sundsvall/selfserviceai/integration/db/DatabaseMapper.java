@@ -7,9 +7,10 @@ import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 public class DatabaseMapper {
 	private DatabaseMapper() {}
 
-	public static SessionEntity toSessionEntity(String municipalityId, final UUID sessionId) {
+	public static SessionEntity toSessionEntity(String municipalityId, final UUID sessionId, final String partyId) {
 		return SessionEntity.builder()
 			.withMunicipalityId(municipalityId)
+			.withPartyId(partyId)
 			.withSessionId(sessionId.toString())
 			.build();
 	}

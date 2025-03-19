@@ -5,23 +5,15 @@
 				"equalTo": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDEwNzg1MzQsImV4cCI6MTc0MTA4MjEzNCwiYXVkIjoid3d3Lml0dGVzdC5jb20iLCJzdWIiOiJpdHRlc3RAbm9yZXBseS5jb20ifQ.HQXOaHq4VNHpGxyfYKYOsSxpvScMgvqqhd702MlJ0YM"
 			}
 		},
-		"method": "POST",
-		"bodyPatterns": [
-			{
-				"equalToJson": {
-					"question": "Påbörjar session för party id '5a6c3e4e-c320-4006-b448-1fd4121df828'",
-					"files": []
-				}
-			}
-		],
-		"urlPath": "/intric/assistants/intric-assistant-uuid/sessions/"
+		"method": "GET",
+		"urlPath": "/intric/assistants/intric-assistant-uuid/sessions/158cfabe-1c3d-433c-b71f-1c909beaa291/"
 	},
 	"response": {
 		"headers": {
 			"Content-Type": "application/json"
 		},
 		"status": 200,
-		"bodyFileName": "test01_createSession/responses/api-intric-create-assistant-session-response.json"
+		"bodyFileName": "test06_deleteSession/responses/api-intric-get-assistant-session-response.json"
 	},
-	"name": "api-intric-create-assistant-session"
+	"name": "api-intric-get-assistant-session"
 }
