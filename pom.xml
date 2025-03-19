@@ -104,31 +104,6 @@
 						</configOptions>
 					</configuration>
 				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>se.sundsvall.dept44</groupId>
-										<artifactId>dept44-formatting-plugin</artifactId>
-										<versionRange>[6.0.7,)</versionRange>
-										<goals>
-											<goal>check</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -158,9 +133,7 @@
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<configOptions>
-								<!-- Cannot use java8 since Employee API doesn't
-								return dates on correct format -->
-								<dateLibrary>legacy</dateLibrary>
+								<dateLibrary>java8</dateLibrary>
 								<generatePom>false</generatePom>
 								<interfaceOnly>true</interfaceOnly>
 								<sourceFolder>models</sourceFolder>
@@ -184,9 +157,7 @@
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<configOptions>
-								<!-- Cannot use java8 since Employee API doesn't
-								return dates on correct format -->
-								<dateLibrary>legacy</dateLibrary>
+								<dateLibrary>java8</dateLibrary>
 								<generatePom>false</generatePom>
 								<interfaceOnly>true</interfaceOnly>
 								<sourceFolder>models</sourceFolder>
@@ -210,13 +181,35 @@
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<configOptions>
-								<!-- Cannot use java8 since Employee API doesn't
-								return dates on correct format -->
-								<dateLibrary>legacy</dateLibrary>
+								<dateLibrary>java8</dateLibrary>
 								<generatePom>false</generatePom>
 								<interfaceOnly>true</interfaceOnly>
 								<sourceFolder>models</sourceFolder>
 								<modelPackage>generated.se.sundsvall.invoices</modelPackage>
+								<openApiNullable>false</openApiNullable>
+								<useBeanValidation>false</useBeanValidation>
+								<useSwaggerAnnotations>false</useSwaggerAnnotations>
+								<useSpringBoot3>true</useSpringBoot3>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>lime</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/contracts/lime/lime.yml</inputSpec>
+							<output>${generated-sources-path}</output>
+							<generatorName>spring</generatorName>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<configOptions>
+								<dateLibrary>java8</dateLibrary>
+								<generatePom>false</generatePom>
+								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>models</sourceFolder>
+								<modelPackage>generated.se.sundsvall.lime</modelPackage>
 								<openApiNullable>false</openApiNullable>
 								<useBeanValidation>false</useBeanValidation>
 								<useSwaggerAnnotations>false</useSwaggerAnnotations>
@@ -236,9 +229,7 @@
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<configOptions>
-								<!-- Cannot use java8 since Employee API doesn't
-								return dates on correct format -->
-								<dateLibrary>legacy</dateLibrary>
+								<dateLibrary>java8</dateLibrary>
 								<generatePom>false</generatePom>
 								<interfaceOnly>true</interfaceOnly>
 								<sourceFolder>models</sourceFolder>

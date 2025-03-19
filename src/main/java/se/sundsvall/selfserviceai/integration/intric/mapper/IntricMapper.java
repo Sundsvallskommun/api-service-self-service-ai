@@ -2,7 +2,6 @@ package se.sundsvall.selfserviceai.integration.intric.mapper;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
-import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toLocalDate;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
@@ -102,9 +101,9 @@ public class IntricMapper {
 			.withType(item.getType())
 			.withFacilityId(item.getFacilityId())
 			.withPlacementId(item.getPlacementId())
-			.withCommitmentStartDate(toLocalDate(item.getFacilityCommitmentStartDate()))
-			.withCommitmentEndDate(toLocalDate(item.getFacilityCommitmentEndDate()))
-			.withLastModifiedDate(toLocalDate(item.getLastModifiedDate()))
+			.withCommitmentStartDate(item.getFacilityCommitmentStartDate())
+			.withCommitmentEndDate(item.getFacilityCommitmentEndDate())
+			.withLastModifiedDate(item.getLastModifiedDate())
 			.withInformation(toInformation(item.getMetaData()))
 			.build();
 	}

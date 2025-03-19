@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
+import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
 
 @Component
@@ -58,6 +59,18 @@ public class IntricIntegration {
 			LOG.warn("Exception when interacting with assistant", e);
 			return Optional.empty();
 		}
+	}
+
+	/**
+	 * Get complete history of session interaction
+	 *
+	 * @param  assistantId The ID of the assistant to get history for
+	 * @param  sessionId   The ID of the session to get history for
+	 * @return             Complete session history
+	 */
+	public SessionPublic getSession(final String assistantId, final String sessionId) {
+		LOG.debug("Retrieving history from assistant session");
+		return client.getSession(assistantId, sessionId);
 	}
 
 	/**

@@ -6,7 +6,6 @@ import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,8 +14,6 @@ import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 class IntricMapperTest {
-
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Test
 	void toAskAssistantWithoutFiles() {
@@ -100,10 +97,10 @@ class IntricMapperTest {
 		assertThat(f.getAddress().getCity()).isEqualTo(TestFactory.IB1_CITY);
 		assertThat(f.getAddress().getPostalCode()).isEqualTo(TestFactory.IB1_POSTAL_CODE);
 		assertThat(f.getAddress().getStreet()).isEqualTo(TestFactory.IB1_STREET);
-		assertThat(f.getCommitmentEndDate()).isEqualTo(SDF.format(TestFactory.IB1_END_DATE));
-		assertThat(f.getCommitmentStartDate()).isEqualTo(SDF.format(TestFactory.IB1_START_DATE));
+		assertThat(f.getCommitmentEndDate()).isEqualTo(TestFactory.IB1_END_DATE);
+		assertThat(f.getCommitmentStartDate()).isEqualTo(TestFactory.IB1_START_DATE);
 		assertThat(f.getFacilityId()).isEqualTo(TestFactory.IB1_FACILITY_ID);
-		assertThat(f.getLastModifiedDate()).isEqualTo(SDF.format(TestFactory.IB1_LAST_MODIFIED_DATE));
+		assertThat(f.getLastModifiedDate()).isEqualTo(TestFactory.IB1_LAST_MODIFIED_DATE);
 		assertThat(f.getPlacementId()).isEqualTo(TestFactory.IB1_PLACEMENT_ID);
 		assertThat(f.getType()).isEqualTo(TestFactory.IB1_TYPE);
 		assertThat(f.getInformation()).hasSize(1).satisfiesExactly(m -> {
@@ -120,9 +117,9 @@ class IntricMapperTest {
 		assertThat(f.getAddress().getPostalCode()).isEqualTo(TestFactory.IB2_POSTAL_CODE);
 		assertThat(f.getAddress().getStreet()).isEqualTo(TestFactory.IB2_STREET);
 		assertThat(f.getCommitmentEndDate()).isNull();
-		assertThat(f.getCommitmentStartDate()).isEqualTo(SDF.format(TestFactory.IB2_START_DATE));
+		assertThat(f.getCommitmentStartDate()).isEqualTo(TestFactory.IB2_START_DATE);
 		assertThat(f.getFacilityId()).isEqualTo(TestFactory.IB2_FACILITY_ID);
-		assertThat(f.getLastModifiedDate()).isEqualTo(SDF.format(TestFactory.IB2_LAST_MODIFIED_DATE));
+		assertThat(f.getLastModifiedDate()).isEqualTo(TestFactory.IB2_LAST_MODIFIED_DATE);
 		assertThat(f.getPlacementId()).isEqualTo(TestFactory.IB2_PLACEMENT_ID);
 		assertThat(f.getType()).isEqualTo(TestFactory.IB2_TYPE);
 		assertThat(f.getInformation()).hasSize(1).satisfiesExactly(m -> {

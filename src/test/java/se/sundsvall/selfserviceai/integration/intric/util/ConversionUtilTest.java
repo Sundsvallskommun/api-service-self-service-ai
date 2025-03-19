@@ -1,15 +1,8 @@
 package se.sundsvall.selfserviceai.integration.intric.util;
 
-import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,34 +18,6 @@ class ConversionUtilTest {
 	@Test
 	void toBooleanFromNull() {
 		assertThat(ConversionUtil.toBoolean(null)).isFalse();
-	}
-
-	@Test
-	void toLocalDate() {
-		final var cal = Calendar.getInstance();
-		cal.set(1970, 0, 1); // Calendar has 0-based monthvalues
-
-		assertThat(ConversionUtil.toLocalDate(cal.getTime())).isEqualTo(LocalDate.of(1970, 1, 1));
-		assertThat(ConversionUtil.toLocalDate(new Date())).isEqualTo(LocalDate.now());
-	}
-
-	@Test
-	void toLocalDateFromNull() {
-		assertThat(ConversionUtil.toLocalDate(null)).isNull();
-	}
-
-	@Test
-	void toOffsetDateTime() {
-		final var cal = Calendar.getInstance();
-		cal.set(1970, 0, 1); // Calendar has 0-based monthvalues
-
-		assertThat(ConversionUtil.toOffsetDateTime(cal.getTime())).isCloseTo(OffsetDateTime.ofInstant(cal.toInstant(), systemDefault()), within(50, MILLIS));
-		assertThat(ConversionUtil.toOffsetDateTime(new Date())).isCloseTo(OffsetDateTime.now(), within(50, MILLIS));
-	}
-
-	@Test
-	void toOffsetDateTimeFromNull() {
-		assertThat(ConversionUtil.toOffsetDateTime(null)).isNull();
 	}
 
 	@ParameterizedTest

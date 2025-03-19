@@ -19,8 +19,8 @@ class IntricPropertiesTest {
 	void testProperties() {
 		assertThat(properties.assistantId()).isEqualTo("intric-assistant-uuid");
 		assertThat(properties.url()).isEqualTo("intric-integration-url");
-		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(9);
-		assertThat(properties.readTimeoutInSeconds()).isEqualTo(10);
+		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(5);
+		assertThat(properties.readTimeoutInSeconds()).isEqualTo(6);
 		assertThat(properties.oauth2()).satisfies(oauth -> {
 			assertThat(oauth.url()).isEqualTo("intric-token-url");
 			assertThat(oauth.username()).isEqualTo("override");

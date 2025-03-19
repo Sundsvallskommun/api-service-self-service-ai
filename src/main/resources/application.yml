@@ -53,10 +53,13 @@ integration:
   invoices:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
-  measurement-data:
+  intric:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
-  intric:
+  lime:
+    connect-timeout-in-seconds: 5
+    read-timeout-in-seconds: 60
+  measurement-data:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
     

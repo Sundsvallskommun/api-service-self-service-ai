@@ -4,7 +4,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBigDecimal;
 import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBoolean;
-import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toLocalDate;
 
 import generated.se.sundsvall.invoices.Address;
 import generated.se.sundsvall.invoices.Invoice;
@@ -40,12 +39,12 @@ public class InvoiceDecorator {
 			.withAmountVatIncluded(toBigDecimal(invoice.getAmountVatIncluded(), DECIMAL_POINTS))
 			.withCurrency(invoice.getCurrency())
 			.withDescription(invoice.getInvoiceDescription())
-			.withDueDate(toLocalDate(invoice.getDueDate()))
+			.withDueDate(invoice.getDueDate())
 			.withInvoiceAddress(toAddress(invoice.getInvoiceAddress()))
 			.withInvoiceName(invoice.getInvoiceName())
 			.withInvoiceNumber(invoice.getInvoiceNumber())
 			.withInvoiceType(invoice.getInvoiceType().name())
-			.withInvoicingDate(toLocalDate(invoice.getInvoiceDate()))
+			.withInvoicingDate(invoice.getInvoiceDate())
 			.withOcrNumber(invoice.getOcrNumber())
 			.withOrganizationNumber(invoice.getOrganizationNumber())
 			.withPdfAvailable(toBoolean(invoice.getPdfAvailable()))

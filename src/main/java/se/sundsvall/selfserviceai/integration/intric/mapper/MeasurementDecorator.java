@@ -2,7 +2,6 @@ package se.sundsvall.selfserviceai.integration.intric.mapper;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
-import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toOffsetDateTime;
 
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementPoints;
@@ -51,7 +50,7 @@ public class MeasurementDecorator {
 		return MeasurementData.builder()
 			.withCategory(data.getCategory().name())
 			.withMeasurementType(serie.getMeasurementType())
-			.withTimestamp(toOffsetDateTime(measurementPoint.getTimestamp()))
+			.withTimestamp(measurementPoint.getTimestamp())
 			.withUnit(serie.getUnit())
 			.withValue(measurementPoint.getValue())
 			.build();

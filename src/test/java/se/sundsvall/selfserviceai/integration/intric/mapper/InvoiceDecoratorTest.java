@@ -5,7 +5,6 @@ import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 import static se.sundsvall.selfserviceai.TestFactory.createInvoices;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
@@ -13,8 +12,6 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
 
 class InvoiceDecoratorTest {
-
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Test
 	void addInvoices() {
@@ -43,12 +40,12 @@ class InvoiceDecoratorTest {
 		assertThat(i.getAmountVatIncluded()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_AMOUNT_VAT_INCLUDED));
 		assertThat(i.getCurrency()).isEqualTo(TestFactory.IB1_INVOICE2_CURRENCY);
 		assertThat(i.getDescription()).isEqualTo(TestFactory.IB1_INVOICE2_DESCRIPTION);
-		assertThat(i.getDueDate()).isEqualTo(SDF.format(TestFactory.IB1_INVOICE2_DUE_DATE));
+		assertThat(i.getDueDate()).isEqualTo(TestFactory.IB1_INVOICE2_DUE_DATE);
 		assertThat(i.getInvoiceAddress()).isNull();
 		assertThat(i.getInvoiceName()).isEqualTo(TestFactory.IB1_INVOICE2_NAME);
 		assertThat(i.getInvoiceNumber()).isEqualTo(TestFactory.IB1_INVOICE2_NUMBER);
 		assertThat(i.getInvoiceType()).isEqualTo(TestFactory.IB1_INVOICE2_TYPE.name());
-		assertThat(i.getInvoicingDate()).isEqualTo(SDF.format(TestFactory.IB1_INVOICE2_DATE));
+		assertThat(i.getInvoicingDate()).isEqualTo(TestFactory.IB1_INVOICE2_DATE);
 		assertThat(i.getOcrNumber()).isEqualTo(TestFactory.IB1_INVOICE2_OCR_NUMBER);
 		assertThat(i.getOrganizationNumber()).isEqualTo(TestFactory.IB1_INVOICE2_ORGANIZATION_NUMBER);
 		assertThat(i.getRounding()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_ROUNDING));
@@ -63,7 +60,7 @@ class InvoiceDecoratorTest {
 		assertThat(i.getAmountVatIncluded()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_AMOUNT_VAT_INCLUDED));
 		assertThat(i.getCurrency()).isEqualTo(TestFactory.IB1_INVOICE1_CURRENCY);
 		assertThat(i.getDescription()).isEqualTo(TestFactory.IB1_INVOICE1_DESCRIPTION);
-		assertThat(i.getDueDate()).isEqualTo(SDF.format(TestFactory.IB1_INVOICE1_DUE_DATE));
+		assertThat(i.getDueDate()).isEqualTo(TestFactory.IB1_INVOICE1_DUE_DATE);
 		assertThat(i.getInvoiceAddress()).isNotNull().satisfies(a -> {
 			assertThat(a.getCareOf()).isEqualTo(TestFactory.IB1_INVOICE1_CARE_OF);
 			assertThat(a.getCity()).isEqualTo(TestFactory.IB1_INVOICE1_CITY);
@@ -73,7 +70,7 @@ class InvoiceDecoratorTest {
 		assertThat(i.getInvoiceName()).isEqualTo(TestFactory.IB1_INVOICE1_NAME);
 		assertThat(i.getInvoiceNumber()).isEqualTo(TestFactory.IB1_INVOICE1_NUMBER);
 		assertThat(i.getInvoiceType()).isEqualTo(TestFactory.IB1_INVOICE1_TYPE.name());
-		assertThat(i.getInvoicingDate()).isEqualTo(SDF.format(TestFactory.IB1_INVOICE1_DATE));
+		assertThat(i.getInvoicingDate()).isEqualTo(TestFactory.IB1_INVOICE1_DATE);
 		assertThat(i.getOcrNumber()).isEqualTo(TestFactory.IB1_INVOICE1_OCR_NUMBER);
 		assertThat(i.getOrganizationNumber()).isEqualTo(TestFactory.IB1_INVOICE1_ORGANIZATION_NUMBER);
 		assertThat(i.getRounding()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_ROUNDING));

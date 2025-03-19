@@ -70,23 +70,28 @@ integration:
     connect-timeout-in-seconds: 3
     read-timeout-in-seconds: 4
     url: installedbase-integration-url
-  invoices:
+  intric:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 6
-    url: invoices-integration-url
-  measurement-data:
-    connect-timeout-in-seconds: 7
-    read-timeout-in-seconds: 8
-    url: measurement-data-integration-url
-  intric:
-    connect-timeout-in-seconds: 9
-    read-timeout-in-seconds: 10
     assistantId: intric-assistant-uuid
     url: intric-integration-url
     oauth2:
       username: override
       password: override
       url: intric-token-url
+  invoices:
+    connect-timeout-in-seconds: 7
+    read-timeout-in-seconds: 8
+    url: invoices-integration-url
+  lime:
+    connect-timeout-in-seconds: 9
+    read-timeout-in-seconds: 10
+    apiKey: lime-api-key
+    url: lime-integration-url
+  measurement-data:
+    connect-timeout-in-seconds: 11
+    read-timeout-in-seconds: 12
+    url: measurement-data-integration-url
 
 scheduler:
   remove-inactive-sessions:
