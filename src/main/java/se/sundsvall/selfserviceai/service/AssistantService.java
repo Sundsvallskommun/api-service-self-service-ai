@@ -1,6 +1,7 @@
 package se.sundsvall.selfserviceai.service;
 
 import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
@@ -140,7 +141,9 @@ public class AssistantService {
 
 	@Async
 	@Transactional
-	public void deleteSessionById(final String municipalityId, final UUID sessionId) {
+	public void deleteSessionById(final String municipalityId, final UUID sessionId, UUID requestId) {
+		RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
+
 		sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
 			.ifPresentOrElse(entity -> Stream.of(entity)
 				.map(this::saveChatHistory)

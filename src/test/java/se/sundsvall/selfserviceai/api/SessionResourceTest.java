@@ -1,6 +1,8 @@
 package se.sundsvall.selfserviceai.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -159,6 +161,6 @@ class SessionResourceTest {
 			.expectBody().isEmpty();
 
 		// Assert and verify
-		verify(mockService).deleteSessionById(MUNICIPALITY_ID, sessionId);
+		verify(mockService).deleteSessionById(eq(MUNICIPALITY_ID), eq(sessionId), any(UUID.class));
 	}
 }

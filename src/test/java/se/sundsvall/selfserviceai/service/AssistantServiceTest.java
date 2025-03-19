@@ -43,6 +43,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
@@ -103,6 +104,9 @@ class AssistantServiceTest {
 	@Mock
 	private FileRepository fileRepositoryMock;
 
+	@Spy
+	private RequestId requestIdSpy;
+
 	@InjectMocks
 	private AssistantService assistantService;
 
@@ -117,6 +121,7 @@ class AssistantServiceTest {
 
 	@AfterEach
 	void verifyNoMoreMockInterations() {
+		RequestId.reset();
 		verifyNoMoreInteractions(
 			intricPropertiesMock,
 			intricIntegrationMock,
@@ -505,7 +510,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -534,7 +539,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -547,7 +552,7 @@ class AssistantServiceTest {
 	@Test
 	void deleteSessionWhenHistoryNotSuccessfullySaved() {
 		// Arrange
-		RequestId.init();
+		final var requestId = UUID.randomUUID();
 		final var sessionEntity = SessionEntity.builder()
 			.withCustomerNbr(CUSTOMER_NBR)
 			.withSessionId(SESSION_ID.toString())
@@ -563,20 +568,20 @@ class AssistantServiceTest {
 		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(intricPropertiesMock).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
 
-		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to save chat history, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to save chat history, filter logs on log id '%s' for more information".formatted(requestId));
 	}
 
 	@Test
 	void deleteSessionWhenFilesNotSuccessfullyDeleted() {
 		// Arrange
-		RequestId.init();
+		final var requestId = UUID.randomUUID();
 		final var fileId = UUID.randomUUID();
 		final var fileEntity = FileEntity.builder()
 			.withFileId(fileId.toString())
@@ -595,7 +600,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -605,13 +610,13 @@ class AssistantServiceTest {
 		verify(fileRepositoryMock, never()).delete(fileEntity);
 		verify(sessionRepositoryMock, never()).delete(sessionEntity);
 
-		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(requestId));
 	}
 
 	@Test
 	void deleteSessionWhenSessionNotSuccessfullyDeleted() {
 		// Arrange
-		RequestId.init();
+		final var requestId = UUID.randomUUID();
 		final var sessionEntity = SessionEntity.builder()
 			.withCustomerNbr(CUSTOMER_NBR)
 			.withSessionId(SESSION_ID.toString())
@@ -625,7 +630,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -635,19 +640,20 @@ class AssistantServiceTest {
 		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock, never()).delete(sessionEntity);
 
-		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(requestId));
 	}
 
 	@Test
 	void deleteSessionForNonExistingSession() {
 		// Arrange
+		final var requestId = UUID.randomUUID();
 		SessionEntity.builder()
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
 			.build();
 
 		// Act
-		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID));
+		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId));
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
