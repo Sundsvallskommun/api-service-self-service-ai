@@ -30,6 +30,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomUtils;
@@ -50,6 +51,7 @@ import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
+import se.sundsvall.selfserviceai.api.model.SessionResponse;
 import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
@@ -70,12 +72,13 @@ import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataInt
 class AssistantServiceTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
-	private static final String ASSISTANT_ID = "assistantId";
-	private static final UUID SESSION_ID = UUID.randomUUID();
+	private static final String ASSISTANT_ID = UUID.randomUUID().toString();
 	private static final String PARTY_ID = UUID.randomUUID().toString();
+	private static final UUID SESSION_ID = UUID.randomUUID();
 	private static final String CUSTOMER_NBR = "customerNbr";
 	private static final String FACILITY_ID = UUID.randomUUID().toString();
 	private static final String CUSTOMER_ENGAGEMENT_ORG_ID = "customerEngagementOrgId";
+	private static final Set<String> CUSTOMER_ENGAGEMENT_ORG_IDS = Set.of(CUSTOMER_ENGAGEMENT_ORG_ID);
 
 	@Mock
 	private IntricProperties intricPropertiesMock;
@@ -146,11 +149,17 @@ class AssistantServiceTest {
 		final var response = assistantService.createSession(MUNICIPALITY_ID, PARTY_ID);
 
 		// Assert and verify
-		verify(intricPropertiesMock).assistantId();
+		verify(intricPropertiesMock, times(2)).assistantId();
 		verify(intricIntegrationMock).askAssistant(ASSISTANT_ID, "Påbörjar session för party id '%s'".formatted(PARTY_ID));
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
-		assertThat(response).isEqualTo(SESSION_ID);
+		assertThat(response).isNotNull()
+			.extracting(
+				SessionResponse::getAssistantId,
+				SessionResponse::getSessionId)
+			.containsExactly(
+				ASSISTANT_ID,
+				SESSION_ID.toString());
 		assertThat(sessionEntityCaptor.getValue().getCreated()).isNull();
 		assertThat(sessionEntityCaptor.getValue().getFiles()).isEmpty();
 		assertThat(sessionEntityCaptor.getValue().getInitialized()).isNull();
@@ -214,7 +223,7 @@ class AssistantServiceTest {
 			.partyId(PARTY_ID);
 		final var sessionRequest = SessionRequest.builder()
 			.withPartyId(PARTY_ID)
-			.withCustomerEngagementOrgId(CUSTOMER_ENGAGEMENT_ORG_ID)
+			.withCustomerEngagementOrgIds(CUSTOMER_ENGAGEMENT_ORG_IDS)
 			.build();
 		final var sessionEntity = SessionEntity.builder()
 			.withMunicipalityId(MUNICIPALITY_ID)
@@ -289,7 +298,7 @@ class AssistantServiceTest {
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.build();
 		final var sessionRequest = SessionRequest.builder()
-			.withCustomerEngagementOrgId(CUSTOMER_ENGAGEMENT_ORG_ID)
+			.withCustomerEngagementOrgIds(CUSTOMER_ENGAGEMENT_ORG_IDS)
 			.withPartyId(PARTY_ID)
 			.build();
 
@@ -320,7 +329,7 @@ class AssistantServiceTest {
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.build();
 		final var sessionRequest = SessionRequest.builder()
-			.withCustomerEngagementOrgId(CUSTOMER_ENGAGEMENT_ORG_ID)
+			.withCustomerEngagementOrgIds(CUSTOMER_ENGAGEMENT_ORG_IDS)
 			.withPartyId(PARTY_ID)
 			.build();
 

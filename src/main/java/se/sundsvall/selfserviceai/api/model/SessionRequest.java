@@ -2,7 +2,11 @@ package se.sundsvall.selfserviceai.api.model;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +26,8 @@ public class SessionRequest {
 	@ValidUuid
 	private String partyId;
 
-	@ValidOrganizationNumber
-	@Schema(description = "Organization id to the counterparty for the customer's engagements that will form the basis of the assistant's answers", example = "5566123456", requiredMode = REQUIRED)
-	private String customerEngagementOrgId;
+	@ArraySchema(schema = @Schema(description = "Organization id specifying the counterparty to fetch customer's engagements for", example = "5566123456"), minItems = 1)
+	@NotNull
+	@Size(min = 1, message = "list must contain at least 1 entry")
+	private Set<@ValidOrganizationNumber(message = "list members must match the regular expression ^([1235789][\\d][2-9]\\d{7})$") String> customerEngagementOrgIds;
 }

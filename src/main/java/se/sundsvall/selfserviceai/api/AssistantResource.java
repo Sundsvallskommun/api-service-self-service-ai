@@ -66,13 +66,13 @@ class AssistantResource {
 		@RequestBody @Valid final SessionRequest request) {
 
 		// Create session
-		final var sessionId = assistantService.createSession(municipalityId, request.getPartyId());
+		final var sessionResponse = assistantService.createSession(municipalityId, request.getPartyId());
 
 		// Populate session with information (asynchronously)
-		assistantService.populateWithInformation(sessionId, request);
+		assistantService.populateWithInformation(UUID.fromString(sessionResponse.getSessionId()), request);
 
 		// Return created with body (as location does not fit here)
-		return status(CREATED).body(SessionResponse.builder().withSessionId(sessionId.toString()).build());
+		return status(CREATED).body(sessionResponse);
 	}
 
 	@Operation(summary = "Ask if assistant is ready for interaction", description = "Resource for checking if the assistant is ready to answer questions (i.e. has been fully initialized with data)", responses = {

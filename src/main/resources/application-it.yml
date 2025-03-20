@@ -55,7 +55,7 @@ integration:
   installedbase:
     url: http://localhost:${wiremock.server.port}/installedbase
   intric:
-    assistantId: intric-assistant-uuid
+    assistantId: 3e951939-18ea-402d-9d01-23d977624ad2
     url: http://localhost:${wiremock.server.port}/intric
     oauth2:
       username: intric-client-id

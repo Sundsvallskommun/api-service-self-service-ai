@@ -1,4 +1,6 @@
 {
 	"partyId": "5a6c3e4e-c320-4006-b448-1fd4121df828",
-	"customerEngagementOrgId": "5566123456"
+	"customerEngagementOrgIds": [
+		"5566123456"
+	]
 }

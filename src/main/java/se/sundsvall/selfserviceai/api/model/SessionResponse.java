@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Model for session initiation response")
 public class SessionResponse {
 
+	@Schema(description = "The id of the assistant", example = "becd153d-e1d9-4a4a-9fcf-eb8a157d3f1f")
+	private String assistantId;
+
 	@Schema(description = "The id of the session to be used when interacting with the assistant", example = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
 	private String sessionId;
 }

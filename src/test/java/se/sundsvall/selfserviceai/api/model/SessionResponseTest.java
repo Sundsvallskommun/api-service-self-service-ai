@@ -25,13 +25,16 @@ class SessionResponseTest {
 
 	@Test
 	void testBuilderMethods() {
+		final var assistantId = "assistantId";
 		final var sessionId = "sessionId";
 
 		final var bean = SessionResponse.builder()
+			.withAssistantId(assistantId)
 			.withSessionId(sessionId)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getAssistantId()).isEqualTo(assistantId);
 		assertThat(bean.getSessionId()).isEqualTo(sessionId);
 	}
 
