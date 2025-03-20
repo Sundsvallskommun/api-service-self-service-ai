@@ -7,8 +7,8 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInstalledBase;
-import static se.sundsvall.selfserviceai.service.AssistantMapper.toQuestionResponse;
-import static se.sundsvall.selfserviceai.service.mapper.ServiceMapper.toSessionResponse;
+import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
+import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -39,6 +39,7 @@ import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
+import se.sundsvall.selfserviceai.service.mapper.AssistantMapper;
 
 @Service
 public class AssistantService {

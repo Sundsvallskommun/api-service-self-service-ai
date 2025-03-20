@@ -1,4 +1,4 @@
 {
 	"assistantId": "3e951939-18ea-402d-9d01-23d977624ad2",
-	"sessionId": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
+	"sessionId": "33b52702-d27b-4737-948b-29d6f51fdc29"
 }
