@@ -38,6 +38,12 @@ public class SessionEntity {
 	@Column(name = "municipality_id", nullable = false)
 	private String municipalityId;
 
+	@Column(name = "party_id", nullable = false)
+	private String partyId;
+
+	@Column(name = "customer_nbr")
+	private String customerNbr;
+
 	@Column(name = "created")
 	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime created;
@@ -50,8 +56,8 @@ public class SessionEntity {
 	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime lastAccessed;
 
-	@Column(name = "initiation_status", columnDefinition = "mediumtext")
-	private String initiationStatus;
+	@Column(name = "status", columnDefinition = "mediumtext")
+	private String status;
 
 	@Builder.Default
 	@OneToMany

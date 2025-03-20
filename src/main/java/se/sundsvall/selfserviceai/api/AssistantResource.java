@@ -34,6 +34,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
+import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
@@ -65,7 +66,7 @@ class AssistantResource {
 		@RequestBody @Valid final SessionRequest request) {
 
 		// Create session
-		final var sessionId = assistantService.createSession(municipalityId);
+		final var sessionId = assistantService.createSession(municipalityId, request.getPartyId());
 
 		// Populate session with information (asynchronously)
 		assistantService.populateWithInformation(sessionId, request);
@@ -111,7 +112,7 @@ class AssistantResource {
 		@Parameter(name = "id", description = "Session id", example = "f5211067-b3c7-4394-b84a-aa3fa65507e3") @PathVariable("id") @ValidUuid final String sessionId) {
 
 		// Handle removal of session (asynchronously)
-		assistantService.deleteSessionById(municipalityId, UUID.fromString(sessionId));
+		assistantService.deleteSessionById(municipalityId, UUID.fromString(sessionId), UUID.fromString(RequestId.get()));
 
 		return status(NO_CONTENT).header(CONTENT_TYPE, ALL_VALUE).build();
 	}

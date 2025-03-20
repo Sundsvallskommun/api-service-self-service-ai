@@ -19,8 +19,8 @@ public class LimeIntegration {
 		return limeClient.getChatHistory(sessionId);
 	}
 
-	public void saveChatHistory(String partyId, boolean isOrganization, int customerNbr, SessionPublic session) {
-		limeClient.saveChatHistory(toChatHistoryRequest(partyId, isOrganization, customerNbr, session));
+	public void saveChatHistory(String partyId, String customerNbr, SessionPublic session) {
+		limeClient.saveChatHistory(toChatHistoryRequest(partyId, customerNbr, session));
 	}
 
 }

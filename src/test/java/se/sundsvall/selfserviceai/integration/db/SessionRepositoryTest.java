@@ -43,6 +43,7 @@ class SessionRepositoryTest {
 		final var session = SessionEntity.builder()
 			.withMunicipalityId(MUNICIPALITY)
 			.withSessionId(sessionId)
+			.withPartyId(UUID.randomUUID().toString())
 			.build();
 
 		assertThat(sessionRepository.existsById(sessionId)).isFalse();
@@ -74,7 +75,9 @@ class SessionRepositoryTest {
 
 		assertThat(session.getCreated()).isEqualTo(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 11, 0, 0), OffsetDateTime.now(systemDefault()).getOffset()));
 		assertThat(session.getInitialized()).isEqualTo(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 11, 0, 30), OffsetDateTime.now(systemDefault()).getOffset()));
-		assertThat(session.getInitiationStatus()).isEqualTo("Successfully initialized");
+		assertThat(session.getStatus()).isEqualTo("Successfully initialized");
+		assertThat(session.getPartyId()).isEqualTo("e7d536c8-86a7-4a65-98ce-e700e65e31d7");
+		assertThat(session.getCustomerNbr()).isEqualTo("16324");
 		assertThat(session.getLastAccessed()).isNull();
 		assertThat(session.getMunicipalityId()).isEqualTo(MUNICIPALITY);
 		assertThat(session.getFiles()).hasSize(2)
@@ -134,11 +137,11 @@ class SessionRepositoryTest {
 		final var file = fileRepository.save(FileEntity.builder().withFileId(UUID.randomUUID().toString()).build());
 
 		assertThat(session.getInitialized()).isNull();
-		assertThat(session.getInitiationStatus()).isNull();
+		assertThat(session.getStatus()).isNull();
 		assertThat(session.getFiles()).isEmpty();
 
 		session.setInitialized(OffsetDateTime.now());
-		session.setInitiationStatus("Successfully initialized");
+		session.setStatus("Successfully initialized");
 		session.getFiles().add(file);
 
 		sessionRepository.save(session);

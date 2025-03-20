@@ -1,6 +1,7 @@
 package se.sundsvall.selfserviceai.service;
 
 import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
@@ -12,12 +13,14 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
+import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
@@ -32,6 +35,7 @@ import se.sundsvall.selfserviceai.integration.intric.mapper.AgreementDecorator;
 import se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator;
 import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator;
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
+import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
 
 @Service
@@ -45,6 +49,7 @@ public class AssistantService {
 	private final InstalledbaseIntegration installedbaseIntegration;
 	private final IntricIntegration intricIntegration;
 	private final InvoicesIntegration invoicesIntegration;
+	private final LimeIntegration limeIntegration;
 	private final MeasurementDataIntegration measurementDataIntegration;
 	private final SessionRepository sessionRepository;
 	private final FileRepository fileRepository;
@@ -55,6 +60,7 @@ public class AssistantService {
 		final InstalledbaseIntegration installedbaseIntegration,
 		final IntricIntegration intricIntegration,
 		final InvoicesIntegration invoicesIntegration,
+		final LimeIntegration limeIntegration,
 		final MeasurementDataIntegration measurementDataIntegration,
 		final SessionRepository sessionRepository,
 		final FileRepository fileRepository) {
@@ -64,14 +70,15 @@ public class AssistantService {
 		this.installedbaseIntegration = installedbaseIntegration;
 		this.intricIntegration = intricIntegration;
 		this.invoicesIntegration = invoicesIntegration;
+		this.limeIntegration = limeIntegration;
 		this.measurementDataIntegration = measurementDataIntegration;
 		this.sessionRepository = sessionRepository;
 		this.fileRepository = fileRepository;
 	}
 
-	public UUID createSession(String municipalityId) {
-		final var session = intricIntegration.askAssistant(intricProperties.assistantId(), "Påbörjar session");
-		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId()));
+	public UUID createSession(String municipalityId, String partyId) {
+		final var session = intricIntegration.askAssistant(intricProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
+		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId(), partyId));
 
 		return session.sessionId();
 	}
@@ -79,11 +86,11 @@ public class AssistantService {
 	@Async
 	@Transactional
 	public void populateWithInformation(UUID sessionId, SessionRequest sessionRequest) {
-		final var session = sessionRepository.findById(sessionId.toString())
+		final var sessionEntity = sessionRepository.findById(sessionId.toString())
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
 		try {
-			final var municipalityId = session.getMunicipalityId();
+			final var municipalityId = sessionEntity.getMunicipalityId();
 			final var partyId = sessionRequest.getPartyId();
 
 			// Collect all information regarding customers installed base from different backends
@@ -96,19 +103,20 @@ public class AssistantService {
 
 			// Save information in intric and update database with id of stored file
 			final var fileId = intricIntegration.uploadFile(installedBase);
-			final var file = fileRepository.save(toFileEntity(fileId));
+			final var fileEntity = fileRepository.save(toFileEntity(fileId));
 
 			// Add file to session, update with success information
-			session.getFiles().add(file);
-			session.setInitialized(OffsetDateTime.now());
-			session.setInitiationStatus("Successfully initialized");
+			sessionEntity.getFiles().add(fileEntity);
+			sessionEntity.setCustomerNbr(installedBase.getCustomerNumber());
+			sessionEntity.setInitialized(OffsetDateTime.now());
+			sessionEntity.setStatus("Successfully initialized");
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when populating session with customer information", e);
 			// Update with failed information
-			session.setInitialized(null);
-			session.setInitiationStatus("Initialization failed");
+			sessionEntity.setInitialized(null);
+			sessionEntity.setStatus("Initialization failed, filter logs on log id '%s' for more information".formatted(RequestId.get()));
 		} finally {
-			sessionRepository.save(session);
+			sessionRepository.save(sessionEntity);
 		}
 	}
 
@@ -133,10 +141,15 @@ public class AssistantService {
 
 	@Async
 	@Transactional
-	public void deleteSessionById(final String municipalityId, final UUID sessionId) {
+	public void deleteSessionById(final String municipalityId, final UUID sessionId, UUID requestId) {
+		RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
+
 		sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
-			.ifPresentOrElse(this::deleteSession,
-				() -> {
+			.ifPresentOrElse(entity -> Stream.of(entity)
+				.map(this::saveChatHistory)
+				.filter(Objects::nonNull)
+				.findAny()
+				.ifPresent(this::deleteSession), () -> {
 					throw Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId));
 				});
 	}
@@ -147,6 +160,8 @@ public class AssistantService {
 
 		sessionRepository.findAllByLastAccessedBeforeOrLastAccessedIsNull(timestamp).stream()
 			.filter(session -> isSubjectForRemoval(timestamp, session))
+			.map(this::saveChatHistory)
+			.filter(Objects::nonNull)
 			.forEach(this::deleteSession);
 	}
 
@@ -162,7 +177,20 @@ public class AssistantService {
 		return Objects.nonNull(session.getLastAccessed()) || session.getCreated().isBefore(timestamp);
 	}
 
-	void deleteSession(final SessionEntity sessionEntity) {
+	private SessionEntity saveChatHistory(final SessionEntity sessionEntity) {
+		try {
+			final var session = intricIntegration.getSession(intricProperties.assistantId(), sessionEntity.getSessionId());
+			limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
+			return sessionEntity;
+		} catch (final Exception e) {
+			LOG.error("Exception thrown when saving chat history for session", e);
+			// Update with failed information
+			sessionEntity.setStatus("Failed to save chat history, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+			return null;
+		}
+	}
+
+	private void deleteSession(final SessionEntity sessionEntity) {
 		sessionEntity.getFiles().removeIf(file -> {
 			final var isRemoved = intricIntegration.deleteFile(file.getFileId());
 			if (isRemoved) {
@@ -175,6 +203,7 @@ public class AssistantService {
 			sessionRepository.delete(sessionEntity);
 			return;
 		}
-		LOG.info("Could not delete session: {}", sessionEntity.getSessionId());
+		LOG.error("Could not delete session: {}", sessionEntity.getSessionId());
+		sessionEntity.setStatus("Failed to delete session, filter logs on log id '%s' for more information".formatted(RequestId.get()));
 	}
 }

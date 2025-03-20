@@ -1,0 +1,107 @@
+{
+	"request": {
+		"headers": {
+			"X-Client-Secret": {
+				"equalTo": "lime-api-key"
+			}
+		},
+		"method": "POST",
+		"bodyPatterns": [
+			{
+				"equalToJson": {
+					"chatSession": {
+						"created_at": "2025-03-07T07:05:58.727118Z",
+						"updated_at": "2025-03-07T07:05:58.727118Z",
+						"name": "Påbörjar session för party id '5a6c3e4e-c320-4006-b448-1fd4121df828'",
+						"id": "158cfabe-1c3d-433c-b71f-1c909beaa291",
+						"messages": [
+							{
+								"created_at": "2025-03-07T07:05:58.727118Z",
+								"updated_at": "2025-03-14T16:30:10.682865Z",
+								"id": "834948e9-8eff-41ea-be48-9392617c918b",
+								"question": "Påbörjar session för party id '5a6c3e4e-c320-4006-b448-1fd4121df828'",
+								"answer": "Hej och välkommen! Hur kan jag hjälpa dig idag? \n\nHär är en översikt av dina anläggningar:\n\n| Anläggnings-ID | Adress                      | Typ av tjänst    |\n|----------------|-----------------------------|-------------------|\n| [facilityId]   | [careOf, street, postalCode, city] | [type]          |\n\nFyll gärna i med den specifika informationen så kan jag assistera dig vidare!",
+								"completion_model": {
+									"created_at": "2025-01-09T19:02:55.223252Z",
+									"updated_at": "2025-03-18T10:25:36.220323Z",
+									"id": "f2794da6-abe0-42c1-b1d8-351bc05a63e6",
+									"name": "gpt-4o-mini-azure",
+									"nickname": "GPT-4o mini (Azure)",
+									"family": "azure",
+									"token_limit": 128000,
+									"is_deprecated": false,
+									"stability": "stable",
+									"hosting": "swe",
+									"description": "Microsoft Azure's hosted version of the compact GPT-4 Omni model, offering faster processing with advanced capabilities.",
+									"deployment_name": "gpt-4o-mini",
+									"org": "Microsoft",
+									"vision": true,
+									"is_org_enabled": false,
+									"is_org_default": false
+								},
+								"references": [],
+								"files": [],
+								"tools": {
+									"assistants": [
+										{
+											"id": "1795219d-e4c5-43ab-a516-6dab4f07e479"
+										}
+									]
+								}
+							},
+							{
+								"created_at": "2025-03-07T07:49:50.405806Z",
+								"updated_at": "2025-03-14T16:30:10.682865Z",
+								"id": "b3784ef9-fa49-4e16-ad6e-bd6e7bbfdaa1",
+								"question": "What is the answer to the ultimate question of life, the universe and everything?",
+								"answer": "The answer to the ultimate question of life, the universe, and everything is famously known to be \"42.\" This concept comes from Douglas Adams' science fiction series \"The Hitchhiker's Guide to the Galaxy,\" where the randomness of the answer is part of the humor and satire of the narrative. \n\nIf you have any other questions or if there's anything else you'd like to discuss, feel free to let me know! I'm here to assist you with any inquiries regarding your energy services or other topics.",
+								"completion_model": {
+									"created_at": "2025-01-09T19:02:55.223252Z",
+									"updated_at": "2025-03-18T10:25:36.220323Z",
+									"id": "f2794da6-abe0-42c1-b1d8-351bc05a63e6",
+									"name": "gpt-4o-mini-azure",
+									"nickname": "GPT-4o mini (Azure)",
+									"family": "azure",
+									"token_limit": 128000,
+									"is_deprecated": false,
+									"stability": "stable",
+									"hosting": "swe",
+									"description": "Microsoft Azure's hosted version of the compact GPT-4 Omni model, offering faster processing with advanced capabilities.",
+									"deployment_name": "gpt-4o-mini",
+									"org": "Microsoft",
+									"vision": true,
+									"is_org_enabled": false,
+									"is_org_default": false
+								},
+								"references": [],
+								"files": [
+									{
+										"id": "578255c8-3fb9-4a3c-8ced-0f4a218c6e34",
+										"name": "selfservice-ai-data.json",
+										"size": 4026,
+										"created_at": "2025-03-07T07:06:04.579881Z",
+										"updated_at": "2025-03-07T07:06:04.579881Z"
+									}
+								],
+								"tools": {
+									"assistants": [
+										{
+											"id": "1795219d-e4c5-43ab-a516-6dab4f07e479"
+										}
+									]
+								}
+							}
+						]
+					},
+					"kundnummer": "11393",
+					"partyId": "9bb8472c-f528-4ed0-ba12-d5b6548d429e"
+				}
+			}
+		],
+		"urlPath": "/lime/chathistorik"
+	},
+	"response": {
+		"status": 204
+	},
+	"name": "api-lime-save-chathistory"
+}

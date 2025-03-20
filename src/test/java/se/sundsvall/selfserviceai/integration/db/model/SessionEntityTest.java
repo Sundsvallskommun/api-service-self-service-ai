@@ -39,31 +39,37 @@ class SessionEntityTest {
 	@Test
 	void testBuilderMethods() {
 		final var created = OffsetDateTime.now().minusHours(1);
+		final var customerNbr = "customerNbr";
 		final var files = List.of(FileEntity.builder().build());
 		final var initialized = OffsetDateTime.now().minusMinutes(59);
-		final var initiationStatus = "initiationStatus";
 		final var lastAccessed = OffsetDateTime.now().minusMinutes(55);
 		final var municipalityId = "municipalityId";
+		final var partyId = "partyId";
 		final var sessionId = "sessionId";
+		final var status = "status";
 
 		final var bean = SessionEntity.builder()
 			.withCreated(created)
+			.withCustomerNbr(customerNbr)
 			.withFiles(files)
 			.withInitialized(initialized)
-			.withInitiationStatus(initiationStatus)
 			.withLastAccessed(lastAccessed)
 			.withMunicipalityId(municipalityId)
+			.withPartyId(partyId)
 			.withSessionId(sessionId)
+			.withStatus(status)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getCreated()).isEqualTo(created);
+		assertThat(bean.getCustomerNbr()).isEqualTo(customerNbr);
 		assertThat(bean.getFiles()).isEqualTo(files);
 		assertThat(bean.getInitialized()).isEqualTo(initialized);
-		assertThat(bean.getInitiationStatus()).isEqualTo(initiationStatus);
 		assertThat(bean.getLastAccessed()).isEqualTo(lastAccessed);
 		assertThat(bean.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(bean.getPartyId()).isEqualTo(partyId);
 		assertThat(bean.getSessionId()).isEqualTo(sessionId);
+		assertThat(bean.getStatus()).isEqualTo(status);
 	}
 
 	@Test

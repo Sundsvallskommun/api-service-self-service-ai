@@ -1,5 +1,7 @@
 package se.sundsvall.selfserviceai.integration.lime.configuration;
 
+import static java.util.Optional.ofNullable;
+
 import feign.RequestInterceptor;
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +24,7 @@ public class LimeConfiguration {
 			.composeCustomizersToOne();
 	}
 
-	RequestInterceptor requestInterceptor(final String apiKey) {
-		return requestTemplate -> requestTemplate.header(API_KEY_HEADER_NAME, apiKey);
+	RequestInterceptor requestInterceptor(final String secret) {
+		return requestTemplate -> ofNullable(secret).ifPresent(s -> requestTemplate.header(API_KEY_HEADER_NAME, s));
 	}
 }

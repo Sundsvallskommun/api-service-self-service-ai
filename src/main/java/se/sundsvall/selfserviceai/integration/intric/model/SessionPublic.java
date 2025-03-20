@@ -9,9 +9,10 @@ import lombok.Builder;
 @Builder(setterPrefix = "with")
 public record SessionPublic(
 
-	@JsonProperty UUID id,
-	@JsonProperty String name,
-	@JsonProperty List<Message> messages,
-	@JsonProperty OffsetDateTime createdAt,
-	@JsonProperty OffsetDateTime updatedAt) {
+	@JsonProperty("id") UUID id,
+	@JsonProperty("name") String name,
+	@JsonProperty("messages") List<Message> messages,
+	@JsonProperty("feedback") SessionFeedback feedback,
+	@JsonProperty("created_at") OffsetDateTime createdAt,
+	@JsonProperty("updated_at") OffsetDateTime updatedAt) {
 }
