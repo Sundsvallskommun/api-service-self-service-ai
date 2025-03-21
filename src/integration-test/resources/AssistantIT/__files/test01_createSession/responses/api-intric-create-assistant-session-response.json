@@ -29,6 +29,10 @@
 		"is_locked": true
 	},
 	"tools": {
-		"assistants": []
+		"assistants": [
+			{
+				"id": "3e951939-18ea-402d-9d01-23d977624ad2"
+			}
+		]
 	}
 }

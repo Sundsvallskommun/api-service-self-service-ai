@@ -232,7 +232,7 @@ components:
   schemas:
     SessionRequest:
       required:
-      - customerEngagementOrgId
+      - customerEngagementOrgIds
       - partyId
       type: object
       properties:
@@ -241,11 +241,16 @@ components:
           description: The id of the party to use when retrieving the information
             that will form the basis of the assistant's answers
           example: 5a6c3e4e-c320-4006-b448-1fd4121df828
-        customerEngagementOrgId:
-          type: string
-          description: Organization id to the counterparty for the customer's engagements
-            that will form the basis of the assistant's answers
-          example: "5566123456"
+        customerEngagementOrgIds:
+          maxItems: 2147483647
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            description: Organization id specifying the counterparty to fetch customer's
+              engagements for
+            example: "5566123456"
       description: Model for session initiation request
     Problem:
       type: object
@@ -444,6 +449,10 @@ components:
     SessionResponse:
       type: object
       properties:
+        assistantId:
+          type: string
+          description: The id of the assistant
+          example: becd153d-e1d9-4a4a-9fcf-eb8a157d3f1f
         sessionId:
           type: string
           description: The id of the session to be used when interacting with the

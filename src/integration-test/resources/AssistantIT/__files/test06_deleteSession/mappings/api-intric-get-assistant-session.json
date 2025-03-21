@@ -6,7 +6,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/intric/assistants/intric-assistant-uuid/sessions/158cfabe-1c3d-433c-b71f-1c909beaa291/"
+		"urlPath": "/intric/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/158cfabe-1c3d-433c-b71f-1c909beaa291/"
 	},
 	"response": {
 		"headers": {

@@ -7,7 +7,8 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInstalledBase;
-import static se.sundsvall.selfserviceai.service.AssistantMapper.toQuestionResponse;
+import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
+import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -23,6 +24,7 @@ import org.zalando.problem.Problem;
 import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
+import se.sundsvall.selfserviceai.api.model.SessionResponse;
 import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
@@ -37,6 +39,7 @@ import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
+import se.sundsvall.selfserviceai.service.mapper.AssistantMapper;
 
 @Service
 public class AssistantService {
@@ -76,11 +79,11 @@ public class AssistantService {
 		this.fileRepository = fileRepository;
 	}
 
-	public UUID createSession(String municipalityId, String partyId) {
+	public SessionResponse createSession(String municipalityId, String partyId) {
 		final var session = intricIntegration.askAssistant(intricProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
 		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId(), partyId));
 
-		return session.sessionId();
+		return toSessionResponse(intricProperties.assistantId(), session);
 	}
 
 	@Async
@@ -95,7 +98,7 @@ public class AssistantService {
 
 			// Collect all information regarding customers installed base from different backends
 			final var agreements = agreementIntegration.getAgreements(municipalityId, partyId);
-			final var installedBase = Optional.of(toInstalledBase(installedbaseIntegration.getInstalledbase(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgId())))
+			final var installedBase = Optional.of(toInstalledBase(installedbaseIntegration.getInstalledbase(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgIds().iterator().next())))
 				.map(ib -> AgreementDecorator.addAgreements(ib, agreements))
 				.map(ib -> InvoiceDecorator.addInvoices(ib, invoicesIntegration.getInvoices(municipalityId, partyId)))
 				.map(ib -> MeasurementDecorator.addMeasurements(ib, measurementDataIntegration.getMeasurementData(municipalityId, partyId, agreements)))

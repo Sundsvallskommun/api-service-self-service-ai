@@ -11,6 +11,7 @@ import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -47,20 +48,25 @@ class SessionResourceTest {
 	@Test
 	void createSession() {
 		// Arrange
+		final var assistantId = UUID.randomUUID();
 		final var sessionId = UUID.randomUUID();
 		final var customerEngagementOrgId = "5566123456";
 		final var partyId = UUID.randomUUID().toString();
-		final var body = SessionRequest.builder()
-			.withCustomerEngagementOrgId(customerEngagementOrgId)
+		final var request = SessionRequest.builder()
+			.withCustomerEngagementOrgIds(Set.of(customerEngagementOrgId))
 			.withPartyId(partyId)
 			.build();
+		final var serviceResponse = SessionResponse.builder()
+			.withAssistantId(assistantId.toString())
+			.withSessionId(sessionId.toString())
+			.build();
 
-		when(mockService.createSession(MUNICIPALITY_ID, partyId)).thenReturn(sessionId);
+		when(mockService.createSession(MUNICIPALITY_ID, partyId)).thenReturn(serviceResponse);
 
 		// Act
 		final var response = webTestClient.post()
 			.uri(builder -> builder.path("/{municipalityId}/session").build(Map.of("municipalityId", MUNICIPALITY_ID)))
-			.bodyValue(body)
+			.bodyValue(request)
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -69,9 +75,16 @@ class SessionResourceTest {
 			.getResponseBody();
 
 		// Assert and verify
-		assertThat(response).isNotNull().extracting(SessionResponse::getSessionId).isEqualTo(sessionId.toString());
+		assertThat(response).isNotNull()
+			.extracting(
+				SessionResponse::getAssistantId,
+				SessionResponse::getSessionId)
+			.containsExactly(
+				assistantId.toString(),
+				sessionId.toString());
+
 		verify(mockService).createSession(MUNICIPALITY_ID, partyId);
-		verify(mockService).populateWithInformation(sessionId, body);
+		verify(mockService).populateWithInformation(sessionId, request);
 	}
 
 	@ParameterizedTest

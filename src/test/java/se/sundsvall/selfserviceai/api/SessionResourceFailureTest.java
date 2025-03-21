@@ -1,5 +1,6 @@
 package se.sundsvall.selfserviceai.api;
 
+import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -7,8 +8,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,7 +54,7 @@ class SessionResourceFailureTest {
 	void createAssistantSessionWithFaultyPathParameters() {
 		// Arrange
 		final var body = SessionRequest.builder()
-			.withCustomerEngagementOrgId("5566123456")
+			.withCustomerEngagementOrgIds(Set.of("5566123456"))
 			.withPartyId(UUID.randomUUID().toString())
 			.build();
 
@@ -83,7 +87,7 @@ class SessionResourceFailureTest {
 	void createAssistantSessionWithFaultyOrEmptyBodyValues(String value) {
 		// Arrange
 		final var body = SessionRequest.builder()
-			.withCustomerEngagementOrgId(value)
+			.withCustomerEngagementOrgIds(Stream.of(value).collect(toCollection(HashSet::new)))
 			.withPartyId(value)
 			.build();
 
@@ -104,7 +108,63 @@ class SessionResourceFailureTest {
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
 			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
 				.containsExactlyInAnyOrder(
-					tuple("customerEngagementOrgId", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"),
+					tuple("customerEngagementOrgIds[]", "list members must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"),
+					tuple("partyId", "not a valid UUID"));
+		});
+	}
+
+	@Test
+	void createAssistantSessionWithEmptyBody() {
+		// Arrange
+		final var body = SessionRequest.builder().build();
+
+		// Act
+		final var response = webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/session").build(Map.of("municipalityId", MUNICIPALITY_ID)))
+			.bodyValue(body)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert and verify
+		assertThat(response).isNotNull().satisfies(r -> {
+			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
+			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
+			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+				.containsExactlyInAnyOrder(
+					tuple("customerEngagementOrgIds", "must not be null"),
+					tuple("partyId", "not a valid UUID"));
+		});
+	}
+
+	@Test
+	void createAssistantSessionWithEmptyList() {
+		// Arrange
+		final var body = SessionRequest.builder()
+			.withCustomerEngagementOrgIds(Set.of())
+			.build();
+
+		// Act
+		final var response = webTestClient.post()
+			.uri(builder -> builder.path("/{municipalityId}/session").build(Map.of("municipalityId", MUNICIPALITY_ID)))
+			.bodyValue(body)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert and verify
+		assertThat(response).isNotNull().satisfies(r -> {
+			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
+			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
+			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+				.containsExactlyInAnyOrder(
+					tuple("customerEngagementOrgIds", "list must contain at least 1 entry"),
 					tuple("partyId", "not a valid UUID"));
 		});
 	}

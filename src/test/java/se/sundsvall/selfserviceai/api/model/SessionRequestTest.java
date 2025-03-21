@@ -8,6 +8,10 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetter
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
@@ -25,17 +29,28 @@ class SessionRequestTest {
 
 	@Test
 	void testBuilderMethods() {
-		final var customerEngagementOrgId = "customerEngagementOrgId";
+		final var customerEngagementOrgIds = Set.of("customerEngagementOrgId");
 		final var partyId = "partyId";
 
 		final var bean = SessionRequest.builder()
-			.withCustomerEngagementOrgId(customerEngagementOrgId)
+			.withCustomerEngagementOrgIds(customerEngagementOrgIds)
 			.withPartyId(partyId)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(bean.getCustomerEngagementOrgId()).isEqualTo(customerEngagementOrgId);
+		assertThat(bean.getCustomerEngagementOrgIds()).isEqualTo(customerEngagementOrgIds);
 		assertThat(bean.getPartyId()).isEqualTo(partyId);
+	}
+
+	@Test
+	void testBuilderMethodsWithDuplicateOrgIds() {
+		final var bean = SessionRequest.builder()
+			.withCustomerEngagementOrgIds(List.of("customerEngagementOrgId", "customerEngagementOrgId")
+				.stream()
+				.collect(Collectors.toCollection(HashSet::new)))
+			.build();
+
+		assertThat(bean.getCustomerEngagementOrgIds()).hasSize(1).containsExactly("customerEngagementOrgId");
 	}
 
 	@Test
