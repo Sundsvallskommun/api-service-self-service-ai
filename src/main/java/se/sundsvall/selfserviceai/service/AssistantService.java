@@ -103,7 +103,7 @@ public class AssistantService {
 
 			if (isNotEmpty(installedBases)) {
 				// Build file content
-				final var intricModel = buildFileContent(municipalityId, partyId, installedBases);
+				final var intricModel = buildIntricModel(municipalityId, partyId, installedBases);
 
 				// Save information in intric and update database with id of stored file
 				final var fileId = intricIntegration.uploadFile(intricModel);
@@ -130,17 +130,17 @@ public class AssistantService {
 		}
 	}
 
-	private IntricModel buildFileContent(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
-		final var fileContent = toIntricModel(installedBases);
+	private IntricModel buildIntricModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
+		final var intricModel = toIntricModel(installedBases);
 
 		// Enrich all facility with agreement, invoice and measurement information
-		final var facilities = ofNullable(fileContent.getFacilities()).orElse(emptyList());
+		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());
 
 		AgreementDecorator.addAgreements(facilities, agreementIntegration.getAgreements(municipalityId, partyId));
 		InvoiceDecorator.addInvoices(facilities, invoicesIntegration.getInvoices(municipalityId, partyId));
 		MeasurementDecorator.addMeasurements(facilities, measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities));
 
-		return fileContent;
+		return intricModel;
 	}
 
 	public boolean isSessionReady(String municipalityId, UUID sessionId) {

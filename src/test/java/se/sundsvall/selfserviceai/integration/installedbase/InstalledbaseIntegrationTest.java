@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atMostOnce;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -44,7 +43,6 @@ class InstalledbaseIntegrationTest {
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
 		verifyNoMoreInteractions(clientMock);
-		reset(clientMock);
 	}
 
 	@Test
