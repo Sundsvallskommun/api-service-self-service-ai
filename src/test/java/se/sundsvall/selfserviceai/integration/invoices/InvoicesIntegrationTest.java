@@ -112,15 +112,14 @@ class InvoicesIntegrationTest {
 	void getInvoicesThrowsException() {
 
 		// Arrange
-		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenThrow(Problem.valueOf(BAD_GATEWAY, "Bad to the bone"));
+		final var exception = Problem.valueOf(BAD_GATEWAY, "Bad to the bone");
+		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenThrow(exception);
 
 		// Act
-		final var exception = assertThrows(ThrowableProblem.class, () -> integration.getInvoices(MUNICIPALITY_ID, PARTY_ID));
+		final var e = assertThrows(ThrowableProblem.class, () -> integration.getInvoices(MUNICIPALITY_ID, PARTY_ID));
 
 		// Assert and verify
 		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
-		assertThat(exception.getStatus()).isEqualTo(BAD_GATEWAY);
-		assertThat(exception.getMessage()).isEqualTo("Bad Gateway: Bad to the bone");
-
+		assertThat(e).isSameAs(exception);
 	}
 }

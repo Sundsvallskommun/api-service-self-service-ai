@@ -21,132 +21,699 @@
 					{
 						"equalToJson": {
 							"customerNumber": "123456",
-							"partyId": "5a6c3e4e-c320-4006-b448-1fd4121df828",
+							"partyId": "c62fd364-6214-4fb1-82f7-e4b6be53afbe",
 							"facilities": [
 								{
-									"facilityId": "735999109220207025",
-									"type": "El",
-									"placementId": 24031,
-									"commitmentStartDate": "2010-11-01",
-									"lastModifiedDate": "2024-03-01",
+									"facilityId": "735999109220108018",
 									"address": {
 										"careOf": "Parker Peter",
-										"street": "Spindelgatan 1",
-										"postalCode": "85234",
+										"street": "Åtta bens väg 8",
+										"postalCode": "85641",
 										"city": "Sundsvall"
 									},
-									"information": [
+									"installedBases": [
 										{
-											"name": "annualusage",
-											"displayName": "Beräknad årlig förbrukning",
-											"type": "kWh",
-											"value": "6727"
+											"type": "El",
+											"placementId": 5689,
+											"commitmentStartDate": "2014-04-01",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "62591"
+												},
+												{
+													"name": "equipmentNumber",
+													"displayName": "Mätarnummer",
+													"type": "string",
+													"value": "1095588"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "35"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Mellangård 66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										},
 										{
-											"name": "equipmentNumber",
-											"displayName": "Mätarnummer",
-											"type": "string",
-											"value": "0802705"
-										},
-										{
-											"name": "fusesize",
-											"displayName": "Säkringsstorlek",
-											"type": "A",
-											"value": "20"
-										},
-										{
-											"name": "netarea",
-											"displayName": "Nätområde",
-											"type": "location",
-											"value": "Sundsvall tätort"
-										},
-										{
-											"name": "netareaid",
-											"displayName": "NätområdesID",
-											"type": "location",
-											"value": "SUV"
-										},
-										{
-											"name": "placementStatus",
-											"displayName": "Anläggningsstatus",
-											"type": "string",
-											"value": "Tillkopplad"
-										},
-										{
-											"name": "siteStatus",
-											"displayName": "Sitestatus",
-											"type": "string",
-											"value": "Normal"
+											"type": "Elhandel",
+											"placementId": -34453,
+											"commitmentStartDate": "2014-04-01",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										}
 									],
 									"agreements": [
 										{
-											"agreementId": "99694",
+											"agreementId": "32784",
 											"description": "Säkringsabonnemang",
 											"category": "ELECTRICITY",
-											"fromDate": "2010-11-01",
+											"fromDate": "2014-04-01",
 											"bound": false,
 											"bindingRule": "B00-U00"
+										},
+										{
+											"agreementId": "8775",
+											"description": "Rörligt pris +2,40 öre/kWh",
+											"category": "ELECTRICITY_TRADE",
+											"fromDate": "2014-10-01",
+											"bound": false,
+											"bindingRule": "B00-U03"
 										}
 									],
-									"measurements": [],
-									"invoices": []
+									"measurements": [
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 6010.077,
+											"unit": "kWh",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 3759.84,
+											"unit": "kWh",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 2786.82,
+											"unit": "kWh",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 2654.067,
+											"unit": "kWh",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 2815.742,
+											"unit": "kWh",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 3542.951,
+											"unit": "kWh",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 5078.255,
+											"unit": "kWh",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 6810.155,
+											"unit": "kWh",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 7695.628,
+											"unit": "kWh",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 7864.655,
+											"unit": "kWh",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 6692.298,
+											"unit": "kWh",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 4991.503,
+											"unit": "kWh",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 3.5579166666666666,
+											"unit": "C",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 14.319758064516126,
+											"unit": "C",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 17.20097222222223,
+											"unit": "C",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 18.611559139784946,
+											"unit": "C",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 17.98172043010753,
+											"unit": "C",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 12.371805555555552,
+											"unit": "C",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 6.951209677419353,
+											"unit": "C",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 1.7218055555555556,
+											"unit": "C",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -1.6767473118279568,
+											"unit": "C",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -2.23239247311828,
+											"unit": "C",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -1.6319940476190478,
+											"unit": "C",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										}
+									],
+									"invoices": [
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-04-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-10",
+											"invoiceName": "276344298.pdf",
+											"invoiceNumber": "276344298",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "276344298",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-04-07",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-07",
+											"invoiceName": "860339191.pdf",
+											"invoiceNumber": "860339191",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "860339191",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-03-13",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-11",
+											"invoiceName": "273469395.pdf",
+											"invoiceNumber": "273469395",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "273469395",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-03-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-07",
+											"invoiceName": "858874498.pdf",
+											"invoiceNumber": "858874498",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "858874498",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-02-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-10",
+											"invoiceName": "267893196.pdf",
+											"invoiceNumber": "267893196",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "267893196",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-02-06",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-07",
+											"invoiceName": "856444690.pdf",
+											"invoiceNumber": "856444690",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "856444690",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-01-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-10",
+											"invoiceName": "265026690.pdf",
+											"invoiceNumber": "265026690",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "265026690",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-01-08",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-09",
+											"invoiceName": "855825998.pdf",
+											"invoiceNumber": "855825998",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "855825998",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-12-11",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-11",
+											"invoiceName": "262133796.pdf",
+											"invoiceNumber": "262133796",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "262133796",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-12-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-08",
+											"invoiceName": "854354990.pdf",
+											"invoiceNumber": "854354990",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "854354990",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-11-08",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-09",
+											"invoiceName": "259273092.pdf",
+											"invoiceNumber": "259273092",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "259273092",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-11-07",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-08",
+											"invoiceName": "852769397.pdf",
+											"invoiceNumber": "852769397",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "852769397",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-10-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-10",
+											"invoiceName": "256384991.pdf",
+											"invoiceNumber": "256384991",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "256384991",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-10-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-09",
+											"invoiceName": "851272393.pdf",
+											"invoiceNumber": "851272393",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "851272393",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										}
+									]
 								},
 								{
-									"facilityId": "735999109252268018",
-									"type": "El",
-									"placementId": 25797,
-									"commitmentStartDate": "2003-04-30",
-									"commitmentEndDate": "2011-01-10",
-									"lastModifiedDate": "2024-03-01",
+									"facilityId": "735999109220108025",
 									"address": {
 										"careOf": "Parker Peter",
-										"street": "Gröna trollets väg 222",
-										"postalCode": "85321",
-										"city": "Sundsvall"
+										"street": "Åtta bens väg 8"
 									},
-									"information": [
+									"installedBases": [
 										{
-											"name": "annualusage",
-											"displayName": "Beräknad årlig förbrukning",
-											"type": "kWh",
-											"value": "5081"
-										},
-										{
-											"name": "equipmentNumber",
-											"displayName": "Mätarnummer",
-											"type": "string",
-											"value": "9504528"
-										},
-										{
-											"name": "fusesize",
-											"displayName": "Säkringsstorlek",
-											"type": "A",
-											"value": "16"
-										},
-										{
-											"name": "netarea",
-											"displayName": "Nätområde",
-											"type": "location",
-											"value": "Sundsvall tätort"
-										},
-										{
-											"name": "netareaid",
-											"displayName": "NätområdesID",
-											"type": "location",
-											"value": "SUV"
-										},
-										{
-											"name": "placementStatus",
-											"displayName": "Anläggningsstatus",
-											"type": "string",
-											"value": "Tillkopplad"
-										},
-										{
-											"name": "siteStatus",
-											"displayName": "Sitestatus",
-											"type": "string",
-											"value": "Normal"
+											"type": "El",
+											"placementId": 24039,
+											"commitmentStartDate": "2014-04-01",
+											"commitmentEndDate": "2014-10-20",
+											"lastModifiedDate": "2024-02-26",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "443"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "16"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Frånkopplad"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Riven"
+												}
+											]
 										}
 									],
 									"agreements": [],
@@ -154,215 +721,2167 @@
 									"invoices": []
 								},
 								{
-									"facilityId": "735999109260428015",
-									"type": "El",
-									"placementId": -14132,
-									"commitmentStartDate": "2016-11-08",
-									"lastModifiedDate": "2024-03-01",
+									"facilityId": "735999109222306054",
 									"address": {
 										"careOf": "Parker Peter",
-										"street": "Nätvägen 12",
-										"postalCode": "85678",
-										"city": "Sundsvall"
+										"street": "Marvelgatan 33",
+										"postalCode": "85644",
+										"city": "SUNDSVALL"
 									},
-									"information": [
+									"installedBases": [
 										{
-											"name": "annualusage",
-											"displayName": "Beräknad årlig förbrukning",
-											"type": "kWh",
-											"value": "10458"
+											"type": "El",
+											"placementId": 24186,
+											"commitmentStartDate": "2022-01-20",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "2236"
+												},
+												{
+													"name": "equipmentNumber",
+													"displayName": "Mätarnummer",
+													"type": "string",
+													"value": "0813701"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "16"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Kapten Amerika 66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										},
 										{
-											"name": "equipmentNumber",
-											"displayName": "Mätarnummer",
-											"type": "string",
-											"value": "3385472"
-										},
-										{
-											"name": "fusesize",
-											"displayName": "Säkringsstorlek",
-											"type": "A",
-											"value": "25"
-										},
-										{
-											"name": "netarea",
-											"displayName": "Nätområde",
-											"type": "location",
-											"value": "Sundsvall tätort"
-										},
-										{
-											"name": "netareaid",
-											"displayName": "NätområdesID",
-											"type": "location",
-											"value": "SUV"
-										},
-										{
-											"name": "placementStatus",
-											"displayName": "Anläggningsstatus",
-											"type": "string",
-											"value": "Tillkopplad"
-										},
-										{
-											"name": "siteStatus",
-											"displayName": "Sitestatus",
-											"type": "string",
-											"value": "Normal"
+											"type": "Elhandel",
+											"placementId": -43545,
+											"commitmentStartDate": "2022-01-20",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										}
 									],
 									"agreements": [
 										{
-											"agreementId": "41291",
+											"agreementId": "513131",
 											"description": "Säkringsabonnemang",
 											"category": "ELECTRICITY",
-											"fromDate": "2016-11-08",
+											"fromDate": "2022-01-20",
+											"bound": false
+										},
+										{
+											"agreementId": "531358",
+											"description": "Rörligt pris +2,40 öre/kWh",
+											"category": "ELECTRICITY_TRADE",
+											"fromDate": "2023-02-01",
 											"bound": false,
-											"bindingRule": "B00-U00"
+											"bindingRule": "B00-U03"
 										}
 									],
+									"measurements": [
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 126.22,
+											"unit": "kWh",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 43.073,
+											"unit": "kWh",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 32.357,
+											"unit": "kWh",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 24.709,
+											"unit": "kWh",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 28.651,
+											"unit": "kWh",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 51.954,
+											"unit": "kWh",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 62.648,
+											"unit": "kWh",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 180.409,
+											"unit": "kWh",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 515.143,
+											"unit": "kWh",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 548.16,
+											"unit": "kWh",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 439.143,
+											"unit": "kWh",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 184.333,
+											"unit": "kWh",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 3.5579166666666666,
+											"unit": "C",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 14.319758064516126,
+											"unit": "C",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 17.20097222222223,
+											"unit": "C",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 18.611559139784946,
+											"unit": "C",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 17.98172043010753,
+											"unit": "C",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 12.371805555555552,
+											"unit": "C",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 6.951209677419353,
+											"unit": "C",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 1.7218055555555556,
+											"unit": "C",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -1.6767473118279568,
+											"unit": "C",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -2.23239247311828,
+											"unit": "C",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -1.6319940476190478,
+											"unit": "C",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										}
+									],
+									"invoices": [
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-03-31",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-10",
+											"invoiceName": "276402690.pdf",
+											"invoiceNumber": "276402690",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "276402690",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-04-07",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-07",
+											"invoiceName": "860339894.pdf",
+											"invoiceNumber": "860339894",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "860339894",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-03-03",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-11",
+											"invoiceName": "273527994.pdf",
+											"invoiceNumber": "273527994",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "273527994",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-03-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-07",
+											"invoiceName": "858875198.pdf",
+											"invoiceNumber": "858875198",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "858875198",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-01-30",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-10",
+											"invoiceName": "267951895.pdf",
+											"invoiceNumber": "267951895",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "267951895",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-02-06",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-07",
+											"invoiceName": "856445390.pdf",
+											"invoiceNumber": "856445390",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "856445390",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-12-30",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-10",
+											"invoiceName": "265085399.pdf",
+											"invoiceNumber": "265085399",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "265085399",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-01-08",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-09",
+											"invoiceName": "855826699.pdf",
+											"invoiceNumber": "855826699",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "855826699",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-12-02",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-11",
+											"invoiceName": "262192495.pdf",
+											"invoiceNumber": "262192495",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "262192495",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-12-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-08",
+											"invoiceName": "854355690.pdf",
+											"invoiceNumber": "854355690",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "854355690",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-10-29",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-09",
+											"invoiceName": "259332096.pdf",
+											"invoiceNumber": "259332096",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "259332096",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-11-07",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-08",
+											"invoiceName": "852770098.pdf",
+											"invoiceNumber": "852770098",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "852770098",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-09-30",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-10",
+											"invoiceName": "256443995.pdf",
+											"invoiceNumber": "256443995",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "256443995",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-10-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-09",
+											"invoiceName": "851273094.pdf",
+											"invoiceNumber": "851273094",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "851273094",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										}
+									]
+								},
+								{
+									"facilityId": "735999109245102077",
+									"address": {
+										"careOf": "Parker Peter",
+										"street": "Insektsgatan 2",
+										"postalCode": "85634",
+										"city": "Sundsvall"
+									},
+									"installedBases": [
+										{
+											"type": "El",
+											"placementId": 25392,
+											"commitmentStartDate": "2011-05-09",
+											"commitmentEndDate": "2011-07-21",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "17104"
+												},
+												{
+													"name": "equipmentNumber",
+													"displayName": "Mätarnummer",
+													"type": "string",
+													"value": "8283288"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "20"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Spindeln 66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
+										}
+									],
+									"agreements": [],
 									"measurements": [],
 									"invoices": []
 								},
 								{
-									"facilityId": "735999109260428039",
-									"type": "El",
-									"placementId": -14133,
-									"commitmentStartDate": "2016-11-08",
-									"lastModifiedDate": "2024-03-01",
+									"facilityId": "735999109260307051",
 									"address": {
 										"careOf": "Parker Peter",
-										"street": "Nätvägen 12",
-										"postalCode": "85678",
-										"city": "Sundsvall"
+										"street": "Bossvägen 2",
+										"postalCode": "85650",
+										"city": "SUNDSVALL"
 									},
-									"information": [
+									"installedBases": [
 										{
-											"name": "annualusage",
-											"displayName": "Beräknad årlig förbrukning",
-											"type": "kWh",
-											"value": "2579"
+											"type": "El",
+											"placementId": 5687,
+											"commitmentStartDate": "2013-10-01",
+											"commitmentEndDate": "2018-04-19",
+											"lastModifiedDate": "2025-03-12",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "1201"
+												},
+												{
+													"name": "equipmentNumber",
+													"displayName": "Mätarnummer",
+													"type": "string",
+													"value": "4385594"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "16"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Gärde 1:66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										},
 										{
-											"name": "equipmentNumber",
-											"displayName": "Mätarnummer",
-											"type": "string",
-											"value": "3381825"
-										},
-										{
-											"name": "fusesize",
-											"displayName": "Säkringsstorlek",
-											"type": "A",
-											"value": "16"
-										},
-										{
-											"name": "netarea",
-											"displayName": "Nätområde",
-											"type": "location",
-											"value": "Sundsvall tätort"
-										},
-										{
-											"name": "netareaid",
-											"displayName": "NätområdesID",
-											"type": "location",
-											"value": "SUV"
-										},
-										{
-											"name": "placementStatus",
-											"displayName": "Anläggningsstatus",
-											"type": "string",
-											"value": "Tillkopplad"
-										},
-										{
-											"name": "siteStatus",
-											"displayName": "Sitestatus",
-											"type": "string",
-											"value": "Normal"
+											"type": "Elhandel",
+											"placementId": -29665,
+											"commitmentStartDate": "2014-10-01",
+											"commitmentEndDate": "2018-04-19",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										}
 									],
-									"agreements": [
-										{
-											"agreementId": "41292",
-											"description": "Säkringsabonnemang Lägenhet",
-											"category": "ELECTRICITY",
-											"fromDate": "2016-11-08",
-											"bound": false,
-											"bindingRule": "B00-U00"
-										}
-									],
+									"agreements": [],
 									"measurements": [],
 									"invoices": []
 								},
 								{
-									"facilityId": "735999109321708018",
-									"type": "El",
-									"placementId": 30225,
-									"commitmentStartDate": "2007-02-01",
-									"lastModifiedDate": "2024-03-01",
+									"facilityId": "735999109260722045",
 									"address": {
 										"careOf": "Parker Peter",
-										"street": "Doktor Bläckfisks väg 176"
+										"street": "Dagliga buglevägen 1",
+										"postalCode": "85634",
+										"city": "Sundsvall"
 									},
-									"information": [
+									"installedBases": [
 										{
-											"name": "annualusage",
-											"displayName": "Beräknad årlig förbrukning",
-											"type": "kWh",
-											"value": "1931"
+											"type": "El",
+											"placementId": 26190,
+											"commitmentStartDate": "2008-10-02",
+											"commitmentEndDate": "2008-10-31",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "18876"
+												},
+												{
+													"name": "equipmentNumber",
+													"displayName": "Mätarnummer",
+													"type": "string",
+													"value": "1908833"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "20"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Trollet 1:66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
+										}
+									],
+									"agreements": [],
+									"measurements": [],
+									"invoices": []
+								},
+								{
+									"facilityId": "735999109260723028",
+									"address": {
+										"careOf": "Parker Peter",
+										"street": "Doktor Bläckfisks väg 88"
+									},
+									"installedBases": [
+										{
+											"type": "El",
+											"placementId": 5686,
+											"commitmentStartDate": "2006-04-04",
+											"commitmentEndDate": "2020-02-03",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "9937"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "16"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Frånkopplad"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Riven"
+												}
+											]
 										},
 										{
-											"name": "equipmentNumber",
-											"displayName": "Mätarnummer",
-											"type": "string",
-											"value": "4216129"
+											"type": "Elhandel",
+											"placementId": -32744,
+											"commitmentStartDate": "2011-11-01",
+											"commitmentEndDate": "2020-02-03",
+											"information": [
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
+										}
+									],
+									"agreements": [],
+									"measurements": [],
+									"invoices": []
+								},
+								{
+									"facilityId": "735999109260723035",
+									"address": {
+										"careOf": "Parker Peter",
+										"street": "Doktor Bläckfisks väg 88",
+										"postalCode": "85634",
+										"city": "SUNDSVALL"
+									},
+									"installedBases": [
+										{
+											"type": "El",
+											"placementId": 5688,
+											"commitmentStartDate": "2005-05-17",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "kWh",
+													"value": "27403"
+												},
+												{
+													"name": "equipmentNumber",
+													"displayName": "Mätarnummer",
+													"type": "string",
+													"value": "1894242"
+												},
+												{
+													"name": "fusesize",
+													"displayName": "Säkringsstorlek",
+													"type": "A",
+													"value": "25"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Lyktan 1:66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										},
 										{
-											"name": "fusesize",
-											"displayName": "Säkringsstorlek",
-											"type": "A",
-											"value": "16"
-										},
-										{
-											"name": "netarea",
-											"displayName": "Nätområde",
-											"type": "location",
-											"value": "Sundsvall tätort"
-										},
-										{
-											"name": "netareaid",
-											"displayName": "NätområdesID",
-											"type": "location",
-											"value": "SUV"
-										},
-										{
-											"name": "placementStatus",
-											"displayName": "Anläggningsstatus",
-											"type": "string",
-											"value": "Tillkopplad"
-										},
-										{
-											"name": "propertyDesignation",
-											"displayName": "Fastighetsbeteckning",
-											"type": "string",
-											"value": "Näsudden 1:55"
-										},
-										{
-											"name": "siteStatus",
-											"displayName": "Sitestatus",
-											"type": "string",
-											"value": "Normal"
+											"type": "Elhandel",
+											"placementId": -31980,
+											"commitmentStartDate": "2011-03-01",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall tätort"
+												},
+												{
+													"name": "netareaid",
+													"displayName": "NätområdesID",
+													"type": "location",
+													"value": "SUV"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
 										}
 									],
 									"agreements": [
 										{
-											"agreementId": "99696",
+											"agreementId": "32783",
 											"description": "Säkringsabonnemang",
 											"category": "ELECTRICITY",
-											"fromDate": "2007-02-01",
+											"fromDate": "2005-05-17",
 											"bound": false,
 											"bindingRule": "B00-U00"
+										},
+										{
+											"agreementId": "8774",
+											"description": "Rörligt pris +2,40 öre/kWh",
+											"category": "ELECTRICITY_TRADE",
+											"fromDate": "2015-04-01",
+											"bound": false,
+											"bindingRule": "B00-U03"
 										}
 									],
-									"measurements": [],
-									"invoices": []
+									"measurements": [
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 3104.4,
+											"unit": "kWh",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 1650.749,
+											"unit": "kWh",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 910.098,
+											"unit": "kWh",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 973.71,
+											"unit": "kWh",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 1115.951,
+											"unit": "kWh",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 1325.021,
+											"unit": "kWh",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 2298.291,
+											"unit": "kWh",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 2783.356,
+											"unit": "kWh",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 3397.237,
+											"unit": "kWh",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 3380.58,
+											"unit": "kWh",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 3128.214,
+											"unit": "kWh",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "Energy",
+											"value": 1999.993,
+											"unit": "kWh",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 3.5579166666666666,
+											"unit": "C",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 14.319758064516126,
+											"unit": "C",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 17.20097222222223,
+											"unit": "C",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 18.611559139784946,
+											"unit": "C",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 17.98172043010753,
+											"unit": "C",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 12.371805555555552,
+											"unit": "C",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 6.951209677419353,
+											"unit": "C",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": 1.7218055555555556,
+											"unit": "C",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -1.6767473118279568,
+											"unit": "C",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -2.23239247311828,
+											"unit": "C",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "ELECTRICITY",
+											"measurementType": "outdoor_temperature",
+											"value": -1.6319940476190478,
+											"unit": "C",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										}
+									],
+									"invoices": [
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-04-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-10",
+											"invoiceName": "276344199.pdf",
+											"invoiceNumber": "276344199",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "276344199",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-04-07",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-07",
+											"invoiceName": "860339092.pdf",
+											"invoiceNumber": "860339092",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "860339092",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-03-13",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-11",
+											"invoiceName": "273469296.pdf",
+											"invoiceNumber": "273469296",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "273469296",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-03-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-07",
+											"invoiceName": "858874399.pdf",
+											"invoiceNumber": "858874399",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "858874399",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-02-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-10",
+											"invoiceName": "267893097.pdf",
+											"invoiceNumber": "267893097",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "267893097",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-02-06",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-07",
+											"invoiceName": "856444591.pdf",
+											"invoiceNumber": "856444591",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "856444591",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2025-01-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-10",
+											"invoiceName": "265026591.pdf",
+											"invoiceNumber": "265026591",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "265026591",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2025-01-08",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-09",
+											"invoiceName": "855825899.pdf",
+											"invoiceNumber": "855825899",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "855825899",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-12-11",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-11",
+											"invoiceName": "262133697.pdf",
+											"invoiceNumber": "262133697",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "262133697",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-12-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-08",
+											"invoiceName": "854354891.pdf",
+											"invoiceNumber": "854354891",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "854354891",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-11-08",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-09",
+											"invoiceName": "259272995.pdf",
+											"invoiceNumber": "259272995",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "259272995",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-11-07",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-08",
+											"invoiceName": "852769298.pdf",
+											"invoiceNumber": "852769298",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "852769298",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "El",
+											"dueDate": "2024-10-10",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-10",
+											"invoiceName": "256384892.pdf",
+											"invoiceNumber": "256384892",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "256384892",
+											"organizationNumber": "5565027223",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										},
+										{
+											"amountVatIncluded": 0.00,
+											"amountVatExcluded": 0.00,
+											"currency": "sek",
+											"description": "Elhandel",
+											"dueDate": "2024-10-09",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-09",
+											"invoiceName": "851272294.pdf",
+											"invoiceNumber": "851272294",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "851272294",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.00,
+											"status": "VOID",
+											"totalAmount": 0.00,
+											"vat": 0.00,
+											"vatEligibleAmount": 0.00
+										}
+									]
+								},
+								{
+									"facilityId": "9222306053",
+									"address": {
+										"careOf": "Parker Peter",
+										"street": "Marvelgatan 33",
+										"postalCode": "85644",
+										"city": "SUNDSVALL"
+									},
+									"installedBases": [
+										{
+											"type": "Fjärrvärme",
+											"placementId": 1328,
+											"commitmentStartDate": "2022-01-19",
+											"lastModifiedDate": "2025-03-01",
+											"information": [
+												{
+													"name": "annualusage",
+													"displayName": "Beräknad årlig förbrukning",
+													"type": "MWh",
+													"value": "21"
+												},
+												{
+													"name": "debiteffect",
+													"displayName": "Abonnerad effekt",
+													"type": "kW",
+													"value": "8"
+												},
+												{
+													"name": "netarea",
+													"displayName": "Nätområde",
+													"type": "location",
+													"value": "Sundsvall"
+												},
+												{
+													"name": "placementStatus",
+													"displayName": "Anläggningsstatus",
+													"type": "string",
+													"value": "Tillkopplad"
+												},
+												{
+													"name": "propertyDesignation",
+													"displayName": "Fastighetsbeteckning",
+													"type": "string",
+													"value": "Kapten Amerika 66"
+												},
+												{
+													"name": "siteStatus",
+													"displayName": "Sitestatus",
+													"type": "string",
+													"value": "Normal"
+												}
+											]
+										}
+									],
+									"agreements": [
+										{
+											"agreementId": "513132",
+											"description": "Fjärrvärme villa",
+											"category": "DISTRICT_HEATING",
+											"fromDate": "2022-01-19",
+											"bound": false
+										}
+									],
+									"measurements": [
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 56.89,
+											"unit": "m3",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 26.18,
+											"unit": "m3",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 15.46,
+											"unit": "m3",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 9.84,
+											"unit": "m3",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 11.49,
+											"unit": "m3",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 25.83,
+											"unit": "m3",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 43.63,
+											"unit": "m3",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 64.74,
+											"unit": "m3",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 73.68,
+											"unit": "m3",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 72.51,
+											"unit": "m3",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 65.7,
+											"unit": "m3",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow",
+											"value": 47.97,
+											"unit": "m3",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "return_temperature",
+											"unit": "C",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 2181.0,
+											"unit": "kWh",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 1002.0,
+											"unit": "kWh",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 491.0,
+											"unit": "kWh",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 218.0,
+											"unit": "kWh",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 285.0,
+											"unit": "kWh",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 955.0,
+											"unit": "kWh",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 1723.0,
+											"unit": "kWh",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 2527.0,
+											"unit": "kWh",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 2969.0,
+											"unit": "kWh",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 3054.0,
+											"unit": "kWh",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 2610.0,
+											"unit": "kWh",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "energy",
+											"value": 1868.0,
+											"unit": "kWh",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-04-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-05-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-06-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-07-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-08-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-09-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-10-01T00:00:00+02:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-11-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2024-12-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2025-01-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2025-02-01T00:00:00+01:00"
+										},
+										{
+											"category": "DISTRICT_HEATING",
+											"measurementType": "flow_temperature",
+											"unit": "C",
+											"timestamp": "2025-03-01T00:00:00+01:00"
+										}
+									],
+									"invoices": [
+										{
+											"amountVatIncluded": 2733.80,
+											"amountVatExcluded": 2187.04,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2025-03-28",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-03-04",
+											"invoiceName": "859276990.pdf",
+											"invoiceNumber": "859276990",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "859276990",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.20,
+											"status": "SENT",
+											"totalAmount": 2734.00,
+											"vat": 546.76,
+											"vatEligibleAmount": 2187.04
+										},
+										{
+											"amountVatIncluded": 3130.08,
+											"amountVatExcluded": 2504.06,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2025-02-28",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-02-03",
+											"invoiceName": "857816896.pdf",
+											"invoiceNumber": "857816896",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "857816896",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": -0.08,
+											"status": "PAID",
+											"totalAmount": 3130.00,
+											"vat": 626.02,
+											"vatEligibleAmount": 2504.06
+										},
+										{
+											"amountVatIncluded": 2801.81,
+											"amountVatExcluded": 2241.45,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2025-01-28",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2025-01-03",
+											"invoiceName": "856262696.pdf",
+											"invoiceNumber": "856262696",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "856262696",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.19,
+											"status": "PAID",
+											"totalAmount": 2802.00,
+											"vat": 560.36,
+											"vatEligibleAmount": 2241.45
+										},
+										{
+											"amountVatIncluded": 2439.93,
+											"amountVatExcluded": 1951.94,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2024-12-30",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-12-04",
+											"invoiceName": "854933496.pdf",
+											"invoiceNumber": "854933496",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "854933496",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.07,
+											"status": "PAID",
+											"totalAmount": 2440.00,
+											"vat": 487.99,
+											"vatEligibleAmount": 1951.94
+										},
+										{
+											"amountVatIncluded": 1781.65,
+											"amountVatExcluded": 1425.32,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2024-11-28",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-11-06",
+											"invoiceName": "853307692.pdf",
+											"invoiceNumber": "853307692",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "853307692",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.35,
+											"status": "PAID",
+											"totalAmount": 1782.00,
+											"vat": 356.33,
+											"vatEligibleAmount": 1425.32
+										},
+										{
+											"amountVatIncluded": 1152.85,
+											"amountVatExcluded": 922.28,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2024-10-29",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-10-02",
+											"invoiceName": "851873299.pdf",
+											"invoiceNumber": "851873299",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "851873299",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.15,
+											"status": "PAID",
+											"totalAmount": 1153.00,
+											"vat": 230.57,
+											"vatEligibleAmount": 922.28
+										},
+										{
+											"amountVatIncluded": 435.78,
+											"amountVatExcluded": 348.62,
+											"currency": "sek",
+											"description": "Fjärrvärme",
+											"dueDate": "2024-09-30",
+											"invoiceAddress": {
+												"careOf": "Parker Peter",
+												"street": "Gröna trollets gränd 5",
+												"postalCode": "85634",
+												"city": "Sundsvall"
+											},
+											"invoicingDate": "2024-09-03",
+											"invoiceName": "850248394.pdf",
+											"invoiceNumber": "850248394",
+											"invoiceType": "INVOICE",
+											"ocrNumber": "850248394",
+											"organizationNumber": "5564786647",
+											"pdfAvailable": false,
+											"reversedVat": false,
+											"rounding": 0.22,
+											"status": "PAID",
+											"totalAmount": 436.00,
+											"vat": 87.16,
+											"vatEligibleAmount": 348.62
+										}
+									]
 								}
 							]
 						}
