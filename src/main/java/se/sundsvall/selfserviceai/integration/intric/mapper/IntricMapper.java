@@ -105,7 +105,7 @@ public class IntricMapper {
 				.flatMap(List::stream)
 				.toList();
 
-			intricModel.getFacilities().forEach(facility -> addCommitments(facility, installedBases));
+			intricModel.getFacilities().forEach(facility -> addInstalledBases(facility, installedBases));
 		}
 
 		return intricModel;
@@ -137,16 +137,16 @@ public class IntricMapper {
 		return t -> seen.add(keyExtractor.apply(t));
 	}
 
-	private static void addCommitments(Facility facility, List<InstalledBaseItem> installedBaseItems) {
+	private static void addInstalledBases(Facility facility, List<InstalledBaseItem> installedBaseItems) {
 		facility.getInstalledBases().addAll(
 			ofNullable(installedBaseItems).orElse(emptyList()).stream()
 				.filter(ib -> Objects.equals(facility.getFacilityId(), ib.getFacilityId()))
-				.map(IntricMapper::toCommitment)
+				.map(IntricMapper::toInstalledBase)
 				.filter(Objects::nonNull)
 				.toList());
 	}
 
-	private static InstalledBase toCommitment(InstalledBaseItem installedBaseItem) {
+	private static InstalledBase toInstalledBase(InstalledBaseItem installedBaseItem) {
 		return ofNullable(installedBaseItem)
 			.map(item -> InstalledBase.builder().withType(item.getType())
 				.withPlacementId(item.getPlacementId())
