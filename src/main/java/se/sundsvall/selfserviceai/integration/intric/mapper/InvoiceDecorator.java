@@ -9,24 +9,22 @@ import generated.se.sundsvall.invoices.Address;
 import generated.se.sundsvall.invoices.Invoice;
 import java.util.List;
 import java.util.Objects;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 public class InvoiceDecorator {
 	private static final int DECIMAL_POINTS = 2;
 
 	private InvoiceDecorator() {}
 
-	public static InstalledBase addInvoices(InstalledBase installedBase, List<Invoice> invoices) {
+	public static void addInvoices(List<Facility> facilities, List<Invoice> invoices) {
 		ofNullable(invoices).orElse(emptyList())
 			.stream()
 			.filter(Objects::nonNull)
-			.forEach(invoice -> attachToFacility(installedBase, invoice));
-
-		return installedBase;
+			.forEach(invoice -> attachToFacility(facilities, invoice));
 	}
 
-	private static void attachToFacility(InstalledBase installedBase, Invoice invoice) {
-		ofNullable(installedBase.getFacilities()).orElse(emptyList())
+	private static void attachToFacility(List<Facility> facilities, Invoice invoice) {
+		ofNullable(facilities).orElse(emptyList())
 			.stream()
 			.filter(f -> f.getFacilityId().equals(invoice.getFacilityId()))
 			.findFirst()

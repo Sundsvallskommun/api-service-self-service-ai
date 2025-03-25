@@ -1,6 +1,7 @@
 package se.sundsvall.selfserviceai.integration.intric.mapper;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
@@ -8,6 +9,7 @@ import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
@@ -76,7 +78,7 @@ class IntricMapperTest {
 		final var input = createCustomer();
 
 		// Act
-		final var result = IntricMapper.toInstalledBase(input);
+		final var result = IntricMapper.toIntricModel(Map.of("123456", input));
 
 		// Assert
 		assertThat(result.getCustomerNumber()).isEqualTo(input.getCustomerNumber());
@@ -97,17 +99,19 @@ class IntricMapperTest {
 		assertThat(f.getAddress().getCity()).isEqualTo(TestFactory.IB1_CITY);
 		assertThat(f.getAddress().getPostalCode()).isEqualTo(TestFactory.IB1_POSTAL_CODE);
 		assertThat(f.getAddress().getStreet()).isEqualTo(TestFactory.IB1_STREET);
-		assertThat(f.getCommitmentEndDate()).isEqualTo(TestFactory.IB1_END_DATE);
-		assertThat(f.getCommitmentStartDate()).isEqualTo(TestFactory.IB1_START_DATE);
 		assertThat(f.getFacilityId()).isEqualTo(TestFactory.IB1_FACILITY_ID);
-		assertThat(f.getLastModifiedDate()).isEqualTo(TestFactory.IB1_LAST_MODIFIED_DATE);
-		assertThat(f.getPlacementId()).isEqualTo(TestFactory.IB1_PLACEMENT_ID);
-		assertThat(f.getType()).isEqualTo(TestFactory.IB1_TYPE);
-		assertThat(f.getInformation()).hasSize(1).satisfiesExactly(m -> {
-			assertThat(m.getDisplayName()).isEqualTo(TestFactory.IB1_META_DISPLAY_NAME);
-			assertThat(m.getName()).isEqualTo(TestFactory.IB1_META_KEY);
-			assertThat(m.getType()).isEqualTo(TestFactory.IB1_META_TYPE);
-			assertThat(m.getValue()).isEqualTo(TestFactory.IB1_META_VALUE);
+		assertThat(f.getInstalledBases()).hasSize(1).satisfiesExactly(c -> {
+			assertThat(c.getCommitmentEndDate()).isEqualTo(TestFactory.IB1_END_DATE);
+			assertThat(c.getCommitmentStartDate()).isEqualTo(TestFactory.IB1_START_DATE);
+			assertThat(c.getLastModifiedDate()).isEqualTo(TestFactory.IB1_LAST_MODIFIED_DATE);
+			assertThat(c.getPlacementId()).isEqualTo(TestFactory.IB1_PLACEMENT_ID);
+			assertThat(c.getType()).isEqualTo(TestFactory.IB1_TYPE);
+			assertThat(c.getInformation()).hasSize(1).satisfiesExactly(m -> {
+				assertThat(m.getDisplayName()).isEqualTo(TestFactory.IB1_META_DISPLAY_NAME);
+				assertThat(m.getName()).isEqualTo(TestFactory.IB1_META_KEY);
+				assertThat(m.getType()).isEqualTo(TestFactory.IB1_META_TYPE);
+				assertThat(m.getValue()).isEqualTo(TestFactory.IB1_META_VALUE);
+			});
 		});
 	}
 
@@ -116,28 +120,35 @@ class IntricMapperTest {
 		assertThat(f.getAddress().getCity()).isEqualTo(TestFactory.IB2_CITY);
 		assertThat(f.getAddress().getPostalCode()).isEqualTo(TestFactory.IB2_POSTAL_CODE);
 		assertThat(f.getAddress().getStreet()).isEqualTo(TestFactory.IB2_STREET);
-		assertThat(f.getCommitmentEndDate()).isNull();
-		assertThat(f.getCommitmentStartDate()).isEqualTo(TestFactory.IB2_START_DATE);
 		assertThat(f.getFacilityId()).isEqualTo(TestFactory.IB2_FACILITY_ID);
-		assertThat(f.getLastModifiedDate()).isEqualTo(TestFactory.IB2_LAST_MODIFIED_DATE);
-		assertThat(f.getPlacementId()).isEqualTo(TestFactory.IB2_PLACEMENT_ID);
-		assertThat(f.getType()).isEqualTo(TestFactory.IB2_TYPE);
-		assertThat(f.getInformation()).hasSize(1).satisfiesExactly(m -> {
-			assertThat(m.getDisplayName()).isEqualTo(TestFactory.IB2_META_DISPLAY_NAME);
-			assertThat(m.getName()).isEqualTo(TestFactory.IB2_META_KEY);
-			assertThat(m.getType()).isEqualTo(TestFactory.IB2_META_TYPE);
-			assertThat(m.getValue()).isEqualTo(TestFactory.IB2_META_VALUE);
+		assertThat(f.getInstalledBases()).hasSize(1).satisfiesExactly(c -> {
+			assertThat(c.getCommitmentEndDate()).isNull();
+			assertThat(c.getCommitmentStartDate()).isEqualTo(TestFactory.IB2_START_DATE);
+			assertThat(c.getLastModifiedDate()).isEqualTo(TestFactory.IB2_LAST_MODIFIED_DATE);
+			assertThat(c.getPlacementId()).isEqualTo(TestFactory.IB2_PLACEMENT_ID);
+			assertThat(c.getType()).isEqualTo(TestFactory.IB2_TYPE);
+			assertThat(c.getInformation()).hasSize(1).satisfiesExactly(m -> {
+				assertThat(m.getDisplayName()).isEqualTo(TestFactory.IB2_META_DISPLAY_NAME);
+				assertThat(m.getName()).isEqualTo(TestFactory.IB2_META_KEY);
+				assertThat(m.getType()).isEqualTo(TestFactory.IB2_META_TYPE);
+				assertThat(m.getValue()).isEqualTo(TestFactory.IB2_META_VALUE);
+			});
 		});
 	}
 
 	@Test
 	void toInstalledBaseFromNull() {
-		assertThat(IntricMapper.toInstalledBase(null)).isNull();
+		assertThat(IntricMapper.toIntricModel(null)).isNull();
+	}
+
+	@Test
+	void toInstalledBaseFromEmptyMap() {
+		assertThat(IntricMapper.toIntricModel(emptyMap())).isNull();
 	}
 
 	@Test
 	void toInstalledBaseFromEmptyObject() {
-		final var result = IntricMapper.toInstalledBase(new InstalledBaseCustomer());
+		final var result = IntricMapper.toIntricModel(Map.of("123456", new InstalledBaseCustomer()));
 
 		assertThat(result)
 			.hasAllNullFieldsOrPropertiesExcept("facilities")

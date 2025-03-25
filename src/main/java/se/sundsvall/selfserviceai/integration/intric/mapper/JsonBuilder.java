@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
 
 @Component
 public class JsonBuilder {
@@ -26,9 +26,9 @@ public class JsonBuilder {
 			.setSerializationInclusion(NON_NULL);
 	}
 
-	public String toJsonString(InstalledBase installedBase) {
+	public String toJsonString(IntricModel intricModel) {
 		try {
-			return objectMapper.writeValueAsString(installedBase);
+			return objectMapper.writeValueAsString(intricModel);
 		} catch (final Exception e) {
 			final var formattedError = SERIALIZATION_ERROR_MESSAGE.formatted(e.getClass().getSimpleName());
 			LOG.error(formattedError, e);

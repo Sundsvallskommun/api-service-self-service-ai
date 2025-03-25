@@ -32,89 +32,46 @@ class FacilityTest {
 			hasValidBeanHashCode(),
 			hasValidBeanEquals(),
 			hasValidBeanToString()));
-
-		MatcherAssert.assertThat(Facility.Metadata.class, allOf(
-			hasValidBeanConstructor(),
-			hasValidGettersAndSetters(),
-			hasValidBeanHashCode(),
-			hasValidBeanEquals(),
-			hasValidBeanToString()));
-
 	}
 
 	@Test
 	void testBuilderMethodsForFacility() {
 		final var address = Address.builder().build();
 		final var agreements = List.of(Agreement.builder().build());
-		final var commitmentEndDate = LocalDate.now().plusDays(1);
-		final var commitmentStartDate = LocalDate.now().minusDays(1);
+		final var installedBases = List.of(InstalledBase.builder().build());
 		final var facilityId = "facilityId";
-		final var information = List.of(Facility.Metadata.builder().build());
 		final var invoices = List.of(Invoice.builder().build());
-		final var lastModifiedDate = LocalDate.now();
 		final var measurements = List.of(MeasurementData.builder().build());
-		final var placementId = 123;
-		final var type = "type";
 
 		final var bean = Facility.builder()
 			.withAddress(address)
 			.withAgreements(agreements)
-			.withCommitmentEndDate(commitmentEndDate)
-			.withCommitmentStartDate(commitmentStartDate)
+			.withInstalledBases(installedBases)
 			.withFacilityId(facilityId)
-			.withInformation(information)
 			.withInvoices(invoices)
-			.withLastModifiedDate(lastModifiedDate)
 			.withMeasurements(measurements)
-			.withPlacementId(placementId)
-			.withType(type)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getAddress()).isEqualTo(address);
 		assertThat(bean.getAgreements()).isEqualTo(agreements);
-		assertThat(bean.getCommitmentEndDate()).isEqualTo(commitmentEndDate);
-		assertThat(bean.getCommitmentStartDate()).isEqualTo(commitmentStartDate);
+		assertThat(bean.getInstalledBases()).isEqualTo(installedBases);
 		assertThat(bean.getFacilityId()).isEqualTo(facilityId);
-		assertThat(bean.getInformation()).isEqualTo(information);
 		assertThat(bean.getInvoices()).isEqualTo(invoices);
-		assertThat(bean.getLastModifiedDate()).isEqualTo(lastModifiedDate);
 		assertThat(bean.getMeasurements()).isEqualTo(measurements);
-		assertThat(bean.getPlacementId()).isEqualTo(placementId);
-		assertThat(bean.getType()).isEqualTo(type);
-	}
-
-	void testBuilderMethodsForMetadata() {
-		final var displayName = "displayName";
-		final var name = "name";
-		final var type = "type";
-		final var value = "value";
-
-		final var bean = Facility.Metadata.builder()
-			.withDisplayName(displayName)
-			.withName(name)
-			.withType(type)
-			.withValue(value)
-			.build();
-
-		assertThat(bean.getDisplayName()).isEqualTo(displayName);
-		assertThat(bean.getName()).isEqualTo(name);
-		assertThat(bean.getType()).isEqualTo(type);
-		assertThat(bean.getValue()).isEqualTo(value);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(Facility.builder().build()).hasAllNullFieldsOrPropertiesExcept("agreements", "measurements", "invoices")
+		assertThat(Facility.builder().build()).hasAllNullFieldsOrPropertiesExcept("agreements", "installedBases", "invoices", "measurements")
 			.hasFieldOrPropertyWithValue("agreements", emptyList())
-			.hasFieldOrPropertyWithValue("measurements", emptyList())
-			.hasFieldOrPropertyWithValue("invoices", emptyList());
-		assertThat(new Facility()).hasAllNullFieldsOrPropertiesExcept("agreements", "measurements", "invoices")
+			.hasFieldOrPropertyWithValue("installedBases", emptyList())
+			.hasFieldOrPropertyWithValue("invoices", emptyList())
+			.hasFieldOrPropertyWithValue("measurements", emptyList());
+		assertThat(new Facility()).hasAllNullFieldsOrPropertiesExcept("agreements", "installedBases", "invoices", "measurements")
 			.hasFieldOrPropertyWithValue("agreements", emptyList())
-			.hasFieldOrPropertyWithValue("measurements", emptyList())
-			.hasFieldOrPropertyWithValue("invoices", emptyList());
-
-		assertThat(Facility.Metadata.builder().build()).hasAllNullFieldsOrProperties();
-		assertThat(new Facility.Metadata()).hasAllNullFieldsOrProperties();
+			.hasFieldOrPropertyWithValue("installedBases", emptyList())
+			.hasFieldOrPropertyWithValue("invoices", emptyList())
+			.hasFieldOrPropertyWithValue("measurements", emptyList());
 	}
 }
