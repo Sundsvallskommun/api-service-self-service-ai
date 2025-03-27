@@ -32,6 +32,8 @@ spring:
             token-uri: ${spring.security.oauth2.common.token-url}
           invoices:
             token-uri: ${spring.security.oauth2.common.token-url}
+          lime:
+            token-uri: ${spring.security.oauth2.common.token-url}
           measurement-data:
             token-uri: ${spring.security.oauth2.common.token-url}
 
@@ -43,6 +45,9 @@ spring:
             client-id: ${spring.security.oauth2.common.client-id}
             client-secret: ${spring.security.oauth2.common.client-secret}
           invoices:
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
+          lime:
             client-id: ${spring.security.oauth2.common.client-id}
             client-secret: ${spring.security.oauth2.common.client-secret}
           measurement-data:

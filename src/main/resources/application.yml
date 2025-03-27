@@ -39,6 +39,9 @@ spring:
           invoices:
             authorization-grant-type: client_credentials
             provider: invoices
+          lime:
+            authorization-grant-type: client_credentials
+            provider: lime
           measurement-data:
             authorization-grant-type: client_credentials
             provider: measurement-data
