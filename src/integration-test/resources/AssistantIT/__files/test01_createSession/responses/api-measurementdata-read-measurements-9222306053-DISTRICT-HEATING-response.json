@@ -1,0 +1,521 @@
+{
+	"category": "DISTRICT_HEATING",
+	"facilityId": "9222306053",
+	"aggregateOn": "MONTH",
+	"fromDate": "2024-03-24T00:00:00+01:00",
+	"toDate": "2025-03-25T00:00:00+01:00",
+	"measurementSeries": [
+		{
+			"unit": "m3",
+			"measurementType": "flow",
+			"measurementPoints": [
+				{
+					"value": 56.89,
+					"timestamp": "2024-04-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "12291220"
+						},
+						{
+							"key": "interpolation",
+							"value": "1"
+						}
+					]
+				},
+				{
+					"value": 26.18,
+					"timestamp": "2024-05-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "13668734"
+						}
+					]
+				},
+				{
+					"value": 15.46,
+					"timestamp": "2024-06-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "14313159"
+						}
+					]
+				},
+				{
+					"value": 9.84,
+					"timestamp": "2024-07-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15335885"
+						},
+						{
+							"key": "interpolation",
+							"value": "3"
+						}
+					]
+				},
+				{
+					"value": 11.49,
+					"timestamp": "2024-08-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15993664"
+						},
+						{
+							"key": "interpolation",
+							"value": "4"
+						}
+					]
+				},
+				{
+					"value": 25.83,
+					"timestamp": "2024-09-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "16690974"
+						}
+					]
+				},
+				{
+					"value": 43.63,
+					"timestamp": "2024-10-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "17992064"
+						},
+						{
+							"key": "interpolation",
+							"value": "1"
+						}
+					]
+				},
+				{
+					"value": 64.74,
+					"timestamp": "2024-11-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "19101912"
+						}
+					]
+				},
+				{
+					"value": 73.68,
+					"timestamp": "2024-12-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "22790664"
+						}
+					]
+				},
+				{
+					"value": 72.51,
+					"timestamp": "2025-01-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "28398481"
+						}
+					]
+				},
+				{
+					"value": 65.7,
+					"timestamp": "2025-02-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30099130"
+						}
+					]
+				},
+				{
+					"value": 47.97,
+					"timestamp": "2025-03-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30976422"
+						}
+					]
+				}
+			]
+		},
+		{
+			"unit": "C",
+			"measurementType": "return_temperature",
+			"measurementPoints": [
+				{
+					"timestamp": "2024-04-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "12296084"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-05-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "13673788"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-06-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "14318261"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-07-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15341059"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-08-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15998893"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-09-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "16696252"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-10-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "17997363"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-11-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "19107334"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-12-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "22796168"
+						}
+					]
+				},
+				{
+					"timestamp": "2025-01-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "28404017"
+						}
+					]
+				},
+				{
+					"timestamp": "2025-02-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30105076"
+						}
+					]
+				},
+				{
+					"timestamp": "2025-03-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30982855"
+						}
+					]
+				}
+			]
+		},
+		{
+			"unit": "kWh",
+			"measurementType": "energy",
+			"measurementPoints": [
+				{
+					"value": 2181.0,
+					"timestamp": "2024-04-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "12288790"
+						},
+						{
+							"key": "interpolation",
+							"value": "1"
+						}
+					]
+				},
+				{
+					"value": 1002.0,
+					"timestamp": "2024-05-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "13666209"
+						}
+					]
+				},
+				{
+					"value": 491.0,
+					"timestamp": "2024-06-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "14310610"
+						}
+					]
+				},
+				{
+					"value": 218.0,
+					"timestamp": "2024-07-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15333301"
+						},
+						{
+							"key": "interpolation",
+							"value": "3"
+						}
+					]
+				},
+				{
+					"value": 285.0,
+					"timestamp": "2024-08-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15991053"
+						},
+						{
+							"key": "interpolation",
+							"value": "4"
+						}
+					]
+				},
+				{
+					"value": 955.0,
+					"timestamp": "2024-09-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "16688337"
+						}
+					]
+				},
+				{
+					"value": 1723.0,
+					"timestamp": "2024-10-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "17989417"
+						},
+						{
+							"key": "interpolation",
+							"value": "1"
+						}
+					]
+				},
+				{
+					"value": 2527.0,
+					"timestamp": "2024-11-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "19099203"
+						}
+					]
+				},
+				{
+					"value": 2969.0,
+					"timestamp": "2024-12-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "22787914"
+						}
+					]
+				},
+				{
+					"value": 3054.0,
+					"timestamp": "2025-01-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "28395715"
+						}
+					]
+				},
+				{
+					"value": 2610.0,
+					"timestamp": "2025-02-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30096159"
+						}
+					]
+				},
+				{
+					"value": 1868.0,
+					"timestamp": "2025-03-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30973210"
+						}
+					]
+				}
+			]
+		},
+		{
+			"unit": "C",
+			"measurementType": "flow_temperature",
+			"measurementPoints": [
+				{
+					"timestamp": "2024-04-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "12293651"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-05-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "13671260"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-06-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "14315709"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-07-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15338472"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-08-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "15996278"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-09-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "16693613"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-10-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "17994713"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-11-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "19104623"
+						}
+					]
+				},
+				{
+					"timestamp": "2024-12-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "22793416"
+						}
+					]
+				},
+				{
+					"timestamp": "2025-01-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "28401249"
+						}
+					]
+				},
+				{
+					"timestamp": "2025-02-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30102103"
+						}
+					]
+				},
+				{
+					"timestamp": "2025-03-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "readingSequence",
+							"value": "30979638"
+						}
+					]
+				}
+			]
+		}
+	]
+}

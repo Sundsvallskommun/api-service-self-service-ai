@@ -11,6 +11,7 @@ import static se.sundsvall.selfserviceai.TestFactory.createInvoices;
 import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -23,11 +24,11 @@ class JsonBuilderTest {
 
 	@Test
 	void toJson(@Load(value = "junit/expected-structure.json", as = Load.ResourceType.STRING) String expected) throws Exception {
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
 
-		AgreementDecorator.addAgreements(installedBase, createAgreements(true));
-		MeasurementDecorator.addMeasurements(installedBase, createMeasurements(true));
-		InvoiceDecorator.addInvoices(installedBase, createInvoices(true));
+		AgreementDecorator.addAgreements(installedBase.getFacilities(), createAgreements(true));
+		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), createMeasurements(true));
+		InvoiceDecorator.addInvoices(installedBase.getFacilities(), createInvoices(true));
 
 		final var jsonBuilder = new JsonBuilder(new ObjectMapper());
 		assertThat(jsonBuilder.toJsonString(installedBase)).isEqualToIgnoringWhitespace(expected);

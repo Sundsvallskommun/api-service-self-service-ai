@@ -1,0 +1,39 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/measurementdata/2281/measurement-data",
+		"queryParameters": {
+			"facilityId": {
+				"equalTo": "9222306053"
+			},
+			"category": {
+				"equalTo": "DISTRICT_HEATING"
+			},
+			"partyId": {
+				"equalTo": "c62fd364-6214-4fb1-82f7-e4b6be53afbe"
+			},
+			"aggregateOn": {
+				"equalTo": "MONTH"
+			},
+			"fromDate": {
+				"matches": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}$"
+			},
+			"toDate": {
+				"matches": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}$"
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test01_createSession/responses/api-measurementdata-read-measurements-9222306053-DISTRICT-HEATING-response.json"
+	},
+	"name": "api-measurementdata-read-measurements-9222306053-DISTRICT-HEATING"
+}

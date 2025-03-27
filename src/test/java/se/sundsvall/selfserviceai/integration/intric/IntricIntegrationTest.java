@@ -24,7 +24,7 @@ import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
 
 @ExtendWith(MockitoExtension.class)
 class IntricIntegrationTest {
@@ -149,7 +149,7 @@ class IntricIntegrationTest {
 	 */
 	@Test
 	void uploadFile_1() throws Exception {
-		final var installedBase = InstalledBase.builder().build();
+		final var installedBase = IntricModel.builder().build();
 		final var id = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
 		final var filePublic = FilePublic.builder()
 			.withId(UUID.fromString(id))
@@ -172,7 +172,7 @@ class IntricIntegrationTest {
 	 */
 	@Test
 	void uploadFile_2() throws Exception {
-		final var installedBase = InstalledBase.builder().build();
+		final var installedBase = IntricModel.builder().build();
 		final var exception = new RuntimeException("Something went wrong");
 		when(intricClientMock.uploadFile(any(MultipartFile.class))).thenThrow(exception);
 

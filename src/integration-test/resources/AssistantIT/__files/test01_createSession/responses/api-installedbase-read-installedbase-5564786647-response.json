@@ -1,0 +1,226 @@
+{
+	"installedBaseCustomers": [
+		{
+			"customerNumber": "123456",
+			"partyId": "c62fd364-6214-4fb1-82f7-e4b6be53afbe",
+			"items": [
+				{
+					"type": "Elhandel",
+					"facilityId": "735999109220108018",
+					"placementId": -34453,
+					"facilityCommitmentStartDate": "2014-04-01",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Åtta bens väg 8",
+						"postalCode": "85641",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "Elhandel",
+					"facilityId": "735999109222306054",
+					"placementId": -43545,
+					"facilityCommitmentStartDate": "2022-01-20",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Marvelgatan 33",
+						"postalCode": "85644",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "Elhandel",
+					"facilityId": "735999109260307051",
+					"placementId": -29665,
+					"facilityCommitmentStartDate": "2014-10-01",
+					"facilityCommitmentEndDate": "2018-04-19",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Bossvägen 2",
+						"postalCode": "85650",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "Elhandel",
+					"facilityId": "735999109260723028",
+					"placementId": -32744,
+					"facilityCommitmentStartDate": "2011-11-01",
+					"facilityCommitmentEndDate": "2020-02-03",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Doktor Bläckfisks väg 88"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "Elhandel",
+					"facilityId": "735999109260723035",
+					"placementId": -31980,
+					"facilityCommitmentStartDate": "2011-03-01",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Doktor Bläckfisks väg 88",
+						"postalCode": "85634",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "Fjärrvärme",
+					"facilityId": "9222306053",
+					"placementId": 1328,
+					"facilityCommitmentStartDate": "2022-01-19",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"propertyDesignation": "Kapten Amerika 66",
+						"careOf": "Parker Peter",
+						"street": "Marvelgatan 33",
+						"postalCode": "85644",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "21",
+							"type": "MWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "debiteffect",
+							"value": "8",
+							"type": "kW",
+							"displayName": "Abonnerad effekt"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Kapten Amerika 66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -8,23 +8,21 @@ import generated.se.sundsvall.measurementdata.MeasurementPoints;
 import generated.se.sundsvall.measurementdata.MeasurementSerie;
 import java.util.List;
 import java.util.Objects;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.MeasurementData;
 
 public class MeasurementDecorator {
 	private MeasurementDecorator() {}
 
-	public static InstalledBase addMeasurements(InstalledBase installedBase, List<Data> measurementDatas) {
+	public static void addMeasurements(List<Facility> facilities, List<Data> measurementDatas) {
 		ofNullable(measurementDatas).orElse(emptyList())
 			.stream()
 			.filter(Objects::nonNull)
-			.forEach(data -> attachToFacility(installedBase, data));
-
-		return installedBase;
+			.forEach(data -> attachToFacility(facilities, data));
 	}
 
-	private static void attachToFacility(InstalledBase installedBase, Data data) {
-		ofNullable(installedBase.getFacilities()).orElse(emptyList())
+	private static void attachToFacility(List<Facility> facilities, Data data) {
+		ofNullable(facilities).orElse(emptyList())
 			.stream()
 			.filter(f -> f.getFacilityId().equals(data.getFacilityId()))
 			.findFirst()

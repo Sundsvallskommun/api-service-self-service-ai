@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
 
 @Component
 public class IntricIntegration {
@@ -95,11 +95,11 @@ public class IntricIntegration {
 	/**
 	 * Uploads a file to Intric
 	 *
-	 * @param  installedBase The file content in the form of a installedBase object to store in intric
-	 * @return               The ID of the uploaded file
+	 * @param  intricModel The file content in the form of a installedBase object to store in intric
+	 * @return             The ID of the uploaded file
 	 */
-	public UUID uploadFile(final InstalledBase installedBase) {
-		final var content = jsonBuilder.toJsonString(installedBase);
+	public UUID uploadFile(final IntricModel intricModel) {
+		final var content = jsonBuilder.toJsonString(intricModel);
 
 		LOG.debug("Uploading file with content '{}'", content);
 		return client.uploadFile(toInformationFile(content)).id();

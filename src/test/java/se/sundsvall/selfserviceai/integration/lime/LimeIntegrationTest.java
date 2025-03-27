@@ -93,15 +93,15 @@ class LimeIntegrationTest {
 	void getHistoryThrowsException() {
 
 		// Arrange
-		when(clientMock.getChatHistory(SESSION_ID)).thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
+		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
+		when(clientMock.getChatHistory(SESSION_ID)).thenThrow(exception);
 
 		// Act
 		final var e = assertThrows(ThrowableProblem.class, () -> integration.getChatHistory(SESSION_ID));
 
 		// Assert and verify
 		verify(clientMock).getChatHistory(SESSION_ID);
-		assertThat(e.getStatus()).isEqualTo(Status.I_AM_A_TEAPOT);
-		assertThat(e.getMessage()).isEqualTo("I'm a teapot: Big and stout");
+		assertThat(e).isSameAs(exception);
 	}
 
 }

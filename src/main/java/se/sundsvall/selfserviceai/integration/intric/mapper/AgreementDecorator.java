@@ -7,22 +7,20 @@ import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.
 import generated.se.sundsvall.agreement.Agreement;
 import java.util.List;
 import java.util.Objects;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InstalledBase;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 public class AgreementDecorator {
 	private AgreementDecorator() {}
 
-	public static InstalledBase addAgreements(InstalledBase installedBase, List<Agreement> agreements) {
+	public static void addAgreements(List<Facility> facilities, List<Agreement> agreements) {
 		ofNullable(agreements).orElse(emptyList())
 			.stream()
 			.filter(Objects::nonNull)
-			.forEach(agreement -> attachToFacility(installedBase, agreement));
-
-		return installedBase;
+			.forEach(agreement -> attachToFacility(facilities, agreement));
 	}
 
-	private static void attachToFacility(InstalledBase installedBase, Agreement agreement) {
-		ofNullable(installedBase.getFacilities()).orElse(emptyList())
+	private static void attachToFacility(List<Facility> facilities, Agreement agreement) {
+		ofNullable(facilities).orElse(emptyList())
 			.stream()
 			.filter(f -> f.getFacilityId().equals(agreement.getFacilityId()))
 			.findFirst()

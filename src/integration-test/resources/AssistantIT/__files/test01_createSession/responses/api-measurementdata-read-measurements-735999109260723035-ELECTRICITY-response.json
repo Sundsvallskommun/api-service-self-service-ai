@@ -1,0 +1,185 @@
+{
+	"category": "ELECTRICITY",
+	"facilityId": "735999109260723035",
+	"aggregateOn": "MONTH",
+	"fromDate": "2024-03-24T00:00:00+01:00",
+	"toDate": "2025-03-25T00:00:00+01:00",
+	"measurementSeries": [
+		{
+			"unit": "kWh",
+			"measurementType": "Energy",
+			"measurementPoints": [
+				{
+					"value": 3104.4,
+					"timestamp": "2024-04-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "30"
+						}
+					]
+				},
+				{
+					"value": 1650.749,
+					"timestamp": "2024-05-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "31"
+						}
+					]
+				},
+				{
+					"value": 910.098,
+					"timestamp": "2024-06-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "30"
+						}
+					]
+				},
+				{
+					"value": 973.71,
+					"timestamp": "2024-07-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "31"
+						}
+					]
+				},
+				{
+					"value": 1115.951,
+					"timestamp": "2024-08-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "31"
+						}
+					]
+				},
+				{
+					"value": 1325.021,
+					"timestamp": "2024-09-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "30"
+						}
+					]
+				},
+				{
+					"value": 2298.291,
+					"timestamp": "2024-10-01T00:00:00+02:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "31"
+						}
+					]
+				},
+				{
+					"value": 2783.356,
+					"timestamp": "2024-11-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "30"
+						}
+					]
+				},
+				{
+					"value": 3397.237,
+					"timestamp": "2024-12-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "31"
+						}
+					]
+				},
+				{
+					"value": 3380.58,
+					"timestamp": "2025-01-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "31"
+						}
+					]
+				},
+				{
+					"value": 3128.214,
+					"timestamp": "2025-02-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "28"
+						}
+					]
+				},
+				{
+					"value": 1999.993,
+					"timestamp": "2025-03-01T00:00:00+01:00",
+					"metaData": [
+						{
+							"key": "interpolation",
+							"value": "22"
+						}
+					]
+				}
+			]
+		},
+		{
+			"unit": "C",
+			"measurementType": "outdoor_temperature",
+			"measurementPoints": [
+				{
+					"value": 3.5579166666666666,
+					"timestamp": "2024-04-01T00:00:00+02:00"
+				},
+				{
+					"value": 14.319758064516126,
+					"timestamp": "2024-05-01T00:00:00+02:00"
+				},
+				{
+					"value": 17.20097222222223,
+					"timestamp": "2024-06-01T00:00:00+02:00"
+				},
+				{
+					"value": 18.611559139784946,
+					"timestamp": "2024-07-01T00:00:00+02:00"
+				},
+				{
+					"value": 17.98172043010753,
+					"timestamp": "2024-08-01T00:00:00+02:00"
+				},
+				{
+					"value": 12.371805555555552,
+					"timestamp": "2024-09-01T00:00:00+02:00"
+				},
+				{
+					"value": 6.951209677419353,
+					"timestamp": "2024-10-01T00:00:00+02:00"
+				},
+				{
+					"value": 1.7218055555555556,
+					"timestamp": "2024-11-01T00:00:00+01:00"
+				},
+				{
+					"value": -1.6767473118279568,
+					"timestamp": "2024-12-01T00:00:00+01:00"
+				},
+				{
+					"value": -2.23239247311828,
+					"timestamp": "2025-01-01T00:00:00+01:00"
+				},
+				{
+					"value": -1.6319940476190478,
+					"timestamp": "2025-02-01T00:00:00+01:00"
+				}
+			]
+		}
+	]
+}

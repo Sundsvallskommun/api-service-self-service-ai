@@ -5,6 +5,7 @@ import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
 import java.util.ArrayList;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
@@ -14,15 +15,15 @@ class AgreementDecoratorTest {
 	@Test
 	void addAgreements() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
 		final var agreements = new ArrayList<>(createAgreements(true));
 		agreements.add(null);
 
 		// Act
-		final var result = AgreementDecorator.addAgreements(installedBase, agreements);
+		AgreementDecorator.addAgreements(installedBase.getFacilities(), agreements);
 
 		// Assert
-		assertThat(result.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
+		assertThat(installedBase.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
 			assertThat(f.getAgreements()).hasSize(2).satisfiesExactlyInAnyOrder(a -> {
 				assertThat(a.getAgreementId()).isEqualTo(TestFactory.IB1_AGREEMENT1_ID);
 				assertThat(a.isBound()).isEqualTo(TestFactory.IB1_AGREEMENT1_BINDING);
@@ -54,25 +55,25 @@ class AgreementDecoratorTest {
 	void addAgreementsNoMatches() {
 		// Arrange
 		final var agreements = createAgreements(false);
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
 
 		// Act
-		final var result = AgreementDecorator.addAgreements(installedBase, agreements);
+		AgreementDecorator.addAgreements(installedBase.getFacilities(), agreements);
 
 		// Assert
-		assertThat(result.getFacilities()).flatExtracting(Facility::getAgreements).isEmpty();
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getAgreements).isEmpty();
 	}
 
 	@Test
 	void addAgreementsFromNull() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
 
 		// Act
-		final var result = AgreementDecorator.addAgreements(installedBase, null);
+		AgreementDecorator.addAgreements(installedBase.getFacilities(), null);
 
 		// Assert
-		assertThat(result.getFacilities()).flatExtracting(Facility::getAgreements).isEmpty();
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getAgreements).isEmpty();
 	}
 
 }

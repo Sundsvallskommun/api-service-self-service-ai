@@ -9,7 +9,7 @@
 		"bodyPatterns": [
 			{
 				"equalToJson": {
-					"question": "Påbörjar session för party id '5a6c3e4e-c320-4006-b448-1fd4121df828'",
+					"question": "Påbörjar session för party id 'c62fd364-6214-4fb1-82f7-e4b6be53afbe'",
 					"files": []
 				}
 			}
