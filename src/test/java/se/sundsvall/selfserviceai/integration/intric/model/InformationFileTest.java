@@ -1,14 +1,18 @@
 package se.sundsvall.selfserviceai.integration.intric.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,4 +66,29 @@ class InformationFileTest {
 
 		assertThat(Files.readString(Path.of(file.getPath()), Charset.defaultCharset())).isEqualTo(data);
 	}
+
+	@Test
+	void transferToWhenNull() throws Exception {
+		final var fileMock = Mockito.mock(File.class);
+		final var bean = InformationFile.create();
+
+		assertDoesNotThrow(() -> bean.transferTo(fileMock));
+
+		verifyNoInteractions(fileMock);
+	}
+
+	@Test
+	void isEmpty() {
+		assertThat(InformationFile.create().isEmpty()).isTrue();
+		assertThat(InformationFile.create().withData("").isEmpty()).isTrue();
+		assertThat(InformationFile.create().withData("1").isEmpty()).isFalse();
+	}
+
+	@Test
+	void withData() throws IOException {
+		assertThat(InformationFile.create().withData(null).getBytes()).isNull();
+		assertThat(InformationFile.create().withData("").getBytes()).isEmpty();
+		assertThat(InformationFile.create().withData("1").getBytes()).isNotEmpty();
+	}
+
 }

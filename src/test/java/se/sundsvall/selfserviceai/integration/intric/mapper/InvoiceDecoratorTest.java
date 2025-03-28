@@ -14,10 +14,12 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
 
 class InvoiceDecoratorTest {
 
+	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+
 	@Test
 	void addInvoices() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var invoices = new ArrayList<>(createInvoices(true));
 		invoices.add(null);
 
@@ -78,7 +80,7 @@ class InvoiceDecoratorTest {
 	@Test
 	void addInvoicesNoMatches() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var invoices = new ArrayList<>(createInvoices(false));
 
 		// Act
@@ -91,7 +93,7 @@ class InvoiceDecoratorTest {
 	@Test
 	void addInvoicesFromNull() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 
 		// Act
 		InvoiceDecorator.addInvoices(installedBase.getFacilities(), null);

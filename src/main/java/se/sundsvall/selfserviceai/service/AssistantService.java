@@ -7,7 +7,6 @@ import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
-import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toIntricModel;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 
@@ -36,6 +35,7 @@ import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegra
 import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
 import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
 import se.sundsvall.selfserviceai.integration.intric.mapper.AgreementDecorator;
+import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
 import se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator;
 import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
@@ -50,36 +50,39 @@ public class AssistantService {
 	private static final Logger LOG = LoggerFactory.getLogger(AssistantService.class);
 	private static final String ERROR_SESSION_NOT_FOUND = "Session with id '%s' could not be found";
 
-	private final IntricProperties intricProperties;
 	private final AgreementIntegration agreementIntegration;
+	private final FileRepository fileRepository;
 	private final InstalledbaseIntegration installedbaseIntegration;
 	private final IntricIntegration intricIntegration;
+	private final IntricMapper intricMapper;
+	private final IntricProperties intricProperties;
 	private final InvoicesIntegration invoicesIntegration;
 	private final LimeIntegration limeIntegration;
 	private final MeasurementDataIntegration measurementDataIntegration;
 	private final SessionRepository sessionRepository;
-	private final FileRepository fileRepository;
 
 	public AssistantService(
-		final IntricProperties intricProperties,
 		final AgreementIntegration agreementIntegration,
+		final FileRepository fileRepository,
 		final InstalledbaseIntegration installedbaseIntegration,
 		final IntricIntegration intricIntegration,
+		final IntricMapper intricMapper,
+		final IntricProperties intricProperties,
 		final InvoicesIntegration invoicesIntegration,
 		final LimeIntegration limeIntegration,
 		final MeasurementDataIntegration measurementDataIntegration,
-		final SessionRepository sessionRepository,
-		final FileRepository fileRepository) {
+		final SessionRepository sessionRepository) {
 
-		this.intricProperties = intricProperties;
 		this.agreementIntegration = agreementIntegration;
+		this.fileRepository = fileRepository;
 		this.installedbaseIntegration = installedbaseIntegration;
 		this.intricIntegration = intricIntegration;
+		this.intricMapper = intricMapper;
+		this.intricProperties = intricProperties;
 		this.invoicesIntegration = invoicesIntegration;
 		this.limeIntegration = limeIntegration;
 		this.measurementDataIntegration = measurementDataIntegration;
 		this.sessionRepository = sessionRepository;
-		this.fileRepository = fileRepository;
 	}
 
 	public SessionResponse createSession(String municipalityId, String partyId) {
@@ -131,7 +134,7 @@ public class AssistantService {
 	}
 
 	private IntricModel buildIntricModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
-		final var intricModel = toIntricModel(installedBases);
+		final var intricModel = intricMapper.toIntricModel(installedBases);
 
 		// Enrich all facility with agreement, invoice and measurement information
 		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());

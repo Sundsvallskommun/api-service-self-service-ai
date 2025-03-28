@@ -62,6 +62,7 @@ import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
 import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
 import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
+import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
@@ -81,6 +82,9 @@ class AssistantServiceTest {
 	private static final String FACILITY_ID = UUID.randomUUID().toString();
 	private static final String CUSTOMER_ENGAGEMENT_ORG_ID = "customerEngagementOrgId";
 	private static final Set<String> CUSTOMER_ENGAGEMENT_ORG_IDS = Set.of(CUSTOMER_ENGAGEMENT_ORG_ID);
+
+	@Spy
+	private IntricMapper intricMapperSpy;
 
 	@Mock
 	private IntricProperties intricPropertiesMock;
@@ -249,6 +253,7 @@ class AssistantServiceTest {
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
 		verify(measurementDataIntegrationMock).getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList());
+		verify(intricMapperSpy).toIntricModel(installedBaseResponse);
 		verify(intricIntegrationMock).uploadFile(installedBaseCaptor.capture());
 		verify(fileRepositoryMock).save(fileEntityCaptor.capture());
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
@@ -332,11 +337,13 @@ class AssistantServiceTest {
 			.withCustomerEngagementOrgIds(CUSTOMER_ENGAGEMENT_ORG_IDS)
 			.withPartyId(PARTY_ID)
 			.build();
+		final var installedBases = Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer());
+		final var intricModel = IntricModel.builder().build();
 
 		when(sessionRepositoryMock.findById(anyString())).thenReturn(Optional.of(sessionEntity));
 
-		when(installedbaseIntegrationMock.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS)).thenReturn(Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer()));
-		when(intricIntegrationMock.uploadFile(any(IntricModel.class))).thenThrow(exception);
+		when(installedbaseIntegrationMock.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS)).thenReturn(installedBases);
+		when(intricIntegrationMock.uploadFile(intricModel)).thenThrow(exception);
 
 		// Act
 		assistantService.populateWithInformation(SESSION_ID, sessionRequest);
@@ -347,7 +354,8 @@ class AssistantServiceTest {
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
 		verify(measurementDataIntegrationMock).getMeasurementData(MUNICIPALITY_ID, PARTY_ID, emptyList());
-		verify(intricIntegrationMock).uploadFile(any(IntricModel.class));
+		verify(intricMapperSpy).toIntricModel(installedBases);
+		verify(intricIntegrationMock).uploadFile(intricModel);
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {

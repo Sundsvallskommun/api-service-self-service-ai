@@ -12,10 +12,12 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 class AgreementDecoratorTest {
 
+	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+
 	@Test
 	void addAgreements() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456789", createCustomer()));
 		final var agreements = new ArrayList<>(createAgreements(true));
 		agreements.add(null);
 
@@ -55,7 +57,7 @@ class AgreementDecoratorTest {
 	void addAgreementsNoMatches() {
 		// Arrange
 		final var agreements = createAgreements(false);
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456789", createCustomer()));
 
 		// Act
 		AgreementDecorator.addAgreements(installedBase.getFacilities(), agreements);
@@ -67,7 +69,7 @@ class AgreementDecoratorTest {
 	@Test
 	void addAgreementsFromNull() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456789", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456789", createCustomer()));
 
 		// Act
 		AgreementDecorator.addAgreements(installedBase.getFacilities(), null);

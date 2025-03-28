@@ -1,14 +1,12 @@
 package se.sundsvall.selfserviceai.integration.intric;
 
-import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toAskAssistant;
-import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInformationFile;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
 import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
@@ -20,10 +18,12 @@ public class IntricIntegration {
 	private static final Logger LOG = LoggerFactory.getLogger(IntricIntegration.class);
 
 	private final IntricClient client;
+	private final IntricMapper mapper;
 	private final JsonBuilder jsonBuilder;
 
-	IntricIntegration(final IntricClient client, final JsonBuilder jsonBuilder) {
+	IntricIntegration(final IntricClient client, final IntricMapper mapper, final JsonBuilder jsonBuilder) {
 		this.client = client;
+		this.mapper = mapper;
 		this.jsonBuilder = jsonBuilder;
 	}
 
@@ -36,7 +36,7 @@ public class IntricIntegration {
 	 */
 	public AskResponse askAssistant(final String assistantId, final String input) {
 		LOG.debug("Asking assistant initial question");
-		final var question = toAskAssistant(input);
+		final var question = mapper.toAskAssistant(input);
 		return client.askAssistant(assistantId, question);
 	}
 
@@ -52,7 +52,8 @@ public class IntricIntegration {
 	 */
 	public Optional<AskResponse> askFollowUp(final String assistantId, final String sessionId, final String input, List<String> fileReferences) {
 		try {
-			final var question = toAskAssistant(input, fileReferences);
+			final var question = mapper.toAskAssistant(input, fileReferences);
+			System.err.println(question);
 			LOG.debug("Asking assistant followup question");
 			return Optional.of(client.askFollowUp(assistantId, sessionId, question));
 		} catch (final Exception e) { // Swallow exception here and let frontend decide how to handle problem
@@ -102,7 +103,7 @@ public class IntricIntegration {
 		final var content = jsonBuilder.toJsonString(intricModel);
 
 		LOG.debug("Uploading file with content '{}'", content);
-		return client.uploadFile(toInformationFile(content)).id();
+		return client.uploadFile(mapper.toInformationFile(content)).id();
 	}
 
 	/**

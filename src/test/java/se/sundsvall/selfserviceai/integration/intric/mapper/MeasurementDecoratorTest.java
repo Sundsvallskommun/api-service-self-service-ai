@@ -14,9 +14,11 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 class MeasurementDecoratorTest {
 
+	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+
 	@Test
 	void addMeasurements() {
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(true));
 		measurements.add(null);
 
@@ -52,7 +54,7 @@ class MeasurementDecoratorTest {
 	@Test
 	void addMeasurementsNoMatches() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(false));
 
 		// Act
@@ -65,7 +67,7 @@ class MeasurementDecoratorTest {
 	@Test
 	void addMeasurementsFromNull() {
 		// Arrange
-		final var installedBase = IntricMapper.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 
 		// Act
 		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), null);
