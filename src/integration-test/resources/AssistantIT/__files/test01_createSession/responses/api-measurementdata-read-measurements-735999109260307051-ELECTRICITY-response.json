@@ -1,0 +1,8 @@
+{
+	"category": "ELECTRICITY",
+	"facilityId": "735999109260307051",
+	"aggregateOn": "MONTH",
+	"fromDate": "2024-03-24T00:00:00+01:00",
+	"toDate": "2025-03-25T00:00:00+01:00",
+	"measurementSeries": []
+}

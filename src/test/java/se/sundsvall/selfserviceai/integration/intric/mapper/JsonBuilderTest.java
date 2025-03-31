@@ -11,6 +11,7 @@ import static se.sundsvall.selfserviceai.TestFactory.createInvoices;
 import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -21,16 +22,18 @@ import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 @ExtendWith(ResourceLoaderExtension.class)
 class JsonBuilderTest {
 
+	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+
 	@Test
 	void toJson(@Load(value = "junit/expected-structure.json", as = Load.ResourceType.STRING) String expected) throws Exception {
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var intricModel = INTRIC_MAPPER.toIntricModel(Map.of("123456789", createCustomer()));
 
-		AgreementDecorator.addAgreements(installedBase, createAgreements(true));
-		MeasurementDecorator.addMeasurements(installedBase, createMeasurements(true));
-		InvoiceDecorator.addInvoices(installedBase, createInvoices(true));
+		AgreementDecorator.addAgreements(intricModel.getFacilities(), createAgreements(true));
+		MeasurementDecorator.addMeasurements(intricModel.getFacilities(), createMeasurements(true));
+		InvoiceDecorator.addInvoices(intricModel.getFacilities(), createInvoices(true));
 
 		final var jsonBuilder = new JsonBuilder(new ObjectMapper());
-		assertThat(jsonBuilder.toJsonString(installedBase)).isEqualToIgnoringWhitespace(expected);
+		assertThat(jsonBuilder.toJsonString(intricModel)).isEqualToIgnoringWhitespace(expected);
 	}
 
 	@Test

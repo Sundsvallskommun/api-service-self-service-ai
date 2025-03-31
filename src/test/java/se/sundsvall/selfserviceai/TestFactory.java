@@ -293,7 +293,7 @@ public class TestFactory {
 			.partyId(PARTY_ID);
 	}
 
-	private static InstalledBaseItem createInstalledBaseItem(int baseItem) {
+	public static InstalledBaseItem createInstalledBaseItem(int baseItem) {
 		return new InstalledBaseItem()
 			.address(createInstalledBaseItemAddress(baseItem))
 			.facilityCommitmentEndDate(baseItem == 1 ? IB1_END_DATE : null)

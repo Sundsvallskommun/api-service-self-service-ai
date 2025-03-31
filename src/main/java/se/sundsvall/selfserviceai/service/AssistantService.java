@@ -1,18 +1,19 @@
 package se.sundsvall.selfserviceai.service;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
-import static se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper.toInstalledBase;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 
+import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -34,8 +35,10 @@ import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegra
 import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
 import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
 import se.sundsvall.selfserviceai.integration.intric.mapper.AgreementDecorator;
+import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
 import se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator;
 import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
@@ -47,36 +50,39 @@ public class AssistantService {
 	private static final Logger LOG = LoggerFactory.getLogger(AssistantService.class);
 	private static final String ERROR_SESSION_NOT_FOUND = "Session with id '%s' could not be found";
 
-	private final IntricProperties intricProperties;
 	private final AgreementIntegration agreementIntegration;
+	private final FileRepository fileRepository;
 	private final InstalledbaseIntegration installedbaseIntegration;
 	private final IntricIntegration intricIntegration;
+	private final IntricMapper intricMapper;
+	private final IntricProperties intricProperties;
 	private final InvoicesIntegration invoicesIntegration;
 	private final LimeIntegration limeIntegration;
 	private final MeasurementDataIntegration measurementDataIntegration;
 	private final SessionRepository sessionRepository;
-	private final FileRepository fileRepository;
 
 	public AssistantService(
-		final IntricProperties intricProperties,
 		final AgreementIntegration agreementIntegration,
+		final FileRepository fileRepository,
 		final InstalledbaseIntegration installedbaseIntegration,
 		final IntricIntegration intricIntegration,
+		final IntricMapper intricMapper,
+		final IntricProperties intricProperties,
 		final InvoicesIntegration invoicesIntegration,
 		final LimeIntegration limeIntegration,
 		final MeasurementDataIntegration measurementDataIntegration,
-		final SessionRepository sessionRepository,
-		final FileRepository fileRepository) {
+		final SessionRepository sessionRepository) {
 
-		this.intricProperties = intricProperties;
 		this.agreementIntegration = agreementIntegration;
+		this.fileRepository = fileRepository;
 		this.installedbaseIntegration = installedbaseIntegration;
 		this.intricIntegration = intricIntegration;
+		this.intricMapper = intricMapper;
+		this.intricProperties = intricProperties;
 		this.invoicesIntegration = invoicesIntegration;
 		this.limeIntegration = limeIntegration;
 		this.measurementDataIntegration = measurementDataIntegration;
 		this.sessionRepository = sessionRepository;
-		this.fileRepository = fileRepository;
 	}
 
 	public SessionResponse createSession(String municipalityId, String partyId) {
@@ -96,23 +102,27 @@ public class AssistantService {
 			final var municipalityId = sessionEntity.getMunicipalityId();
 			final var partyId = sessionRequest.getPartyId();
 
-			// Collect all information regarding customers installed base from different backends
-			final var agreements = agreementIntegration.getAgreements(municipalityId, partyId);
-			final var installedBase = Optional.of(toInstalledBase(installedbaseIntegration.getInstalledbase(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgIds().iterator().next())))
-				.map(ib -> AgreementDecorator.addAgreements(ib, agreements))
-				.map(ib -> InvoiceDecorator.addInvoices(ib, invoicesIntegration.getInvoices(municipalityId, partyId)))
-				.map(ib -> MeasurementDecorator.addMeasurements(ib, measurementDataIntegration.getMeasurementData(municipalityId, partyId, agreements)))
-				.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, "Installed base is not present after information collection")); // This should not be possible though
+			final var installedBases = installedbaseIntegration.getInstalledbases(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgIds());
 
-			// Save information in intric and update database with id of stored file
-			final var fileId = intricIntegration.uploadFile(installedBase);
-			final var fileEntity = fileRepository.save(toFileEntity(fileId));
+			if (isNotEmpty(installedBases)) {
+				// Build file content
+				final var intricModel = buildIntricModel(municipalityId, partyId, installedBases);
 
-			// Add file to session, update with success information
-			sessionEntity.getFiles().add(fileEntity);
-			sessionEntity.setCustomerNbr(installedBase.getCustomerNumber());
+				// Save information in intric and update database with id of stored file
+				final var fileId = intricIntegration.uploadFile(intricModel);
+				final var fileEntity = fileRepository.save(toFileEntity(fileId));
+
+				// Add file to session, update with success information
+				sessionEntity.getFiles().add(fileEntity);
+				sessionEntity.setCustomerNbr(intricModel.getCustomerNumber());
+				sessionEntity.setStatus("Successfully initialized");
+			} else {
+				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds());
+				sessionEntity.setStatus("No installed base information found for customer '%s' and counterparts %s".formatted(sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds()));
+			}
+
 			sessionEntity.setInitialized(OffsetDateTime.now());
-			sessionEntity.setStatus("Successfully initialized");
+
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when populating session with customer information", e);
 			// Update with failed information
@@ -121,6 +131,19 @@ public class AssistantService {
 		} finally {
 			sessionRepository.save(sessionEntity);
 		}
+	}
+
+	private IntricModel buildIntricModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
+		final var intricModel = intricMapper.toIntricModel(installedBases);
+
+		// Enrich all facility with agreement, invoice and measurement information
+		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());
+
+		AgreementDecorator.addAgreements(facilities, agreementIntegration.getAgreements(municipalityId, partyId));
+		InvoiceDecorator.addInvoices(facilities, invoicesIntegration.getInvoices(municipalityId, partyId));
+		MeasurementDecorator.addMeasurements(facilities, measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities));
+
+		return intricModel;
 	}
 
 	public boolean isSessionReady(String municipalityId, UUID sessionId) {
@@ -206,6 +229,7 @@ public class AssistantService {
 			sessionRepository.delete(sessionEntity);
 			return;
 		}
+
 		LOG.error("Could not delete session: {}", sessionEntity.getSessionId());
 		sessionEntity.setStatus("Failed to delete session, filter logs on log id '%s' for more information".formatted(RequestId.get()));
 	}

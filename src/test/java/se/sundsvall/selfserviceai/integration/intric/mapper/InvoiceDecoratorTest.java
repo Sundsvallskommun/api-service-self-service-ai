@@ -6,6 +6,7 @@ import static se.sundsvall.selfserviceai.TestFactory.createInvoices;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
@@ -13,26 +14,22 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
 
 class InvoiceDecoratorTest {
 
+	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+
 	@Test
 	void addInvoices() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var intricModel = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var invoices = new ArrayList<>(createInvoices(true));
 		invoices.add(null);
 
 		// Act
-		final var result = InvoiceDecorator.addInvoices(installedBase, invoices);
+		InvoiceDecorator.addInvoices(intricModel.getFacilities(), invoices);
 
 		// Assert
-		assertThat(result.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
-			assertThat(f.getInvoices()).hasSize(2).satisfiesExactlyInAnyOrder(i -> {
-				assertInvoiceWithAddress(i);
-			}, i -> {
-				assertInvoiceWithoutAddress(i);
-			});
-		}, f -> {
-			assertThat(f.getInvoices()).isEmpty();
-		});
+		assertThat(intricModel.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
+			assertThat(f.getInvoices()).hasSize(2).satisfiesExactlyInAnyOrder(this::assertInvoiceWithAddress, this::assertInvoiceWithoutAddress);
+		}, f -> assertThat(f.getInvoices()).isEmpty());
 	}
 
 	private void assertInvoiceWithoutAddress(Invoice i) {
@@ -83,25 +80,25 @@ class InvoiceDecoratorTest {
 	@Test
 	void addInvoicesNoMatches() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var invoices = new ArrayList<>(createInvoices(false));
 
 		// Act
-		final var result = InvoiceDecorator.addInvoices(installedBase, invoices);
+		InvoiceDecorator.addInvoices(installedBase.getFacilities(), invoices);
 
 		// Assert
-		assertThat(result.getFacilities()).flatExtracting(Facility::getInvoices).isEmpty();
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getInvoices).isEmpty();
 	}
 
 	@Test
 	void addInvoicesFromNull() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 
 		// Act
-		final var result = InvoiceDecorator.addInvoices(installedBase, null);
+		InvoiceDecorator.addInvoices(installedBase.getFacilities(), null);
 
 		// Assert
-		assertThat(result.getFacilities()).flatExtracting(Facility::getInvoices).isEmpty();
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getInvoices).isEmpty();
 	}
 }

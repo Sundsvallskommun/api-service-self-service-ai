@@ -7,23 +7,26 @@ import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
 
 class MeasurementDecoratorTest {
 
+	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+
 	@Test
 	void addMeasurements() {
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(true));
 		measurements.add(null);
 
 		// Act
-		final var result = MeasurementDecorator.addMeasurements(installedBase, measurements);
+		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), measurements);
 
 		// Assert
-		assertThat(result.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
+		assertThat(installedBase.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
 			assertThat(f.getMeasurements()).hasSize(2).satisfiesExactlyInAnyOrder(m -> {
 				assertThat(m.getCategory()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_CATEGORY.name());
 				assertThat(m.getMeasurementType()).isEqualTo(TestFactory.IB1_AGREEMENT1_MEASUREMENT1_TYPE);
@@ -51,25 +54,25 @@ class MeasurementDecoratorTest {
 	@Test
 	void addMeasurementsNoMatches() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(false));
 
 		// Act
-		final var result = MeasurementDecorator.addMeasurements(installedBase, measurements);
+		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), measurements);
 
 		// Assert
-		assertThat(result.getFacilities()).flatExtracting(Facility::getMeasurements).isEmpty();
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getMeasurements).isEmpty();
 	}
 
 	@Test
 	void addMeasurementsFromNull() {
 		// Arrange
-		final var installedBase = IntricMapper.toInstalledBase(createCustomer());
+		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 
 		// Act
-		final var result = MeasurementDecorator.addMeasurements(installedBase, null);
+		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), null);
 
 		// Assert
-		assertThat(result.getFacilities()).flatExtracting(Facility::getMeasurements).isEmpty();
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getMeasurements).isEmpty();
 	}
 }

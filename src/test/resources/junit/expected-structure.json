@@ -4,23 +4,27 @@
 	"facilities": [
 		{
 			"facilityId": "facilityId1",
-			"type": "type1",
-			"placementId": 111,
-			"commitmentStartDate": "2020-01-10",
-			"commitmentEndDate": "2025-01-10",
-			"lastModifiedDate": "2024-01-09",
 			"address": {
 				"careOf": "careOf1",
 				"street": "street1",
 				"postalCode": "postalCode1",
 				"city": "city1"
 			},
-			"information": [
+			"installedBases": [
 				{
-					"name": "key1",
-					"displayName": "displayName1",
-					"type": "metaType1",
-					"value": "value1"
+					"type": "type1",
+					"placementId": 111,
+					"commitmentStartDate": "2020-01-10",
+					"commitmentEndDate": "2025-01-10",
+					"lastModifiedDate": "2024-01-09",
+					"information": [
+						{
+							"name": "key1",
+							"displayName": "displayName1",
+							"type": "metaType1",
+							"value": "value1"
+						}
+					]
 				}
 			],
 			"agreements": [
@@ -107,22 +111,26 @@
 		},
 		{
 			"facilityId": "facilityId2",
-			"type": "type2",
-			"placementId": 222,
-			"commitmentStartDate": "2021-05-15",
-			"lastModifiedDate": "2024-06-30",
 			"address": {
 				"careOf": "careOf2",
 				"street": "street2",
 				"postalCode": "postalCode2",
 				"city": "city2"
 			},
-			"information": [
+			"installedBases": [
 				{
-					"name": "key2",
-					"displayName": "displayName2",
-					"type": "metaType2",
-					"value": "value2"
+					"type": "type2",
+					"placementId": 222,
+					"commitmentStartDate": "2021-05-15",
+					"lastModifiedDate": "2024-06-30",
+					"information": [
+						{
+							"name": "key2",
+							"displayName": "displayName2",
+							"type": "metaType2",
+							"value": "value2"
+						}
+					]
 				}
 			],
 			"agreements": [

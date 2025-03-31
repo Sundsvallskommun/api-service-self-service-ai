@@ -1,0 +1,8 @@
+{
+	"category": "DISTRICT_HEATING",
+	"facilityId": "735999109260722045",
+	"aggregateOn": "MONTH",
+	"fromDate": "2024-03-24T00:00:00+01:00",
+	"toDate": "2025-03-25T00:00:00+01:00",
+	"measurementSeries": []
+}

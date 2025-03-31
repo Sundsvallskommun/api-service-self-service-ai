@@ -1,0 +1,490 @@
+{
+	"installedBaseCustomers": [
+		{
+			"customerNumber": "123456",
+			"partyId": "c62fd364-6214-4fb1-82f7-e4b6be53afbe",
+			"items": [
+				{
+					"type": "El",
+					"facilityId": "735999109220108018",
+					"placementId": 5689,
+					"facilityCommitmentStartDate": "2014-04-01",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Åtta bens väg 8",
+						"postalCode": "85641",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "62591",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "1095588",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "35",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Mellangård 66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109220108025",
+					"placementId": 24039,
+					"facilityCommitmentStartDate": "2014-04-01",
+					"facilityCommitmentEndDate": "2014-10-20",
+					"lastModifiedDate": "2024-02-26",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Åtta bens väg 8"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "443",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Frånkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Riven",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109222306054",
+					"placementId": 24186,
+					"facilityCommitmentStartDate": "2022-01-20",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Marvelgatan 33",
+						"postalCode": "85644",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "2236",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "0813701",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Kapten Amerika 66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109245102077",
+					"placementId": 25392,
+					"facilityCommitmentStartDate": "2011-05-09",
+					"facilityCommitmentEndDate": "2011-07-21",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Insektsgatan 2",
+						"postalCode": "85634",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "17104",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "8283288",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "20",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Spindeln 66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109260307051",
+					"placementId": 5687,
+					"facilityCommitmentStartDate": "2013-10-01",
+					"facilityCommitmentEndDate": "2018-04-19",
+					"lastModifiedDate": "2025-03-12",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Bossvägen 2",
+						"postalCode": "85650",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "1201",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "4385594",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Gärde 1:66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109260722045",
+					"placementId": 26190,
+					"facilityCommitmentStartDate": "2008-10-02",
+					"facilityCommitmentEndDate": "2008-10-31",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Dagliga buglevägen 1",
+						"postalCode": "85634",
+						"city": "Sundsvall"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "18876",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "1908833",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "20",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Trollet 1:66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109260723028",
+					"placementId": 5686,
+					"facilityCommitmentStartDate": "2006-04-04",
+					"facilityCommitmentEndDate": "2020-02-03",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Doktor Bläckfisks väg 88"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "9937",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "fusesize",
+							"value": "16",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Frånkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Riven",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				},
+				{
+					"type": "El",
+					"facilityId": "735999109260723035",
+					"placementId": 5688,
+					"facilityCommitmentStartDate": "2005-05-17",
+					"lastModifiedDate": "2025-03-01",
+					"address": {
+						"careOf": "Parker Peter",
+						"street": "Doktor Bläckfisks väg 88",
+						"postalCode": "85634",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "27403",
+							"type": "kWh",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "equipmentNumber",
+							"value": "1894242",
+							"type": "string",
+							"displayName": "Mätarnummer"
+						},
+						{
+							"key": "fusesize",
+							"value": "25",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						},
+						{
+							"key": "netareaid",
+							"value": "SUV",
+							"type": "location",
+							"displayName": "NätområdesID"
+						},
+						{
+							"key": "placementStatus",
+							"value": "Tillkopplad",
+							"type": "string",
+							"displayName": "Anläggningsstatus"
+						},
+						{
+							"key": "propertyDesignation",
+							"value": "Lyktan 1:66",
+							"type": "string",
+							"displayName": "Fastighetsbeteckning"
+						},
+						{
+							"key": "siteStatus",
+							"value": "Normal",
+							"type": "string",
+							"displayName": "Sitestatus"
+						}
+					]
+				}
+			]
+		}
+	]
+}

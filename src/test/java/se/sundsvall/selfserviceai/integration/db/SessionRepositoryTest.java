@@ -73,8 +73,8 @@ class SessionRepositoryTest {
 		final var sessionId = "4dc21d5e-8a70-45fb-b225-367fcd383a2e";
 		final var session = sessionRepository.getReferenceBySessionIdAndMunicipalityId(sessionId, MUNICIPALITY);
 
-		assertThat(session.getCreated()).isEqualTo(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 11, 0, 0), OffsetDateTime.now(systemDefault()).getOffset()));
-		assertThat(session.getInitialized()).isEqualTo(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 11, 0, 30), OffsetDateTime.now(systemDefault()).getOffset()));
+		assertThat(session.getCreated()).isEqualToIgnoringTimezone(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 11, 0, 0), OffsetDateTime.now(systemDefault()).getOffset()));
+		assertThat(session.getInitialized()).isEqualToIgnoringTimezone(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 11, 0, 30), OffsetDateTime.now(systemDefault()).getOffset()));
 		assertThat(session.getStatus()).isEqualTo("Successfully initialized");
 		assertThat(session.getPartyId()).isEqualTo("e7d536c8-86a7-4a65-98ce-e700e65e31d7");
 		assertThat(session.getCustomerNbr()).isEqualTo("16324");
@@ -117,13 +117,13 @@ class SessionRepositoryTest {
 				"158cfabe-1c3d-433c-b71f-1c909beaa291",
 				"8212c515-6f7a-4e1c-a6b4-a2e265f018ed")),
 			// When sending 2025-01-01 12:01:00, only sessions with no value in access date should be returned
-			Arguments.of(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 12, 1, 0), OffsetDateTime.now(systemDefault()).getOffset()), List.of(
+			Arguments.of(OffsetDateTime.parse("2025-01-01T12:01:00.000+01:00"), List.of(
 				"a6602aba-0b21-4abf-a869-60c583570129",
 				"4dc21d5e-8a70-45fb-b225-367fcd383a2e",
 				"8212c515-6f7a-4e1c-a6b4-a2e265f018ed")),
 			// When sending 2025-01-01 12:01:01, sessions with no value and the one with value '2025-01-01 12:01:00' in access date
 			// should be returned
-			Arguments.of(OffsetDateTime.of(LocalDateTime.of(2025, 1, 1, 12, 1, 1), OffsetDateTime.now(systemDefault()).getOffset()), List.of(
+			Arguments.of(OffsetDateTime.parse("2025-01-01T12:01:01.000+01:00"), List.of(
 				"a6602aba-0b21-4abf-a869-60c583570129",
 				"4dc21d5e-8a70-45fb-b225-367fcd383a2e",
 				"158cfabe-1c3d-433c-b71f-1c909beaa291",

@@ -6,10 +6,10 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/installedbase/2281/installedbase/5566123456",
+		"urlPath": "/installedbase/2281/installedbase/5565027223",
 		"queryParameters": {
 			"partyId": {
-				"equalTo": "5a6c3e4e-c320-4006-b448-1fd4121df828"
+				"equalTo": "c62fd364-6214-4fb1-82f7-e4b6be53afbe"
 			}
 		}
 	},
@@ -18,7 +18,7 @@
 			"Content-Type": "application/json"
 		},
 		"status": 200,
-		"bodyFileName": "test01_createSession/responses/api-installedbase-read-installedbase-response.json"
+		"bodyFileName": "test01_createSession/responses/api-installedbase-read-installedbase-5565027223-response.json"
 	},
-	"name": "api-installedbase-read-installedbase"
+	"name": "api-installedbase-read-installedbase-5565027223"
 }
