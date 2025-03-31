@@ -53,7 +53,7 @@ public class IntricIntegration {
 	public Optional<AskResponse> askFollowUp(final String assistantId, final String sessionId, final String input, List<String> fileReferences) {
 		try {
 			final var question = mapper.toAskAssistant(input, fileReferences);
-			System.err.println(question);
+
 			LOG.debug("Asking assistant followup question");
 			return Optional.of(client.askFollowUp(assistantId, sessionId, question));
 		} catch (final Exception e) { // Swallow exception here and let frontend decide how to handle problem
