@@ -19,15 +19,15 @@ class InvoiceDecoratorTest {
 	@Test
 	void addInvoices() {
 		// Arrange
-		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
+		final var intricModel = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
 		final var invoices = new ArrayList<>(createInvoices(true));
 		invoices.add(null);
 
 		// Act
-		InvoiceDecorator.addInvoices(installedBase.getFacilities(), invoices);
+		InvoiceDecorator.addInvoices(intricModel.getFacilities(), invoices);
 
 		// Assert
-		assertThat(installedBase.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
+		assertThat(intricModel.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
 			assertThat(f.getInvoices()).hasSize(2).satisfiesExactlyInAnyOrder(this::assertInvoiceWithAddress, this::assertInvoiceWithoutAddress);
 		}, f -> assertThat(f.getInvoices()).isEmpty());
 	}

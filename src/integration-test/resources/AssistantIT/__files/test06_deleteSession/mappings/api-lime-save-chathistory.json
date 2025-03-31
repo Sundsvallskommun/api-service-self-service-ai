@@ -1,6 +1,9 @@
 {
 	"request": {
 		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			},
 			"X-Client-Secret": {
 				"equalTo": "lime-api-key"
 			}
