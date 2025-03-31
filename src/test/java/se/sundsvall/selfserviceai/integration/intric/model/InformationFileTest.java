@@ -68,7 +68,7 @@ class InformationFileTest {
 	}
 
 	@Test
-	void transferToWhenNull() throws Exception {
+	void transferToWhenNull() {
 		final var fileMock = Mockito.mock(File.class);
 		final var bean = InformationFile.create();
 
