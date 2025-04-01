@@ -267,9 +267,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
     StatusType:
       type: object
@@ -402,9 +402,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         suppressed:
           type: array
@@ -459,12 +459,220 @@ components:
             assistant
           example: 9406e9e3-e2bf-4b5a-9237-2925b396f096
       description: Model for session initiation response
+    Assistant:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the assistant
+          example: 9406e9e3-e2bf-4b5a-9237-2925b396f096
+        handle:
+          type: string
+          description: Readable handle name for the assistant
+          example: Assistant name
+      description: Model for assistant information
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the file
+          example: 9406e9e3-e2bf-4b5a-9237-2925b396f096
+        name:
+          type: string
+          description: Readable name for the file
+          example: file-name.json
+        mimeType:
+          type: string
+          description: Mime type for the file
+          example: application/json
+        size:
+          type: integer
+          description: Size of the file
+          format: int32
+          example: 12345
+        createdAt:
+          type: string
+          description: Timestamp when file was created
+          format: date-time
+        updatedAt:
+          type: string
+          description: Timestamp when file was last updated
+          format: date-time
+        transcription:
+          type: string
+          description: Transcription of file
+          example: transcription
+      description: Model for file information
+    Metadata:
+      type: object
+      properties:
+        embeddingModelId:
+          type: string
+          description: Id for the embedding model
+          example: d0846e7e-a860-43d0-8bc2-d0a029c23381
+        url:
+          type: string
+          description: Url for the embedding model
+          example: http://some.url
+        title:
+          type: string
+          description: Title of the embeddning model
+          example: Title
+        size:
+          type: integer
+          description: Size
+          format: int32
+      description: Model for model metadata information
+    Model:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the model
+          example: 1f717b73-c676-4316-112e-cda43650d832
+        name:
+          type: string
+          description: Name for the model
+          example: gpt-4o-mini-azure
+        nickname:
+          type: string
+          description: Nickname for the model
+          example: GPT-4o mini (Azure)
+        family:
+          type: string
+          description: Family to which the model belongs
+          example: azure
+        tokenLimit:
+          type: integer
+          description: Token limit
+          format: int32
+        deprecated:
+          type: boolean
+          description: Signal if model is deprecated or not
+        nrBillionParameters:
+          type: integer
+          description: Nr billion parameters
+          format: int32
+        hfLink:
+          type: string
+          description: Hf link for model
+          example: http://some.address
+        stability:
+          type: string
+          description: Stability of the model
+          example: stable
+        hosting:
+          type: string
+          description: Hosting for the model
+          example: swe
+        openSource:
+          type: boolean
+          description: Signal if the model is open source or not
+        description:
+          type: string
+          description: dESCRIPTION FOR THE model
+          example: "Microsoft Azure's hosted version of the compact GPT-4 Omni model,\
+            \ offering faster processing with advanced capabilities."
+        deploymentName:
+          type: string
+          description: Deployment name for the model
+          example: gpt-4o-mini
+        org:
+          type: string
+          description: Organization owning the model
+          example: Microsoft
+        vision:
+          type: boolean
+          description: Vision setting for the model
+        reasoning:
+          type: boolean
+          description: Reasoning setting for the model
+        baseUrl:
+          type: string
+          description: Base url for the model
+          example: http://some.url
+        orgEnabled:
+          type: boolean
+          description: Organization enabled setting for the model
+        orgDefault:
+          type: boolean
+          description: Organization default setting for the model
+        createdAt:
+          type: string
+          description: Timestamp when model was created
+          format: date-time
+        updatedAt:
+          type: string
+          description: Timestamp when model was last updated
+          format: date-time
+      description: Model for completion model information
     QuestionResponse:
       type: object
       properties:
+        sessionId:
+          type: string
+          description: The id of the session to be used when interacting with the
+            assistant
+          example: 9406e9e3-e2bf-4b5a-9237-2925b396f096
+        question:
+          type: string
+          description: The question to ask
+          example: "What is the answer to the ultimate question of life, the universe\
+            \ and everything?"
         answer:
           type: string
           description: Answer to asked question
           example: "42"
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/File"
+        references:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reference"
+        model:
+          $ref: "#/components/schemas/Model"
+        tools:
+          $ref: "#/components/schemas/Tools"
       description: Model for question response
+    Reference:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the reference
+          example: d0846e7e-a860-43d0-8bc2-d0a029c23381
+        metadata:
+          $ref: "#/components/schemas/Metadata"
+        groupId:
+          type: string
+          description: Group id to which the reference belongs
+          example: 56839552-08b7-44e6-88eb-c4c524c0833b
+        websiteId:
+          type: string
+          description: Website id for the reference
+          example: 56839552-08b7-44e6-88eb-c4c524c0833b
+        createdAt:
+          type: string
+          description: Timestamp when the reference was created
+          format: date-time
+        updatedAt:
+          type: string
+          description: Timestamp when the reference was last updated
+          format: date-time
+        score:
+          type: integer
+          description: Score for the reference
+          format: int32
+      description: Model for reference information
+    Tools:
+      type: object
+      properties:
+        assistants:
+          type: array
+          items:
+            $ref: "#/components/schemas/Assistant"
+      description: Model for tools information
   securitySchemes: {}

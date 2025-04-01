@@ -13,5 +13,6 @@ public record Reference(
 	@JsonProperty("group_id") UUID groupId,
 	@JsonProperty("website_id") UUID websiteId,
 	@JsonProperty("created_at") OffsetDateTime createdAt,
-	@JsonProperty("updated_at") OffsetDateTime updatedAt) {
+	@JsonProperty("updated_at") OffsetDateTime updatedAt,
+	@JsonProperty("score") int score) {
 }

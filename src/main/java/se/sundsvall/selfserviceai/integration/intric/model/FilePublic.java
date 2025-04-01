@@ -13,5 +13,6 @@ public record FilePublic(
 	@JsonProperty("mime_type") String mimeType,
 	@JsonProperty("size") Integer size,
 	@JsonProperty("created_at") OffsetDateTime createdAt,
-	@JsonProperty("updated_at") OffsetDateTime updatedAt) {
+	@JsonProperty("updated_at") OffsetDateTime updatedAt,
+	@JsonProperty("transcription") String transcription) {
 }
