@@ -48,7 +48,7 @@ public class Model {
 	@Schema(description = "Signal if the model is open source or not")
 	private Boolean openSource;
 
-	@Schema(description = "dESCRIPTION FOR THE model", example = "Microsoft Azure's hosted version of the compact GPT-4 Omni model, offering faster processing with advanced capabilities.")
+	@Schema(description = "Description for the model", example = "Microsoft Azure's hosted version of the compact GPT-4 Omni model, offering faster processing with advanced capabilities.")
 	private String description;
 
 	@Schema(description = "Deployment name for the model", example = "gpt-4o-mini")

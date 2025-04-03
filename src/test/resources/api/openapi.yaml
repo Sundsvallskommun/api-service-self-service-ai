@@ -571,7 +571,7 @@ components:
           description: Signal if the model is open source or not
         description:
           type: string
-          description: dESCRIPTION FOR THE model
+          description: Description for the model
           example: "Microsoft Azure's hosted version of the compact GPT-4 Omni model,\
             \ offering faster processing with advanced capabilities."
         deploymentName:
