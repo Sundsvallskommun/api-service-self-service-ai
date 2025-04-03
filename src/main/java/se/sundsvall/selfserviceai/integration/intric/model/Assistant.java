@@ -7,5 +7,6 @@ import lombok.Builder;
 @Builder(setterPrefix = "with")
 public record Assistant(
 
-	@JsonProperty("id") UUID id) {
+	@JsonProperty("id") UUID id,
+	@JsonProperty("handle") String handle) {
 }

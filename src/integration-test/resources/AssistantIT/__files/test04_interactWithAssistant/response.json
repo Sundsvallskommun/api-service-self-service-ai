@@ -1,3 +1,50 @@
 {
-	"answer": "The answer to the ultimate question of life, the universe and everything is 42. However, the actual ultimate question itself remains unknown."
+	"sessionId": "81e73c0b-76dd-455e-bbf3-cc5060aca723",
+	"question": "What is the answer to the ultimate question of life, the universe and everything?",
+	"answer": "The answer to the ultimate question of life, the universe and everything is 42. However, the actual ultimate question itself remains unknown.",
+	"files": [
+		{
+			"id": "5ef193cd-96a7-4861-a33d-e01528618f2e",
+			"name": "selfservice-ai-data-1.json",
+			"size": 76012,
+			"createdAt": "2025-01-09T19:02:58.473296Z",
+			"updatedAt": "2025-01-09T19:02:59.473296Z"
+		},
+		{
+			"id": "2f60ca4c-828b-4f4e-818f-432d53d61f83",
+			"name": "selfservice-ai-data-2.json",
+			"size": 68830,
+			"createdAt": "2025-01-09T19:03:05.473296Z",
+			"updatedAt": "2025-01-09T19:03:06.473296Z"
+		}
+	],
+	"references": [],
+	"model": {
+		"id": "f2794da6-abe0-42c1-b1d8-351bc05a63e6",
+		"name": "gpt-4o-mini-azure",
+		"nickname": "GPT-4o mini (Azure)",
+		"family": "azure",
+		"tokenLimit": 128000,
+		"deprecated": false,
+		"nrBillionParameters": 0,
+		"stability": "stable",
+		"hosting": "swe",
+		"description": "GPT-4o mini hosted by azure.",
+		"deploymentName": "gpt-4o-mini",
+		"org": "Microsoft",
+		"vision": true,
+		"reasoning": false,
+		"orgEnabled": false,
+		"orgDefault": false,
+		"createdAt": "2025-01-09T19:02:55.223252Z",
+		"updatedAt": "2025-03-04T09:19:01.416517Z"
+	},
+	"tools": {
+		"assistants": [
+			{
+				"id": "3e951939-18ea-402d-9d01-23d977624ad2",
+				"handle": "selfServiceAssistant"
+			}
+		]
+	}
 }
