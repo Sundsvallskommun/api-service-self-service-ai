@@ -7,6 +7,7 @@ import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
+import static se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator.toDecoratedInvoice;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 
@@ -139,8 +140,13 @@ public class AssistantService {
 		// Enrich all facility with agreement, invoice and measurement information
 		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());
 
+		// Fetch all invoices and their respective details.
+		var decoratedInvoices = invoicesIntegration.getInvoices(municipalityId, partyId).stream()
+			.map(invoice -> toDecoratedInvoice(invoice, invoicesIntegration.getInvoiceDetails(municipalityId, invoice)))
+			.toList();
+
 		AgreementDecorator.addAgreements(facilities, agreementIntegration.getAgreements(municipalityId, partyId));
-		InvoiceDecorator.addInvoices(facilities, invoicesIntegration.getInvoices(municipalityId, partyId));
+		InvoiceDecorator.addInvoices(facilities, decoratedInvoices);
 		MeasurementDecorator.addMeasurements(facilities, measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities));
 
 		return intricModel;
@@ -192,8 +198,8 @@ public class AssistantService {
 	}
 
 	/**
-	 * To be subject for removal the session must either have a last accessed timestamp, or a
-	 * created timestamp that is before the defined threshold for inactivity
+	 * To be subject for removal the session must either have a last accessed timestamp, or a created timestamp that is
+	 * before the defined threshold for inactivity
 	 *
 	 * @param  timestamp timestamp when session is interpreted as inactive
 	 * @param  session   session to evaluate
