@@ -1,0 +1,18 @@
+{
+	"details": [
+		{
+			"amount": 10,
+			"amountVatExcluded": 8,
+			"vat": 2,
+			"vatRate": 20,
+			"quantity": 10,
+			"unit": "unit",
+			"unitPrice": 1,
+			"description": "description",
+			"productCode": "productCode",
+			"productName": "productName",
+			"fromDate": "2023-01-01",
+			"toDate": "2023-01-31"
+		}
+	]
+}

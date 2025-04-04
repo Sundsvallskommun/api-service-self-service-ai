@@ -113,9 +113,6 @@ class AssistantServiceTest {
 	@Mock
 	private FileRepository fileRepositoryMock;
 
-	@Spy
-	private RequestId requestIdSpy;
-
 	@InjectMocks
 	private AssistantService assistantService;
 
@@ -129,7 +126,7 @@ class AssistantServiceTest {
 	private ArgumentCaptor<IntricModel> installedBaseCaptor;
 
 	@AfterEach
-	void verifyNoMoreMockInterations() {
+	void verifyNoMoreMockInteractions() {
 		RequestId.reset();
 		verifyNoMoreInteractions(
 			intricPropertiesMock,
@@ -193,7 +190,7 @@ class AssistantServiceTest {
 		assertThat(e).isSameAs(exception);
 	}
 
-	private static final Stream<Arguments> informationArgumentProvider() {
+	private static Stream<Arguments> informationArgumentProvider() {
 		return Stream.of(
 			Arguments.of(
 				null,
@@ -257,6 +254,7 @@ class AssistantServiceTest {
 		verify(intricIntegrationMock).uploadFile(installedBaseCaptor.capture());
 		verify(fileRepositoryMock).save(fileEntityCaptor.capture());
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
+		verify(invoicesIntegrationMock, times(invoices.size())).getInvoiceDetails(eq(MUNICIPALITY_ID), any());
 
 		assertThat(installedBaseCaptor.getValue().getPartyId()).isEqualTo(PARTY_ID);
 		assertThat(fileEntityCaptor.getValue().getFileId()).isEqualTo(fileId.toString());
@@ -299,7 +297,6 @@ class AssistantServiceTest {
 	@Test
 	void populateWithInformationWhenNoInstalledbaseResponse() {
 		// Arrange
-		Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 		final var sessionEntity = SessionEntity.builder()
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.build();

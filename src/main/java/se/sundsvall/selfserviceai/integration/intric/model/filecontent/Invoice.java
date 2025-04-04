@@ -3,6 +3,8 @@ package se.sundsvall.selfserviceai.integration.intric.model.filecontent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,8 @@ public class Invoice {
 	private String description;
 
 	private LocalDate dueDate;
+
+	private String facilityId;
 
 	private Address invoiceAddress;
 
@@ -53,4 +57,7 @@ public class Invoice {
 	private BigDecimal vat;
 
 	private BigDecimal vatEligibleAmount;
+
+	@Builder.Default
+	private List<InvoiceRow> invoiceRows = new ArrayList<>();
 }

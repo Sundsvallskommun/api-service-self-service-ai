@@ -6,8 +6,7 @@ import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
 import generated.se.sundsvall.installedbase.InstalledBaseItemMetaData;
-import generated.se.sundsvall.invoices.Address;
-import generated.se.sundsvall.invoices.Invoice;
+import generated.se.sundsvall.invoices.InvoiceDetail;
 import generated.se.sundsvall.invoices.InvoiceStatus;
 import generated.se.sundsvall.invoices.InvoiceType;
 import generated.se.sundsvall.measurementdata.Data;
@@ -19,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import se.sundsvall.selfserviceai.integration.intric.model.Assistant;
 import se.sundsvall.selfserviceai.integration.intric.model.CompletionModel;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
@@ -28,6 +28,10 @@ import se.sundsvall.selfserviceai.integration.intric.model.Reference;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionFeedback;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.intric.model.Tools;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InvoiceRow;
 
 public class TestFactory {
 	private TestFactory() {}
@@ -383,54 +387,143 @@ public class TestFactory {
 				.facilityId(NO_MATCH));
 	}
 
-	public static List<Invoice> createInvoices(boolean containsMatches) {
-		return containsMatches ? List.of(
-			new Invoice()
-				.facilityId(IB1_FACILITY_ID)
-				.amountVatExcluded(Float.valueOf(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED))
-				.amountVatIncluded(Float.valueOf(IB1_INVOICE1_AMOUNT_VAT_INCLUDED))
-				.currency(IB1_INVOICE1_CURRENCY)
-				.dueDate(IB1_INVOICE1_DUE_DATE)
-				.invoiceDate(IB1_INVOICE1_DATE)
-				.invoiceAddress(new Address()
-					.careOf(IB1_INVOICE1_CARE_OF)
-					.city(IB1_INVOICE1_CITY)
-					.postcode(IB1_INVOICE1_POSTAL_CODE)
-					.street(IB1_INVOICE1_STREET))
-				.invoiceDescription(IB1_INVOICE1_DESCRIPTION)
-				.invoiceName(IB1_INVOICE1_NAME)
-				.invoiceNumber(IB1_INVOICE1_NUMBER)
-				.invoiceStatus(IB1_INVOICE1_STATUS)
-				.invoiceType(IB1_INVOICE1_TYPE)
-				.ocrNumber(IB1_INVOICE1_OCR_NUMBER)
-				.organizationNumber(IB1_INVOICE1_ORGANIZATION_NUMBER)
-				.pdfAvailable(IB1_INVOICE1_PDF_AVAILABLE)
-				.reversedVat(IB1_INVOICE1_REVERSED_VAT)
-				.rounding(Float.valueOf(IB1_INVOICE1_ROUNDING))
-				.totalAmount(Float.valueOf(IB1_INVOICE1_TOTAL_AMOUNT))
-				.vat(Float.valueOf(IB1_INVOICE1_VAT))
-				.vatEligibleAmount(Float.valueOf(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT)),
-			new Invoice()
-				.facilityId(IB1_FACILITY_ID)
-				.amountVatExcluded(Float.valueOf(IB1_INVOICE2_AMOUNT_VAT_EXCLUDED))
-				.amountVatIncluded(Float.valueOf(IB1_INVOICE2_AMOUNT_VAT_INCLUDED))
-				.currency(IB1_INVOICE2_CURRENCY)
-				.dueDate(IB1_INVOICE2_DUE_DATE)
-				.invoiceDate(IB1_INVOICE2_DATE)
-				.invoiceDescription(IB1_INVOICE2_DESCRIPTION)
-				.invoiceName(IB1_INVOICE2_NAME)
-				.invoiceNumber(IB1_INVOICE2_NUMBER)
-				.invoiceStatus(IB1_INVOICE2_STATUS)
-				.invoiceType(IB1_INVOICE2_TYPE)
-				.ocrNumber(IB1_INVOICE2_OCR_NUMBER)
-				.organizationNumber(IB1_INVOICE2_ORGANIZATION_NUMBER)
-				.reversedVat(IB1_INVOICE2_REVERSED_VAT)
-				.rounding(Float.valueOf(IB1_INVOICE2_ROUNDING))
-				.totalAmount(Float.valueOf(IB1_INVOICE2_TOTAL_AMOUNT))
-				.vat(Float.valueOf(IB1_INVOICE2_VAT))
-				.vatEligibleAmount(Float.valueOf(IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT))
+	public static Facility createFacility() {
+		return createFacility(null);
+	}
 
-		) : List.of(new Invoice().facilityId(NO_MATCH));
+	public static Facility createFacility(final Consumer<Facility> consumer) {
+		var facility = Facility.builder()
+			.withFacilityId("facilityId1")
+			.withAddress(Address.builder()
+				.withStreet("street")
+				.withPostalCode("postalCode")
+				.withCareOf("careOf")
+				.withCity("city")
+				.build())
+			.build();
 
+		if (consumer != null) {
+			consumer.accept(facility);
+		}
+
+		return facility;
+	}
+
+	public static se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice createInvoice() {
+		return createInvoice(null);
+	}
+
+	public static se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice createInvoice(final Consumer<Invoice> consumer) {
+		var invoice = se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice.builder()
+			.withAmountVatExcluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED)))
+			.withAmountVatIncluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_INCLUDED)))
+			.withCurrency(IB1_INVOICE1_CURRENCY)
+			.withDescription(IB1_INVOICE1_DESCRIPTION)
+			.withFacilityId(IB1_FACILITY_ID)
+			.withInvoiceAddress(se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address.builder()
+				.withCareOf(IB1_CARE_OF)
+				.withCity(IB1_CITY)
+				.withPostalCode(IB1_POSTAL_CODE)
+				.withStreet(IB1_STREET)
+				.build())
+			.withInvoicingDate(IB1_INVOICE1_DATE)
+			.withInvoiceName(IB1_INVOICE1_NAME)
+			.withInvoiceNumber(IB1_INVOICE1_NUMBER)
+			.withInvoiceType(IB1_TYPE)
+			.withDueDate(IB1_INVOICE1_DUE_DATE)
+			.withOcrNumber(IB1_INVOICE1_OCR_NUMBER)
+			.withOrganizationNumber(IB1_INVOICE1_ORGANIZATION_NUMBER)
+			.withPdfAvailable(IB1_INVOICE1_PDF_AVAILABLE)
+			.withReversedVat(IB1_INVOICE1_REVERSED_VAT)
+			.withRounding(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_ROUNDING)))
+			.withStatus(IB1_INVOICE1_STATUS.toString())
+			.withTotalAmount(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_TOTAL_AMOUNT)))
+			.withVat(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_VAT)))
+			.withVatEligibleAmount(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT)))
+			.withInvoiceRows(List.of(createInvoiceRow()))
+			.build();
+
+		if (consumer != null) {
+			consumer.accept(invoice);
+		}
+
+		return invoice;
+	}
+
+	public static InvoiceDetail createInvoiceDetail() {
+		return new InvoiceDetail()
+			.amount(12f)
+			.amountVatExcluded(12f)
+			.fromDate(LocalDate.now())
+			.toDate(LocalDate.now())
+			.vat(10f)
+			.vatRate(10f)
+			.quantity(10f)
+			.description("description")
+			.productCode("productCode")
+			.productName("productName")
+			.unit("unit");
+	}
+
+	public static generated.se.sundsvall.invoices.Address createAddress() {
+		return new generated.se.sundsvall.invoices.Address()
+			.careOf("careOf")
+			.city("city")
+			.postcode("postcode")
+			.street("street");
+	}
+
+	public static InvoiceRow createInvoiceRow() {
+		return createInvoiceRow(null);
+	}
+
+	public static InvoiceRow createInvoiceRow(final Consumer<InvoiceRow> consumer) {
+		var invoiceRow = InvoiceRow.builder()
+			.withAmount(BigDecimal.ONE)
+			.withAmountVatExcluded(BigDecimal.ONE)
+			.withVat(BigDecimal.ONE)
+			.withVatRate(BigDecimal.ONE)
+			.withQuantity(BigDecimal.ONE)
+			.withUnit("unit")
+			.withUnitPrice(BigDecimal.ONE)
+			.withPeriodFrom("periodFrom")
+			.withPeriodTo("periodTo")
+			.withProductCode("productCode")
+			.withProductName("productName")
+			.build();
+
+		if (consumer != null) {
+			consumer.accept(invoiceRow);
+		}
+
+		return invoiceRow;
+	}
+
+	public static generated.se.sundsvall.invoices.Invoice createGeneratedInvoice() {
+		return new generated.se.sundsvall.invoices.Invoice()
+			.facilityId(IB1_FACILITY_ID)
+			.amountVatExcluded(Float.valueOf(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED))
+			.amountVatIncluded(Float.valueOf(IB1_INVOICE1_AMOUNT_VAT_INCLUDED))
+			.currency(IB1_INVOICE1_CURRENCY)
+			.dueDate(IB1_INVOICE1_DUE_DATE)
+			.invoiceDate(IB1_INVOICE1_DATE)
+			.invoiceAddress(new generated.se.sundsvall.invoices.Address()
+				.careOf(IB1_INVOICE1_CARE_OF)
+				.city(IB1_INVOICE1_CITY)
+				.postcode(IB1_INVOICE1_POSTAL_CODE)
+				.street(IB1_INVOICE1_STREET))
+			.invoiceDescription(IB1_INVOICE1_DESCRIPTION)
+			.invoiceName(IB1_INVOICE1_NAME)
+			.invoiceNumber(IB1_INVOICE1_NUMBER)
+			.invoiceStatus(IB1_INVOICE1_STATUS)
+			.invoiceType(IB1_INVOICE1_TYPE)
+			.ocrNumber(IB1_INVOICE1_OCR_NUMBER)
+			.organizationNumber(IB1_INVOICE1_ORGANIZATION_NUMBER)
+			.pdfAvailable(IB1_INVOICE1_PDF_AVAILABLE)
+			.reversedVat(IB1_INVOICE1_REVERSED_VAT)
+			.rounding(Float.valueOf(IB1_INVOICE1_ROUNDING))
+			.totalAmount(Float.valueOf(IB1_INVOICE1_TOTAL_AMOUNT))
+			.vat(Float.valueOf(IB1_INVOICE1_VAT))
+			.vatEligibleAmount(Float.valueOf(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT));
 	}
 }

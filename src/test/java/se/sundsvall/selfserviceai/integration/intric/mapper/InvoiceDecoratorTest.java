@@ -1,104 +1,124 @@
 package se.sundsvall.selfserviceai.integration.intric.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
-import static se.sundsvall.selfserviceai.TestFactory.createInvoices;
+import static se.sundsvall.selfserviceai.TestFactory.createAddress;
+import static se.sundsvall.selfserviceai.TestFactory.createFacility;
+import static se.sundsvall.selfserviceai.TestFactory.createGeneratedInvoice;
+import static se.sundsvall.selfserviceai.TestFactory.createInvoice;
+import static se.sundsvall.selfserviceai.TestFactory.createInvoiceDetail;
+import static se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator.DECIMAL_POINTS;
+import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBigDecimal;
+import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBoolean;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.selfserviceai.TestFactory;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
 
 class InvoiceDecoratorTest {
 
-	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
-
 	@Test
 	void addInvoices() {
-		// Arrange
-		final var intricModel = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
-		final var invoices = new ArrayList<>(createInvoices(true));
-		invoices.add(null);
+		var facilities = List.of(createFacility(facility -> facility.setFacilityId("123")));
 
-		// Act
-		InvoiceDecorator.addInvoices(intricModel.getFacilities(), invoices);
+		var invoice1 = createInvoice(invoice -> invoice.setFacilityId("123"));
+		var invoice2 = createInvoice(invoice -> invoice.setFacilityId("321"));
+		var invoice3 = createInvoice(invoice -> invoice.setFacilityId("123"));
+		var invoices = List.of(invoice1, invoice2, invoice3);
 
-		// Assert
-		assertThat(intricModel.getFacilities()).satisfiesExactlyInAnyOrder(f -> {
-			assertThat(f.getInvoices()).hasSize(2).satisfiesExactlyInAnyOrder(this::assertInvoiceWithAddress, this::assertInvoiceWithoutAddress);
-		}, f -> assertThat(f.getInvoices()).isEmpty());
-	}
+		InvoiceDecorator.addInvoices(facilities, invoices);
 
-	private void assertInvoiceWithoutAddress(Invoice i) {
-		assertThat(i.getAmountVatExcluded()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_AMOUNT_VAT_EXCLUDED));
-		assertThat(i.getAmountVatIncluded()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_AMOUNT_VAT_INCLUDED));
-		assertThat(i.getCurrency()).isEqualTo(TestFactory.IB1_INVOICE2_CURRENCY);
-		assertThat(i.getDescription()).isEqualTo(TestFactory.IB1_INVOICE2_DESCRIPTION);
-		assertThat(i.getDueDate()).isEqualTo(TestFactory.IB1_INVOICE2_DUE_DATE);
-		assertThat(i.getInvoiceAddress()).isNull();
-		assertThat(i.getInvoiceName()).isEqualTo(TestFactory.IB1_INVOICE2_NAME);
-		assertThat(i.getInvoiceNumber()).isEqualTo(TestFactory.IB1_INVOICE2_NUMBER);
-		assertThat(i.getInvoiceType()).isEqualTo(TestFactory.IB1_INVOICE2_TYPE.name());
-		assertThat(i.getInvoicingDate()).isEqualTo(TestFactory.IB1_INVOICE2_DATE);
-		assertThat(i.getOcrNumber()).isEqualTo(TestFactory.IB1_INVOICE2_OCR_NUMBER);
-		assertThat(i.getOrganizationNumber()).isEqualTo(TestFactory.IB1_INVOICE2_ORGANIZATION_NUMBER);
-		assertThat(i.getRounding()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_ROUNDING));
-		assertThat(i.getStatus()).isEqualTo(TestFactory.IB1_INVOICE2_STATUS.name());
-		assertThat(i.getTotalAmount()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_TOTAL_AMOUNT));
-		assertThat(i.getVat()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_VAT));
-		assertThat(i.getVatEligibleAmount()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT));
-	}
-
-	private void assertInvoiceWithAddress(Invoice i) {
-		assertThat(i.getAmountVatExcluded()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_AMOUNT_VAT_EXCLUDED));
-		assertThat(i.getAmountVatIncluded()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_AMOUNT_VAT_INCLUDED));
-		assertThat(i.getCurrency()).isEqualTo(TestFactory.IB1_INVOICE1_CURRENCY);
-		assertThat(i.getDescription()).isEqualTo(TestFactory.IB1_INVOICE1_DESCRIPTION);
-		assertThat(i.getDueDate()).isEqualTo(TestFactory.IB1_INVOICE1_DUE_DATE);
-		assertThat(i.getInvoiceAddress()).isNotNull().satisfies(a -> {
-			assertThat(a.getCareOf()).isEqualTo(TestFactory.IB1_INVOICE1_CARE_OF);
-			assertThat(a.getCity()).isEqualTo(TestFactory.IB1_INVOICE1_CITY);
-			assertThat(a.getPostalCode()).isEqualTo(TestFactory.IB1_INVOICE1_POSTAL_CODE);
-			assertThat(a.getStreet()).isEqualTo(TestFactory.IB1_INVOICE1_STREET);
-		});
-		assertThat(i.getInvoiceName()).isEqualTo(TestFactory.IB1_INVOICE1_NAME);
-		assertThat(i.getInvoiceNumber()).isEqualTo(TestFactory.IB1_INVOICE1_NUMBER);
-		assertThat(i.getInvoiceType()).isEqualTo(TestFactory.IB1_INVOICE1_TYPE.name());
-		assertThat(i.getInvoicingDate()).isEqualTo(TestFactory.IB1_INVOICE1_DATE);
-		assertThat(i.getOcrNumber()).isEqualTo(TestFactory.IB1_INVOICE1_OCR_NUMBER);
-		assertThat(i.getOrganizationNumber()).isEqualTo(TestFactory.IB1_INVOICE1_ORGANIZATION_NUMBER);
-		assertThat(i.getRounding()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_ROUNDING));
-		assertThat(i.getStatus()).isEqualTo(TestFactory.IB1_INVOICE1_STATUS.name());
-		assertThat(i.getTotalAmount()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_TOTAL_AMOUNT));
-		assertThat(i.getVat()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_VAT));
-		assertThat(i.getVatEligibleAmount()).isEqualTo(new BigDecimal(TestFactory.IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT));
+		var facility = facilities.getFirst();
+		assertThat(facility.getInvoices()).isNotNull().hasSize(2).containsExactlyInAnyOrder(invoice1, invoice3);
 	}
 
 	@Test
 	void addInvoicesNoMatches() {
-		// Arrange
-		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
-		final var invoices = new ArrayList<>(createInvoices(false));
+		var facilities = List.of(createFacility(facility -> facility.setFacilityId("123")));
 
-		// Act
-		InvoiceDecorator.addInvoices(installedBase.getFacilities(), invoices);
+		var invoice1 = createInvoice(invoice -> invoice.setFacilityId("321"));
+		var invoice2 = createInvoice(invoice -> invoice.setFacilityId("321"));
+		var invoice3 = createInvoice(invoice -> invoice.setFacilityId("321"));
+		var invoices = List.of(invoice1, invoice2, invoice3);
 
-		// Assert
-		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getInvoices).isEmpty();
+		InvoiceDecorator.addInvoices(facilities, invoices);
+
+		var facility = facilities.getFirst();
+		assertThat(facility.getInvoices()).isNotNull().isEmpty();
 	}
 
 	@Test
 	void addInvoicesFromNull() {
-		// Arrange
-		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
+		var facilities = List.of(createFacility(facility -> facility.setFacilityId("123")));
 
-		// Act
-		InvoiceDecorator.addInvoices(installedBase.getFacilities(), null);
+		InvoiceDecorator.addInvoices(facilities, null);
 
-		// Assert
-		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getInvoices).isEmpty();
+		var facility = facilities.getFirst();
+		assertThat(facility.getInvoices()).isNotNull().isEmpty();
 	}
+
+	@Test
+	void toDecoratedInvoice() {
+		generated.se.sundsvall.invoices.Invoice invoice = createGeneratedInvoice();
+		var invoiceDetail1 = createInvoiceDetail();
+		var invoiceDetail2 = createInvoiceDetail();
+		var invoiceDetail3 = createInvoiceDetail();
+		var invoiceDetails = List.of(invoiceDetail1, invoiceDetail2, invoiceDetail3);
+
+		var result = InvoiceDecorator.toDecoratedInvoice(invoice, invoiceDetails);
+
+		assertThat(result.getAmountVatExcluded()).isEqualTo(toBigDecimal(invoice.getAmountVatExcluded(), DECIMAL_POINTS));
+		assertThat(result.getAmountVatIncluded()).isEqualTo(toBigDecimal(invoice.getAmountVatIncluded(), DECIMAL_POINTS));
+		assertThat(result.getCurrency()).isEqualTo(invoice.getCurrency());
+		assertThat(result.getDescription()).isEqualTo(invoice.getInvoiceDescription());
+		assertThat(result.getDueDate()).isEqualTo(invoice.getDueDate());
+		assertThat(result.getFacilityId()).isEqualTo(invoice.getFacilityId());
+		assertThat(result.getInvoiceAddress()).usingRecursiveComparison().isEqualTo(InvoiceDecorator.toAddress(invoice.getInvoiceAddress()));
+		assertThat(result.getInvoiceName()).isEqualTo(invoice.getInvoiceName());
+		assertThat(result.getInvoiceNumber()).isEqualTo(invoice.getInvoiceNumber());
+		assertThat(result.getInvoiceType()).isEqualTo(invoice.getInvoiceType().name());
+		assertThat(result.getInvoicingDate()).isEqualTo(invoice.getInvoiceDate());
+		assertThat(result.getOrganizationNumber()).isEqualTo(invoice.getOrganizationNumber());
+		assertThat(result.isPdfAvailable()).isEqualTo(toBoolean(invoice.getPdfAvailable()));
+		assertThat(result.isReversedVat()).isEqualTo(toBoolean(invoice.getReversedVat()));
+		assertThat(result.getRounding()).isEqualTo(toBigDecimal(invoice.getRounding(), DECIMAL_POINTS));
+		assertThat(result.getStatus()).isEqualTo(invoice.getInvoiceStatus().name());
+		assertThat(result.getTotalAmount()).isEqualTo(toBigDecimal(invoice.getTotalAmount(), DECIMAL_POINTS));
+		assertThat(result.getVat()).isEqualTo(toBigDecimal(invoice.getVat(), DECIMAL_POINTS));
+		assertThat(result.getVatEligibleAmount()).isEqualTo(toBigDecimal(invoice.getVatEligibleAmount(), DECIMAL_POINTS));
+		assertThat(result.getInvoiceRows()).hasSize(3);
+	}
+
+	@Test
+	void toInvoiceRow() {
+		var invoiceDetail = createInvoiceDetail();
+
+		var result = InvoiceDecorator.toInvoiceRow(invoiceDetail);
+
+		assertThat(result.getAmount()).isEqualTo(toBigDecimal(invoiceDetail.getAmount(), DECIMAL_POINTS));
+		assertThat(result.getAmountVatExcluded()).isEqualTo(toBigDecimal(invoiceDetail.getAmountVatExcluded(), DECIMAL_POINTS));
+		assertThat(result.getVat()).isEqualTo(toBigDecimal(invoiceDetail.getVat(), DECIMAL_POINTS));
+		assertThat(result.getVatRate()).isEqualTo(toBigDecimal(invoiceDetail.getVatRate(), DECIMAL_POINTS));
+		assertThat(result.getQuantity()).isEqualTo(toBigDecimal(invoiceDetail.getQuantity(), DECIMAL_POINTS));
+		assertThat(result.getUnit()).isEqualTo(invoiceDetail.getUnit());
+		assertThat(result.getUnitPrice()).isEqualTo(toBigDecimal(invoiceDetail.getUnitPrice(), DECIMAL_POINTS));
+		assertThat(result.getDescription()).isEqualTo(invoiceDetail.getDescription());
+		assertThat(result.getProductCode()).isEqualTo(invoiceDetail.getProductCode());
+		assertThat(result.getProductName()).isEqualTo(invoiceDetail.getProductName());
+		assertThat(result.getPeriodFrom()).isEqualTo(invoiceDetail.getFromDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+		assertThat(result.getPeriodTo()).isEqualTo(invoiceDetail.getToDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+	}
+
+	@Test
+	void toAddress() {
+		var address = createAddress();
+
+		var result = InvoiceDecorator.toAddress(address);
+
+		assertThat(result.getCareOf()).isEqualTo(address.getCareOf());
+		assertThat(result.getCity()).isEqualTo(address.getCity());
+		assertThat(result.getPostalCode()).isEqualTo(address.getPostcode());
+		assertThat(result.getStreet()).isEqualTo(address.getStreet());
+
+	}
+
 }

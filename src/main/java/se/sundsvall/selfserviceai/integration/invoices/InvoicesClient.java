@@ -3,6 +3,7 @@ package se.sundsvall.selfserviceai.integration.invoices;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesConfiguration.CLIENT_ID;
 
+import generated.se.sundsvall.invoices.InvoiceDetailsResponse;
 import generated.se.sundsvall.invoices.InvoiceOrigin;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -31,4 +32,18 @@ public interface InvoicesClient {
 		@RequestParam("organizationGroup") final String organizationGroup,
 		@RequestParam("invoiceDateFrom") final String invoiceDateFrom,
 		@RequestParam("invoiceDateTo") final String invoiceDateTo);
+
+	/**
+	 * Get invoice details for a specific invoice
+	 *
+	 * @param  municipalityId     the municipality id
+	 * @param  organizationNumber the organization number
+	 * @param  invoiceNumber      the invoice number
+	 * @return                    InvoiceDetailsResponse containing details for the specific invoice
+	 */
+	@GetMapping(path = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	InvoiceDetailsResponse getInvoiceDetails(
+		@PathVariable("municipalityId") final String municipalityId,
+		@PathVariable("organizationNumber") final String organizationNumber,
+		@PathVariable("invoiceNumber") final String invoiceNumber);
 }

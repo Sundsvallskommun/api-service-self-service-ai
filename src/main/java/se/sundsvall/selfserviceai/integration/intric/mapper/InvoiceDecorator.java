@@ -5,14 +5,20 @@ import static java.util.Optional.ofNullable;
 import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBigDecimal;
 import static se.sundsvall.selfserviceai.integration.intric.util.ConversionUtil.toBoolean;
 
-import generated.se.sundsvall.invoices.Address;
-import generated.se.sundsvall.invoices.Invoice;
+import generated.se.sundsvall.invoices.InvoiceDetail;
+import generated.se.sundsvall.invoices.InvoiceStatus;
+import generated.se.sundsvall.invoices.InvoiceType;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
+import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InvoiceRow;
 
 public class InvoiceDecorator {
-	private static final int DECIMAL_POINTS = 2;
+
+	static final int DECIMAL_POINTS = 2;
 
 	private InvoiceDecorator() {}
 
@@ -28,36 +34,57 @@ public class InvoiceDecorator {
 			.stream()
 			.filter(f -> f.getFacilityId().equals(invoice.getFacilityId()))
 			.findFirst()
-			.ifPresent(f -> f.getInvoices().add(toInvoice(invoice)));
+			.ifPresent(f -> f.getInvoices().add(invoice));
 	}
 
-	private static se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice toInvoice(Invoice invoice) {
-		return se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice.builder()
+	public static Invoice toDecoratedInvoice(final generated.se.sundsvall.invoices.Invoice invoice, final List<InvoiceDetail> invoiceDetails) {
+		return Invoice.builder()
 			.withAmountVatExcluded(toBigDecimal(invoice.getAmountVatExcluded(), DECIMAL_POINTS))
 			.withAmountVatIncluded(toBigDecimal(invoice.getAmountVatIncluded(), DECIMAL_POINTS))
 			.withCurrency(invoice.getCurrency())
 			.withDescription(invoice.getInvoiceDescription())
 			.withDueDate(invoice.getDueDate())
+			.withFacilityId(invoice.getFacilityId())
 			.withInvoiceAddress(toAddress(invoice.getInvoiceAddress()))
 			.withInvoiceName(invoice.getInvoiceName())
 			.withInvoiceNumber(invoice.getInvoiceNumber())
-			.withInvoiceType(invoice.getInvoiceType().name())
+			.withInvoiceType(ofNullable(invoice.getInvoiceType()).map(InvoiceType::name).orElse(null))
 			.withInvoicingDate(invoice.getInvoiceDate())
 			.withOcrNumber(invoice.getOcrNumber())
 			.withOrganizationNumber(invoice.getOrganizationNumber())
 			.withPdfAvailable(toBoolean(invoice.getPdfAvailable()))
 			.withReversedVat(toBoolean(invoice.getReversedVat()))
 			.withRounding(toBigDecimal(invoice.getRounding(), DECIMAL_POINTS))
-			.withStatus(invoice.getInvoiceStatus().name())
+			.withStatus(ofNullable(invoice.getInvoiceStatus()).map(InvoiceStatus::name).orElse(null))
 			.withTotalAmount(toBigDecimal(invoice.getTotalAmount(), DECIMAL_POINTS))
 			.withVat(toBigDecimal(invoice.getVat(), DECIMAL_POINTS))
 			.withVatEligibleAmount(toBigDecimal(invoice.getVatEligibleAmount(), DECIMAL_POINTS))
+			.withInvoiceRows(invoiceDetails.stream()
+				.map(InvoiceDecorator::toInvoiceRow)
+				.toList())
 			.build();
 	}
 
-	private static se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address toAddress(Address address) {
+	static InvoiceRow toInvoiceRow(final InvoiceDetail invoiceDetail) {
+		return InvoiceRow.builder()
+			.withAmount(toBigDecimal(invoiceDetail.getAmount(), DECIMAL_POINTS))
+			.withAmountVatExcluded(toBigDecimal(invoiceDetail.getAmountVatExcluded(), DECIMAL_POINTS))
+			.withVat(toBigDecimal(invoiceDetail.getVat(), DECIMAL_POINTS))
+			.withVatRate(toBigDecimal(invoiceDetail.getVatRate(), DECIMAL_POINTS))
+			.withQuantity(toBigDecimal(invoiceDetail.getQuantity(), DECIMAL_POINTS))
+			.withUnit(invoiceDetail.getUnit())
+			.withUnitPrice(toBigDecimal(invoiceDetail.getUnitPrice(), DECIMAL_POINTS))
+			.withDescription(invoiceDetail.getDescription())
+			.withProductCode(invoiceDetail.getProductCode())
+			.withProductName(invoiceDetail.getProductName())
+			.withPeriodFrom(ofNullable(invoiceDetail.getFromDate()).map(date -> date.format(DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null))
+			.withPeriodTo(ofNullable(invoiceDetail.getToDate()).map(date -> date.format(DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null))
+			.build();
+	}
+
+	static Address toAddress(final generated.se.sundsvall.invoices.Address address) {
 		return ofNullable(address)
-			.map(a -> se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address.builder()
+			.map(a -> Address.builder()
 				.withCareOf(a.getCareOf())
 				.withCity(a.getCity())
 				.withPostalCode(a.getPostcode())
