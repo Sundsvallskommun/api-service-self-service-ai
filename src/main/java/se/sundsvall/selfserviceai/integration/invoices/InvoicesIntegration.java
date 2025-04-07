@@ -6,6 +6,7 @@ import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.NOT_FOUND;
 
 import generated.se.sundsvall.invoices.Invoice;
+import generated.se.sundsvall.invoices.InvoiceDetail;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,7 +25,12 @@ public class InvoicesIntegration {
 		this.invoicesClient = invoicesClient;
 	}
 
-	public List<Invoice> getInvoices(String municipalityId, String partyId) {
+	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final Invoice invoice) {
+		var response = invoicesClient.getInvoiceDetails(municipalityId, invoice.getOrganizationNumber(), invoice.getInvoiceNumber());
+		return response.getDetails();
+	}
+
+	public List<Invoice> getInvoices(final String municipalityId, final String partyId) {
 		final var fromDate = LocalDate.now().withDayOfMonth(1).minusMonths(6); // First day of previous 6:th month
 		final var toDate = LocalDate.now(); // Todays date
 
@@ -38,7 +44,7 @@ public class InvoicesIntegration {
 		}
 	}
 
-	private List<Invoice> getInvoices(String municipalityId, String partyId, LocalDate fromDate, LocalDate toDate, int page, List<Invoice> invoices) {
+	private List<Invoice> getInvoices(final String municipalityId, final String partyId, final LocalDate fromDate, final LocalDate toDate, final int page, final List<Invoice> invoices) {
 
 		final var response = invoicesClient.getInvoices(municipalityId, COMMERCIAL, page, 100, partyId, ORGANIZATION_GROUP, toString(fromDate), toString(toDate));
 		ofNullable(response.getInvoices()).ifPresent(invoices::addAll);
@@ -50,7 +56,7 @@ public class InvoicesIntegration {
 		return invoices;
 	}
 
-	private String toString(LocalDate date) {
+	private String toString(final LocalDate date) {
 		return ofNullable(date)
 			.map(d -> d.format(DateTimeFormatter.ISO_LOCAL_DATE))
 			.orElse(null);

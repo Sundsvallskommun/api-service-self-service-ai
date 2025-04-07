@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +31,7 @@ import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricMod
 @Component
 public class IntricMapper {
 
-	private static final <T> Predicate<T> distinctByValue(Function<? super T, ?> keyExtractor) {
+	private static <T> Predicate<T> distinctByValue(final Function<? super T, ?> keyExtractor) {
 		final Set<Object> seen = ConcurrentHashMap.newKeySet();
 		return t -> seen.add(keyExtractor.apply(t));
 	}
@@ -41,7 +42,7 @@ public class IntricMapper {
 	 * @param  input question to be asked
 	 * @return       AskAssistant object with provided data
 	 */
-	public AskAssistant toAskAssistant(String input) {
+	public AskAssistant toAskAssistant(final String input) {
 		return toAskAssistant(input, emptyList());
 	}
 
@@ -52,21 +53,21 @@ public class IntricMapper {
 	 * @param  fileReferences id of previously stored files that shall be used to answer question
 	 * @return                AskAssistant object with provided data
 	 */
-	public AskAssistant toAskAssistant(String input, List<String> fileReferences) {
+	public AskAssistant toAskAssistant(final String input, List<String> fileReferences) {
 		return AskAssistant.builder()
 			.withQuestion(input)
 			.withFiles(toFilesPublic(fileReferences))
 			.build();
 	}
 
-	static List<FilePublic> toFilesPublic(List<String> fileReferences) {
+	static List<FilePublic> toFilesPublic(final List<String> fileReferences) {
 		return ofNullable(fileReferences).orElse(emptyList()).stream()
 			.map(IntricMapper::toFilePublic)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static FilePublic toFilePublic(String fileId) {
+	static FilePublic toFilePublic(final String fileId) {
 		return ofNullable(fileId)
 			.map(UUID::fromString)
 			.map(id -> FilePublic.builder()
@@ -81,7 +82,7 @@ public class IntricMapper {
 	 * @param  data string of json data that is to be the content of the file
 	 * @return      a InformationFile object representing the provided data
 	 */
-	public InformationFile toInformationFile(String data) {
+	public InformationFile toInformationFile(final String data) {
 		return InformationFile
 			.create()
 			.withData(data);
@@ -98,7 +99,7 @@ public class IntricMapper {
 		final var intricModel = ofNullable(installedBaseCustomers)
 			.filter(MapUtils::isNotEmpty)
 			.map(ibc -> IntricModel.builder()
-				.withCustomerNumber(ibc.values().iterator().next().getCustomerNumber()) // Use first entry to retrive customer nr and party id (as its always the same for all ib:s)
+				.withCustomerNumber(ibc.values().iterator().next().getCustomerNumber()) // Use first entry to retrieve customer nr and party id (as its always the same for all ib:s)
 				.withPartyId(ibc.values().iterator().next().getPartyId())
 				.withFacilities(toFacilities(ibc))
 				.build())
@@ -106,7 +107,7 @@ public class IntricMapper {
 
 		// Attach matching installed bases to each facility
 		if (nonNull(intricModel)) {
-			final var installedBases = ofNullable(installedBaseCustomers).orElse(emptyMap()).values().stream()
+			final var installedBases = Optional.of(installedBaseCustomers).orElse(emptyMap()).values().stream()
 				.map(InstalledBaseCustomer::getItems)
 				.flatMap(List::stream)
 				.toList();
@@ -117,7 +118,7 @@ public class IntricMapper {
 		return intricModel;
 	}
 
-	List<Facility> toFacilities(Map<String, InstalledBaseCustomer> installedBases) {
+	List<Facility> toFacilities(final Map<String, InstalledBaseCustomer> installedBases) {
 		return ofNullable(installedBases).orElse(emptyMap()).entrySet().stream()
 			.map(this::toFacilities)
 			.flatMap(List::stream)
@@ -125,7 +126,7 @@ public class IntricMapper {
 			.toList();
 	}
 
-	List<Facility> toFacilities(Entry<String, InstalledBaseCustomer> installedBaseEntry) {
+	List<Facility> toFacilities(final Entry<String, InstalledBaseCustomer> installedBaseEntry) {
 		return ofNullable(installedBaseEntry)
 			.map(Entry::getValue)
 			.map(InstalledBaseCustomer::getItems)
@@ -136,7 +137,7 @@ public class IntricMapper {
 			.toList();
 	}
 
-	Facility toFacility(InstalledBaseItem item) {
+	Facility toFacility(final InstalledBaseItem item) {
 		return ofNullable(item)
 			.map(i -> Facility.builder()
 				.withAddress(toAddress(i.getAddress()))
@@ -145,7 +146,7 @@ public class IntricMapper {
 			.orElse(null);
 	}
 
-	void addInstalledBases(Facility facility, List<InstalledBaseItem> installedBaseItems) {
+	void addInstalledBases(final Facility facility, final List<InstalledBaseItem> installedBaseItems) {
 		ofNullable(facility).ifPresent(f -> f.getInstalledBases().addAll(
 			ofNullable(installedBaseItems).orElse(emptyList()).stream()
 				.filter(Objects::nonNull)
@@ -154,7 +155,7 @@ public class IntricMapper {
 				.toList()));
 	}
 
-	InstalledBase toInstalledBase(InstalledBaseItem installedBaseItem) {
+	InstalledBase toInstalledBase(final InstalledBaseItem installedBaseItem) {
 		return ofNullable(installedBaseItem)
 			.map(item -> InstalledBase.builder()
 				.withType(item.getType())
@@ -167,14 +168,14 @@ public class IntricMapper {
 			.orElse(null);
 	}
 
-	List<InstalledBase.Metadata> toMetadatas(List<InstalledBaseItemMetaData> metadatas) {
+	List<InstalledBase.Metadata> toMetadatas(final List<InstalledBaseItemMetaData> metadatas) {
 		return ofNullable(metadatas).orElse(emptyList()).stream()
 			.map(this::toMetadata)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	InstalledBase.Metadata toMetadata(InstalledBaseItemMetaData metadata) {
+	InstalledBase.Metadata toMetadata(final InstalledBaseItemMetaData metadata) {
 		return ofNullable(metadata)
 			.map(m -> InstalledBase.Metadata.builder()
 				.withDisplayName(metadata.getDisplayName())
@@ -185,7 +186,7 @@ public class IntricMapper {
 			.orElse(null);
 	}
 
-	se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address toAddress(InstalledBaseItemAddress address) {
+	se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address toAddress(final InstalledBaseItemAddress address) {
 		return ofNullable(address)
 			.map(a -> se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address.builder()
 				.withCareOf(a.getCareOf())

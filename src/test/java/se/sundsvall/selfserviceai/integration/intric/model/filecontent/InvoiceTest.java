@@ -40,6 +40,7 @@ class InvoiceTest {
 		final var currency = "currency";
 		final var description = "description";
 		final var dueDate = LocalDate.now();
+		final var facilityId = "facilityId";
 		final var invoiceAddress = Address.builder().build();
 		final var invoiceName = "invoiceName";
 		final var invoiceNumber = "invoiceNumber";
@@ -61,6 +62,7 @@ class InvoiceTest {
 			.withCurrency(currency)
 			.withDescription(description)
 			.withDueDate(dueDate)
+			.withFacilityId(facilityId)
 			.withInvoiceAddress(invoiceAddress)
 			.withInvoiceName(invoiceName)
 			.withInvoiceNumber(invoiceNumber)
@@ -83,6 +85,7 @@ class InvoiceTest {
 		assertThat(bean.getCurrency()).isEqualTo(currency);
 		assertThat(bean.getDescription()).isEqualTo(description);
 		assertThat(bean.getDueDate()).isEqualTo(dueDate);
+		assertThat(bean.getFacilityId()).isEqualTo(facilityId);
 		assertThat(bean.getInvoiceAddress()).isEqualTo(invoiceAddress);
 		assertThat(bean.getInvoiceName()).isEqualTo(invoiceName);
 		assertThat(bean.getInvoiceNumber()).isEqualTo(invoiceNumber);
@@ -100,11 +103,11 @@ class InvoiceTest {
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(Invoice.builder().build())
-			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "reversedVat")
+			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "reversedVat", "invoiceRows")
 			.hasFieldOrPropertyWithValue("pdfAvailable", false)
 			.hasFieldOrPropertyWithValue("reversedVat", false);
 		assertThat(new Invoice())
-			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "reversedVat")
+			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "reversedVat", "invoiceRows")
 			.hasFieldOrPropertyWithValue("pdfAvailable", false)
 			.hasFieldOrPropertyWithValue("reversedVat", false);
 	}

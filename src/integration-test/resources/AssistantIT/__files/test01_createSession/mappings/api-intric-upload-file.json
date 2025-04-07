@@ -303,6 +303,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-04-09",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -321,7 +322,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -329,6 +346,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-04-07",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -347,7 +365,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -355,6 +389,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-13",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -373,7 +408,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -381,6 +432,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-03-10",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -399,7 +451,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -407,6 +475,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-02-10",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -425,7 +494,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -433,6 +518,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-02-06",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -451,7 +537,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -459,6 +561,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-01-09",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -477,7 +580,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -485,6 +604,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-01-08",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -503,7 +623,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -511,6 +647,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-11",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -529,7 +666,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -537,6 +690,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-12-09",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -555,7 +709,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -563,6 +733,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-11-08",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -581,7 +752,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -589,6 +776,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-11-07",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -607,7 +795,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -615,6 +819,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-10-10",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -633,7 +838,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -641,6 +862,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-10-09",
+											"facilityId": "735999109220108018",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -659,7 +881,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										}
 									]
 								},
@@ -999,6 +1237,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-31",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1017,7 +1256,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1025,6 +1280,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-04-07",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1043,7 +1299,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1051,6 +1323,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-03",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1069,7 +1342,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1077,6 +1366,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-03-10",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1095,7 +1385,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1103,6 +1409,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-01-30",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1121,7 +1428,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1129,6 +1452,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-02-06",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1147,7 +1471,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1155,6 +1495,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-30",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1173,7 +1514,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1181,6 +1538,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-01-08",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1199,7 +1557,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1207,6 +1581,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-02",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1225,7 +1600,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1233,6 +1624,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-12-09",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1251,7 +1643,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1259,6 +1667,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-10-29",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1277,7 +1686,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1285,6 +1710,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-11-07",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1303,7 +1729,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1311,6 +1753,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-09-30",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1329,7 +1772,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1337,6 +1796,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-10-09",
+											"facilityId": "735999109222306054",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1355,7 +1815,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										}
 									]
 								},
@@ -1961,6 +2437,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-04-09",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1979,7 +2456,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -1987,6 +2480,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-04-07",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2005,7 +2499,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2013,6 +2523,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-13",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2031,7 +2542,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2039,6 +2566,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-03-10",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2057,7 +2585,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2065,6 +2609,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-02-10",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2083,7 +2628,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2091,6 +2652,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-02-06",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2109,7 +2671,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2117,6 +2695,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-01-09",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2135,7 +2714,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2143,6 +2738,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-01-08",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2161,7 +2757,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2169,6 +2781,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-11",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2187,7 +2800,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2195,6 +2824,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-12-09",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2213,7 +2843,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2221,6 +2867,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-11-08",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2239,7 +2886,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2247,6 +2910,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-11-07",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2265,7 +2929,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2273,6 +2953,7 @@
 											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-10-10",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2291,7 +2972,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 0.00,
@@ -2299,6 +2996,7 @@
 											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-10-09",
+											"facilityId": "735999109260723035",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2317,7 +3015,23 @@
 											"status": "VOID",
 											"totalAmount": 0.00,
 											"vat": 0.00,
-											"vatEligibleAmount": 0.00
+											"vatEligibleAmount": 0.00,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										}
 									]
 								},
@@ -2705,6 +3419,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2025-03-28",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2723,7 +3438,23 @@
 											"status": "SENT",
 											"totalAmount": 2734.00,
 											"vat": 546.76,
-											"vatEligibleAmount": 2187.04
+											"vatEligibleAmount": 2187.04,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 3130.08,
@@ -2731,6 +3462,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2025-02-28",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2749,7 +3481,23 @@
 											"status": "PAID",
 											"totalAmount": 3130.00,
 											"vat": 626.02,
-											"vatEligibleAmount": 2504.06
+											"vatEligibleAmount": 2504.06,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 2801.81,
@@ -2757,6 +3505,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2025-01-28",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2775,7 +3524,23 @@
 											"status": "PAID",
 											"totalAmount": 2802.00,
 											"vat": 560.36,
-											"vatEligibleAmount": 2241.45
+											"vatEligibleAmount": 2241.45,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 2439.93,
@@ -2783,6 +3548,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-12-30",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2801,7 +3567,23 @@
 											"status": "PAID",
 											"totalAmount": 2440.00,
 											"vat": 487.99,
-											"vatEligibleAmount": 1951.94
+											"vatEligibleAmount": 1951.94,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 1781.65,
@@ -2809,6 +3591,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-11-28",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2827,7 +3610,23 @@
 											"status": "PAID",
 											"totalAmount": 1782.00,
 											"vat": 356.33,
-											"vatEligibleAmount": 1425.32
+											"vatEligibleAmount": 1425.32,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 1152.85,
@@ -2835,6 +3634,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-10-29",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2853,7 +3653,23 @@
 											"status": "PAID",
 											"totalAmount": 1153.00,
 											"vat": 230.57,
-											"vatEligibleAmount": 922.28
+											"vatEligibleAmount": 922.28,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										},
 										{
 											"amountVatIncluded": 435.78,
@@ -2861,6 +3677,7 @@
 											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-09-30",
+											"facilityId": "9222306053",
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2879,7 +3696,23 @@
 											"status": "PAID",
 											"totalAmount": 436.00,
 											"vat": 87.16,
-											"vatEligibleAmount": 348.62
+											"vatEligibleAmount": 348.62,
+											"invoiceRows": [
+												{
+													"amount": 10.00,
+													"amountVatExcluded": 8.00,
+													"vat": 2.00,
+													"vatRate": 20.00,
+													"quantity": 10.00,
+													"unit": "unit",
+													"unitPrice": 1.00,
+													"description": "description",
+													"productCode": "productCode",
+													"productName": "productName",
+													"periodFrom": "2023-01-01",
+													"periodTo": "2023-01-31"
+												}
+											]
 										}
 									]
 								}
