@@ -5,6 +5,15 @@
         primary key (file_id)
     ) engine=InnoDB;
 
+    create table history (
+        created datetime(6),
+        customer_nbr varchar(255),
+        party_id varchar(255),
+        session_id varchar(255) not null,
+        lime_history longtext,
+        primary key (session_id)
+    ) engine=InnoDB;
+
     create table session (
         created datetime(6),
         initialized datetime(6),
@@ -25,6 +34,12 @@
 
     alter table if exists file 
        add constraint uq_session_id_file_id unique (session_id, file_id);
+
+    create index session_id_idx 
+       on history (session_id);
+
+    create index party_id_idx 
+       on history (party_id);
 
     create index municipality_id_idx 
        on session (municipality_id);

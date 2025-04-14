@@ -1,0 +1,18 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDEwNzg1MzQsImV4cCI6MTc0MTA4MjEzNCwiYXVkIjoid3d3Lml0dGVzdC5jb20iLCJzdWIiOiJpdHRlc3RAbm9yZXBseS5jb20ifQ.HQXOaHq4VNHpGxyfYKYOsSxpvScMgvqqhd702MlJ0YM"
+			}
+		},
+		"method": "DELETE",
+		"urlPath": "/intric/files/fb3a9d99-cbd8-4671-87ab-313f54412cde/"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 204
+	},
+	"name": "api-intric-delete-file"
+}

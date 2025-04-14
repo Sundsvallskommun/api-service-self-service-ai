@@ -16,6 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,10 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.selfserviceai.Application;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
+import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 
 @WireMockAppTestSuite(files = "classpath:/AssistantIT/", classes = Application.class)
@@ -45,6 +48,9 @@ class AssistantIT extends AbstractAppTest {
 
 	@Autowired
 	private SessionRepository sessionRepository;
+
+	@Autowired
+	private HistoryRepository historyRepository;
 
 	@Autowired
 	private FileRepository fileRepository;
@@ -141,8 +147,43 @@ class AssistantIT extends AbstractAppTest {
 			.atMost(Duration.ofSeconds(30))
 			.ignoreExceptions()
 			.until(() -> transactionTemplate.execute(status -> {
-				assertThat(sessionRepository.findById(sessionId)).isNotPresent();
-				assertThat(fileRepository.findById(fileId)).isEmpty();
+				assertThat(sessionRepository.existsById(sessionId)).isFalse();
+				assertThat(historyRepository.existsById(sessionId)).isFalse();
+				assertThat(fileRepository.existsById(fileId)).isFalse();
+
+				return true;
+			}));
+	}
+
+	@Test
+	void test07_deleteSessionWhenLimeFails() {
+		final var sessionId = "07b9dbbe-d36f-4312-8bd2-a4abec07ee20";
+		final var fileId = "fb3a9d99-cbd8-4671-87ab-313f54412cde";
+
+		transactionTemplate.executeWithoutResult(status -> {
+			final var session = sessionRepository.getReferenceById(sessionId);
+
+			// Verify that the session exists and is ready for interaction
+			assertThat(session.getInitialized()).isNotNull();
+			assertThat(session.getFiles()).hasSize(1);
+		});
+
+		// Delete session (asynchronously)
+		setupCall()
+			.withServicePath(PATH + "/" + sessionId)
+			.withHttpMethod(DELETE)
+			.withExpectedResponseStatus(NO_CONTENT)
+			.withExpectedResponseBodyIsNull()
+			.sendRequestAndVerifyResponse();
+
+		// Verify that the session is no longer ready (i.e. is deleted)
+		Awaitility.await()
+			.atMost(Duration.ofSeconds(30))
+			.ignoreExceptions()
+			.until(() -> transactionTemplate.execute(status -> {
+				assertThat(sessionRepository.existsById(sessionId)).isFalse();
+				assertThat(historyRepository.existsById(sessionId)).isTrue(); // As Lime could not handle history log, it should have been stored locally
+				assertThat(fileRepository.existsById(fileId)).isFalse();
 
 				return true;
 			}));

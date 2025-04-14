@@ -2,11 +2,12 @@ package se.sundsvall.selfserviceai.service;
 
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toFileEntity;
-import static se.sundsvall.selfserviceai.integration.db.DatabaseMapper.toSessionEntity;
+import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
+import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
 import static se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator.toDecoratedInvoice;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
@@ -141,7 +142,7 @@ public class AssistantService {
 		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());
 
 		// Fetch all invoices and their respective details.
-		var decoratedInvoices = invoicesIntegration.getInvoices(municipalityId, partyId).stream()
+		final var decoratedInvoices = invoicesIntegration.getInvoices(municipalityId, partyId).stream()
 			.map(invoice -> toDecoratedInvoice(invoice, invoicesIntegration.getInvoiceDetails(municipalityId, invoice)))
 			.toList();
 
@@ -211,8 +212,11 @@ public class AssistantService {
 
 	private SessionEntity saveChatHistory(final SessionEntity sessionEntity) {
 		try {
-			final var session = intricIntegration.getSession(intricProperties.assistantId(), sessionEntity.getSessionId());
-			limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
+			// Only save chathistory if session has been successfully initialized (i.e. the session has been possible to use)
+			if (nonNull(sessionEntity.getInitialized())) {
+				final var session = intricIntegration.getSession(intricProperties.assistantId(), sessionEntity.getSessionId());
+				limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
+			}
 			return sessionEntity;
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when saving chat history for session", e);

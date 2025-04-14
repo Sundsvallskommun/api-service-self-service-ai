@@ -503,6 +503,30 @@ class AssistantServiceTest {
 	}
 
 	@Test
+	void deleteNonInitializedSession() {
+		// Arrange
+		final var sessionEntity = SessionEntity.builder()
+			.withCustomerNbr(CUSTOMER_NBR)
+			.withSessionId(SESSION_ID.toString())
+			.withPartyId(PARTY_ID)
+			.build();
+		SessionPublic.builder().build();
+
+		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
+
+		// Act
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
+
+		// Assert and verify
+		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(intricPropertiesMock).assistantId();
+		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
+		verify(sessionRepositoryMock).delete(sessionEntity);
+	}
+
+	@Test
 	void deleteSessionWithFiles() {
 		// Arrange
 		final var fileId = UUID.randomUUID();
@@ -690,9 +714,9 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.deleteSession(any(), any())).thenReturn(true);
 		when(sessionRepositoryMock.findAllByLastAccessedBeforeOrLastAccessedIsNull(any())).thenReturn(List.of(
 			// Session that is never accessed and has reached threshold level
-			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), null),
+			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), OffsetDateTime.now(), null),
 			// Session that is never accessed but has not reached threshold level (should not be purged)
-			createSession(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now().minusMinutes(inactiveThreshold).plusSeconds(10), null)));
+			createSession(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now().minusMinutes(inactiveThreshold).plusSeconds(10), OffsetDateTime.now(), null)));
 
 		// Act
 		assistantService.cleanUpInactiveSessions(inactiveThreshold);
@@ -713,9 +737,10 @@ class AssistantServiceTest {
 		assertThat(sessionEntityCaptor.getValue().getSessionId()).isEqualTo(sessionId.toString());
 	}
 
-	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime lastAccessed) {
+	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime initialized, final OffsetDateTime lastAccessed) {
 		return SessionEntity.builder()
 			.withCreated(created)
+			.withInitialized(initialized)
 			.withCustomerNbr(CUSTOMER_NBR)
 			.withLastAccessed(lastAccessed)
 			.withSessionId(sessionId.toString())

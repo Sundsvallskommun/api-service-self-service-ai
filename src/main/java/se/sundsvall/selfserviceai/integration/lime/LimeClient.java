@@ -17,11 +17,11 @@ import se.sundsvall.selfserviceai.integration.lime.configuration.LimeConfigurati
 @FeignClient(name = CLIENT_ID, url = "${integration.lime.url}", configuration = LimeConfiguration.class)
 public interface LimeClient {
 
-	@PostMapping(path = "/chathistorik", consumes = APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/api/chathistorik", consumes = APPLICATION_JSON_VALUE)
 	Void saveChatHistory(
 		@RequestBody final ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest request);
 
-	@GetMapping(path = "/chathistorik/{sessionId}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/api/chathistorik/{sessionId}", produces = APPLICATION_JSON_VALUE)
 	ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse getChatHistory(
 		@RequestParam("sessionId") final String sessionId);
 
