@@ -1,0 +1,19 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDEwNzg1MzQsImV4cCI6MTc0MTA4MjEzNCwiYXVkIjoid3d3Lml0dGVzdC5jb20iLCJzdWIiOiJpdHRlc3RAbm9yZXBseS5jb20ifQ.HQXOaHq4VNHpGxyfYKYOsSxpvScMgvqqhd702MlJ0YM"
+			}
+		},
+		"method": "DELETE",
+		"urlPath": "/intric/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/07b9dbbe-d36f-4312-8bd2-a4abec07ee20/"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test07_deleteSessionWhenLimeFails/responses/api-intric-delete-assistant-session-response.json"
+	},
+	"name": "api-intric-delete-assistant-session"
+}

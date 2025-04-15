@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
-import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
+import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 @Component
 public class IntricIntegration {

@@ -20,7 +20,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
+import se.sundsvall.selfserviceai.integration.db.model.HistoryEntity;
 import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
+import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 @ExtendWith(MockitoExtension.class)
 class LimeIntegrationTest {
@@ -30,10 +33,16 @@ class LimeIntegrationTest {
 	private static final String SESSION_ID = "sessionId";
 
 	@Mock
-	private LimeClient clientMock;
+	private HistoryRepository historyRepositoryMock;
 
 	@Mock
-	private InvoicesResponse responseMock;
+	private JsonBuilder jsonBuilderMock;
+
+	@Mock
+	private LimeClient limeClientMock;
+
+	@Mock
+	private InvoicesResponse invoiceResponseMock;
 
 	@Mock
 	private MetaData metaDataMock;
@@ -43,7 +52,7 @@ class LimeIntegrationTest {
 
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
-		verifyNoMoreInteractions(clientMock);
+		verifyNoMoreInteractions(historyRepositoryMock, jsonBuilderMock, limeClientMock);
 	}
 
 	@Test
@@ -53,23 +62,45 @@ class LimeIntegrationTest {
 		integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, SessionPublic.builder().build());
 
 		// Assert and verify
-		verify(clientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
+		verify(limeClientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
 	}
 
 	@Test
-	void saveHistoryThrowsException() {
+	void saveHistoryLimeThrowsException() {
 
 		// Arrange
 		final var session = SessionPublic.builder().build();
 
-		when(clientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
+		when(limeClientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
+			.thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
+
+		// Act
+		integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
+
+		// Assert and verify
+		verify(limeClientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
+		verify(jsonBuilderMock).toJsonString(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
+		verify(historyRepositoryMock).save(any(HistoryEntity.class));
+	}
+
+	@Test
+	void saveHistoryLocalRepositoryThrowsException() {
+
+		// Arrange
+		final var session = SessionPublic.builder().build();
+
+		when(limeClientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
+			.thenThrow(Problem.valueOf(Status.FORBIDDEN, "You shall not pass"));
+		when(historyRepositoryMock.save(any()))
 			.thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
 
 		// Act
 		final var e = assertThrows(ThrowableProblem.class, () -> integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session));
 
 		// Assert and verify
-		verify(clientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
+		verify(limeClientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
+		verify(jsonBuilderMock).toJsonString(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
+		verify(historyRepositoryMock).save(any(HistoryEntity.class));
 		assertThat(e.getStatus()).isEqualTo(Status.I_AM_A_TEAPOT);
 		assertThat(e.getMessage()).isEqualTo("I'm a teapot: Big and stout");
 	}
@@ -79,13 +110,13 @@ class LimeIntegrationTest {
 
 		// Arrange
 		final var response = new ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse();
-		when(clientMock.getChatHistory(SESSION_ID)).thenReturn(response);
+		when(limeClientMock.getChatHistory(SESSION_ID)).thenReturn(response);
 
 		// Act
 		final var result = integration.getChatHistory(SESSION_ID);
 
 		// Assert and verify
-		verify(clientMock).getChatHistory(SESSION_ID);
+		verify(limeClientMock).getChatHistory(SESSION_ID);
 		assertThat(result).isSameAs(response);
 	}
 
@@ -94,13 +125,13 @@ class LimeIntegrationTest {
 
 		// Arrange
 		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
-		when(clientMock.getChatHistory(SESSION_ID)).thenThrow(exception);
+		when(limeClientMock.getChatHistory(SESSION_ID)).thenThrow(exception);
 
 		// Act
 		final var e = assertThrows(ThrowableProblem.class, () -> integration.getChatHistory(SESSION_ID));
 
 		// Assert and verify
-		verify(clientMock).getChatHistory(SESSION_ID);
+		verify(limeClientMock).getChatHistory(SESSION_ID);
 		assertThat(e).isSameAs(exception);
 	}
 

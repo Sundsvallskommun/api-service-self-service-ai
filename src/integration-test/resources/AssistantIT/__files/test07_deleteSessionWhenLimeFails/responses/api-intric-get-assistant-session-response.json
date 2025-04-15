@@ -1,0 +1,109 @@
+{
+	"created_at": "2025-03-07T07:05:58.727118Z",
+	"updated_at": "2025-03-07T07:05:58.727118Z",
+	"name": "Påbörjar session för party id '5a6c3e4e-c320-4006-b448-1fd4121df828'",
+	"id": "07b9dbbe-d36f-4312-8bd2-a4abec07ee20",
+	"messages": [
+		{
+			"created_at": "2025-03-07T07:05:58.727118Z",
+			"updated_at": "2025-03-14T16:30:10.682865Z",
+			"id": "834948e9-8eff-41ea-be48-9392617c918b",
+			"question": "Påbörjar session för party id '5a6c3e4e-c320-4006-b448-1fd4121df828'",
+			"answer": "Hej och välkommen! Hur kan jag hjälpa dig idag? \n\nHär är en översikt av dina anläggningar:\n\n| Anläggnings-ID | Adress                      | Typ av tjänst    |\n|----------------|-----------------------------|-------------------|\n| [facilityId]   | [careOf, street, postalCode, city] | [type]          |\n\nFyll gärna i med den specifika informationen så kan jag assistera dig vidare!",
+			"completion_model": {
+				"created_at": "2025-01-09T19:02:55.223252Z",
+				"updated_at": "2025-03-18T10:25:36.220323Z",
+				"id": "f2794da6-abe0-42c1-b1d8-351bc05a63e6",
+				"name": "gpt-4o-mini-azure",
+				"nickname": "GPT-4o mini (Azure)",
+				"family": "azure",
+				"token_limit": 128000,
+				"is_deprecated": false,
+				"nr_billion_parameters": null,
+				"hf_link": null,
+				"stability": "stable",
+				"hosting": "swe",
+				"open_source": null,
+				"description": "Microsoft Azure's hosted version of the compact GPT-4 Omni model, offering faster processing with advanced capabilities.",
+				"deployment_name": "gpt-4o-mini",
+				"org": "Microsoft",
+				"vision": true,
+				"reasoning": false,
+				"base_url": null,
+				"is_org_enabled": false,
+				"is_org_default": false
+			},
+			"references": [],
+			"files": [
+				{
+					"created_at": "2025-03-07T07:06:04.579881Z",
+					"updated_at": "2025-03-07T07:06:04.579881Z",
+					"id": "fb3a9d99-cbd8-4671-87ab-313f54412cde",
+					"name": "selfservice-ai-data.json",
+					"mimetype": "application/json",
+					"size": 4026,
+					"transcription": null
+				}
+			],
+			"tools": {
+				"assistants": [
+					{
+						"id": "3e951939-18ea-402d-9d01-23d977624ad2",
+						"handle": "selfServiceAssistant"
+					}
+				]
+			}
+		},
+		{
+			"created_at": "2025-03-07T07:49:50.405806Z",
+			"updated_at": "2025-03-14T16:30:10.682865Z",
+			"id": "b3784ef9-fa49-4e16-ad6e-bd6e7bbfdaa1",
+			"question": "What is the answer to the ultimate question of life, the universe and everything?",
+			"answer": "The answer to the ultimate question of life, the universe, and everything is famously known to be \"42.\" This concept comes from Douglas Adams' science fiction series \"The Hitchhiker's Guide to the Galaxy,\" where the randomness of the answer is part of the humor and satire of the narrative. \n\nIf you have any other questions or if there's anything else you'd like to discuss, feel free to let me know! I'm here to assist you with any inquiries regarding your energy services or other topics.",
+			"completion_model": {
+				"created_at": "2025-01-09T19:02:55.223252Z",
+				"updated_at": "2025-03-18T10:25:36.220323Z",
+				"id": "f2794da6-abe0-42c1-b1d8-351bc05a63e6",
+				"name": "gpt-4o-mini-azure",
+				"nickname": "GPT-4o mini (Azure)",
+				"family": "azure",
+				"token_limit": 128000,
+				"is_deprecated": false,
+				"nr_billion_parameters": null,
+				"hf_link": null,
+				"stability": "stable",
+				"hosting": "swe",
+				"open_source": null,
+				"description": "Microsoft Azure's hosted version of the compact GPT-4 Omni model, offering faster processing with advanced capabilities.",
+				"deployment_name": "gpt-4o-mini",
+				"org": "Microsoft",
+				"vision": true,
+				"reasoning": false,
+				"base_url": null,
+				"is_org_enabled": false,
+				"is_org_default": false
+			},
+			"references": [],
+			"files": [
+				{
+					"created_at": "2025-03-07T07:06:04.579881Z",
+					"updated_at": "2025-03-07T07:06:04.579881Z",
+					"id": "fb3a9d99-cbd8-4671-87ab-313f54412cde",
+					"name": "selfservice-ai-data.json",
+					"mimetype": "application/json",
+					"size": 4026,
+					"transcription": null
+				}
+			],
+			"tools": {
+				"assistants": [
+					{
+						"id": "3e951939-18ea-402d-9d01-23d977624ad2",
+						"handle": "selfServiceAssistant"
+					}
+				]
+			}
+		}
+	],
+	"feedback": null
+}

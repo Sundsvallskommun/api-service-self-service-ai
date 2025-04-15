@@ -21,12 +21,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
-import se.sundsvall.selfserviceai.integration.intric.mapper.JsonBuilder;
 import se.sundsvall.selfserviceai.integration.intric.model.AskAssistant;
 import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
 import se.sundsvall.selfserviceai.integration.intric.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
+import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 @ExtendWith(MockitoExtension.class)
 class IntricIntegrationTest {
