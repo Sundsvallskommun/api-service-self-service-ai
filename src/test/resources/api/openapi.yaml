@@ -1,33 +1,33 @@
 openapi: 3.0.1
 info:
   title: self-service-ai
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:57363
+    description: Generated server url
 tags:
-- name: Assistant session resources
-  description: "Resources for creating, interacting with and removing assistant sessions"
+  - name: Assistant session resources
+    description: "Resources for creating, interacting with and removing assistant sessions"
 paths:
   /{municipalityId}/session:
     post:
       tags:
-      - Assistant session resources
+        - Assistant session resources
       summary: Create assistant session
       description: Resource for creating a new session towards the assistant
       operationId: createAssistantSession
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
       requestBody:
         content:
           application/json:
@@ -47,8 +47,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -58,32 +58,33 @@ paths:
   /{municipalityId}/session/{id}:
     get:
       tags:
-      - Assistant session resources
+        - Assistant session resources
       summary: Interact with assistant
       description: Resource for interacting with the assistant by asking a question
       operationId: askAssistant
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Session id
-        required: true
-        schema:
-          type: string
-        example: f5211067-b3c7-4394-b84a-aa3fa65507e3
-      - name: question
-        in: query
-        description: The question to ask
-        required: true
-        schema:
-          type: string
-        example: "What is the answer to the ultimate question of life, the universe\
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Session id
+          required: true
+          schema:
+            type: string
+          example: f5211067-b3c7-4394-b84a-aa3fa65507e3
+        - name: question
+          in: query
+          description: The question to ask
+          required: true
+          schema:
+            minLength: 1
+            type: string
+          example: "What is the answer to the ultimate question of life, the universe\
           \ and everything?"
       responses:
         "404":
@@ -110,8 +111,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -120,25 +121,25 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-      - Assistant session resources
+        - Assistant session resources
       summary: Remove assistant session
       description: Resource for removing the assistant session matching sent in id
       operationId: deleteAssistantSession
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Session id
-        required: true
-        schema:
-          type: string
-        example: f5211067-b3c7-4394-b84a-aa3fa65507e3
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Session id
+          required: true
+          schema:
+            type: string
+          example: f5211067-b3c7-4394-b84a-aa3fa65507e3
       responses:
         "404":
           description: Not found
@@ -154,8 +155,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -165,26 +166,26 @@ paths:
   /{municipalityId}/session/{id}/ready:
     get:
       tags:
-      - Assistant session resources
+        - Assistant session resources
       summary: Ask if assistant is ready for interaction
       description: Resource for checking if the assistant is ready to answer questions
         (i.e. has been fully initialized with data)
       operationId: isAssistantReady
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Session id
-        required: true
-        schema:
-          type: string
-        example: f5211067-b3c7-4394-b84a-aa3fa65507e3
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Session id
+          required: true
+          schema:
+            type: string
+          example: f5211067-b3c7-4394-b84a-aa3fa65507e3
       responses:
         "404":
           description: Not found
@@ -204,8 +205,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -215,7 +216,7 @@ paths:
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -232,8 +233,8 @@ components:
   schemas:
     SessionRequest:
       required:
-      - customerEngagementOrgIds
-      - partyId
+        - customerEngagementOrgIds
+        - partyId
       type: object
       properties:
         partyId:
@@ -265,12 +266,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
           type: string
+        detail:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
@@ -400,12 +401,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
           type: string
+        detail:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:
@@ -675,4 +676,4 @@ components:
           items:
             $ref: "#/components/schemas/Assistant"
       description: Model for tools information
-  securitySchemes: {}
+  securitySchemes: { }
