@@ -84,7 +84,7 @@ class SessionResourceTest {
 				sessionId.toString());
 
 		verify(mockService).createSession(MUNICIPALITY_ID, partyId);
-		verify(mockService).populateWithInformation(sessionId, request);
+		verify(mockService).populateWithInformation(eq(sessionId), eq(request), any(UUID.class));
 	}
 
 	@ParameterizedTest

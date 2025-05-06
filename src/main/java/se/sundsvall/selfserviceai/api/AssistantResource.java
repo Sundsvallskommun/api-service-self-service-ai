@@ -69,7 +69,7 @@ class AssistantResource {
 		final var sessionResponse = assistantService.createSession(municipalityId, request.getPartyId());
 
 		// Populate session with information (asynchronously)
-		assistantService.populateWithInformation(UUID.fromString(sessionResponse.getSessionId()), request);
+		assistantService.populateWithInformation(UUID.fromString(sessionResponse.getSessionId()), request, UUID.fromString(RequestId.get()));
 
 		// Return created with body (as location does not fit here)
 		return status(CREATED).body(sessionResponse);

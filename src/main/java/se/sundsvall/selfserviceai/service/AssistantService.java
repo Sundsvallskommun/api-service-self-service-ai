@@ -96,11 +96,12 @@ public class AssistantService {
 
 	@Async
 	@Transactional
-	public void populateWithInformation(UUID sessionId, SessionRequest sessionRequest) {
+	public void populateWithInformation(UUID sessionId, SessionRequest sessionRequest, UUID requestId) {
 		final var sessionEntity = sessionRepository.findById(sessionId.toString())
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
 		try {
+			RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
 			final var municipalityId = sessionEntity.getMunicipalityId();
 			final var partyId = sessionRequest.getPartyId();
 
@@ -129,9 +130,10 @@ public class AssistantService {
 			LOG.error("Exception thrown when populating session with customer information", e);
 			// Update with failed information
 			sessionEntity.setInitialized(null);
-			sessionEntity.setStatus("Initialization failed, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+			sessionEntity.setStatus("Initialization failed. Error message is '%s'. Filter logs on log id '%s' for more information.".formatted(e.getMessage(), RequestId.get()));
 		} finally {
 			sessionRepository.save(sessionEntity);
+			RequestId.reset();
 		}
 	}
 
@@ -175,16 +177,20 @@ public class AssistantService {
 	@Async
 	@Transactional
 	public void deleteSessionById(final String municipalityId, final UUID sessionId, UUID requestId) {
-		RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
+		try {
+			RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
 
-		sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
-			.ifPresentOrElse(entity -> Stream.of(entity)
-				.map(this::saveChatHistory)
-				.filter(Objects::nonNull)
-				.findAny()
-				.ifPresent(this::deleteSession), () -> {
-					throw Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId));
-				});
+			sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
+				.ifPresentOrElse(entity -> Stream.of(entity)
+					.map(this::saveChatHistory)
+					.filter(Objects::nonNull)
+					.findAny()
+					.ifPresent(this::deleteSession), () -> {
+						throw Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId));
+					});
+		} finally {
+			RequestId.reset();
+		}
 	}
 
 	@Transactional
@@ -221,7 +227,7 @@ public class AssistantService {
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when saving chat history for session", e);
 			// Update with failed information
-			sessionEntity.setStatus("Failed to save chat history, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+			sessionEntity.setStatus("Failed to save chat history. Error message is '%s'. Filter logs on log id '%s' for more information.".formatted(e.getMessage(), RequestId.get()));
 			return null;
 		}
 	}

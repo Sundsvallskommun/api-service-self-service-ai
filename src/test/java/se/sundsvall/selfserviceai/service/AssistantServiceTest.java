@@ -2,8 +2,10 @@ package se.sundsvall.selfserviceai.service;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -42,6 +44,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -242,7 +246,7 @@ class AssistantServiceTest {
 		when(fileRepositoryMock.save(any(FileEntity.class))).then(args -> args.getArgument(0));
 
 		// Act
-		assistantService.populateWithInformation(SESSION_ID, sessionRequest);
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, null);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -308,7 +312,7 @@ class AssistantServiceTest {
 		when(sessionRepositoryMock.findById(anyString())).thenReturn(Optional.of(sessionEntity));
 
 		// Act
-		assistantService.populateWithInformation(SESSION_ID, sessionRequest);
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, null);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -322,10 +326,13 @@ class AssistantServiceTest {
 		});
 	}
 
-	@Test
-	void populateWithInformationWhenIntricThrowsException() {
+	@ParameterizedTest
+	@ValueSource(strings = {
+		"be61d7c3-5534-47b9-88da-ce325b9c8426"
+	})
+	@NullSource
+	void populateWithInformationWhenIntricThrowsException(String uuid) {
 		// Arrange
-		RequestId.init();
 		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 		final var sessionEntity = SessionEntity.builder()
 			.withMunicipalityId(MUNICIPALITY_ID)
@@ -343,7 +350,7 @@ class AssistantServiceTest {
 		when(intricIntegrationMock.uploadFile(intricModel)).thenThrow(exception);
 
 		// Act
-		assistantService.populateWithInformation(SESSION_ID, sessionRequest);
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, isNull(uuid) ? null : UUID.fromString(uuid));
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -358,7 +365,13 @@ class AssistantServiceTest {
 		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
 			assertThat(entity.getFiles()).isEmpty();
 			assertThat(entity.getInitialized()).isNull();
-			assertThat(entity.getStatus()).isEqualTo("Initialization failed, filter logs on log id '%s' for more information".formatted(RequestId.get()));
+			if (isNull(uuid)) {
+				assertThat(entity.getStatus()).startsWith("Initialization failed. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '");
+				assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(94, 130)), "Log message does not contain a valid log id");
+				assertThat(entity.getStatus()).endsWith("' for more information.");
+			} else {
+				assertThat(entity.getStatus()).isEqualTo("Initialization failed. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
+			}
 		});
 	}
 
@@ -368,7 +381,7 @@ class AssistantServiceTest {
 		final var sessionRequest = SessionRequest.builder().build();
 
 		// Act
-		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.populateWithInformation(SESSION_ID, sessionRequest));
+		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.populateWithInformation(SESSION_ID, sessionRequest, null));
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -588,11 +601,14 @@ class AssistantServiceTest {
 		verify(sessionRepositoryMock).delete(sessionEntity);
 	}
 
-	@Test
-	void deleteSessionWhenHistoryNotSuccessfullySaved() {
+	@ParameterizedTest
+	@ValueSource(strings = {
+		"be61d7c3-5534-47b9-88da-ce325b9c8426"
+	})
+	@NullSource
+	void deleteSessionWhenHistoryNotSuccessfullySaved(String uuid) {
 		// Arrange
-		final var requestId = UUID.randomUUID();
-		final var sessionEntity = SessionEntity.builder()
+		final var entity = SessionEntity.builder()
 			.withCustomerNbr(CUSTOMER_NBR)
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
@@ -602,19 +618,26 @@ class AssistantServiceTest {
 		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 
 		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
 		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
 		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, isNull(uuid) ? null : UUID.fromString(uuid));
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(intricPropertiesMock).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
 
-		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to save chat history, filter logs on log id '%s' for more information".formatted(requestId));
+		if (isNull(uuid)) {
+			assertThat(entity.getStatus()).startsWith("Failed to save chat history. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '");
+			assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(100, 136)), "Log message does not contain a valid log id");
+			assertThat(entity.getStatus()).endsWith("' for more information.");
+		} else {
+			assertThat(entity.getStatus()).isEqualTo("Failed to save chat history. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
+		}
+
 	}
 
 	@Test
