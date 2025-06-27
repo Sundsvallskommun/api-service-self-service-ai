@@ -11,6 +11,7 @@ import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.to
 import static se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator.toDecoratedInvoice;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
+import static se.sundsvall.selfserviceai.service.util.StringUtils.sanitizeAndCompress;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.time.OffsetDateTime;
@@ -120,7 +121,7 @@ public class AssistantService {
 				sessionEntity.setCustomerNbr(intricModel.getCustomerNumber());
 				sessionEntity.setStatus("Successfully initialized");
 			} else {
-				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds());
+				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizeAndCompress(partyId), sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
 				sessionEntity.setStatus("No installed base information found for customer '%s' and counterparts %s".formatted(sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds()));
 			}
 
