@@ -39,8 +39,8 @@ public class EneoMapper {
 	/**
 	 * Maps incoming question string into an AskAssistant request
 	 *
-	 * @param input question to be asked
-	 * @return AskAssistant object with provided data
+	 * @param  input question to be asked
+	 * @return       AskAssistant object with provided data
 	 */
 	public AskAssistant toAskAssistant(final String input) {
 		return toAskAssistant(input, emptyList());
@@ -49,9 +49,9 @@ public class EneoMapper {
 	/**
 	 * Maps incoming question string into an AskAssistant request
 	 *
-	 * @param input question to be asked
-	 * @param fileReferences id of previously stored files that shall be used to answer question
-	 * @return AskAssistant object with provided data
+	 * @param  input          question to be asked
+	 * @param  fileReferences id of previously stored files that shall be used to answer question
+	 * @return                AskAssistant object with provided data
 	 */
 	public AskAssistant toAskAssistant(final String input, List<String> fileReferences) {
 		return AskAssistant.builder()
@@ -79,8 +79,8 @@ public class EneoMapper {
 	/**
 	 * Maps incoming data to a InformationFile object implementing the MultipartFile interface
 	 *
-	 * @param data string of json data that is to be the content of the file
-	 * @return a InformationFile object representing the provided data
+	 * @param  data string of json data that is to be the content of the file
+	 * @return      a InformationFile object representing the provided data
 	 */
 	public InformationFile toInformationFile(final String data) {
 		return InformationFile
@@ -91,8 +91,9 @@ public class EneoMapper {
 	/**
 	 * Method for mapping installed base customer object into a intric information model
 	 *
-	 * @param installedBaseCustomers map containing all requested installedbases for the customer, where key is customerEngagementOrgId and value is response from InstalledBase service
-	 * @return A InstalledBase object containing provided installed base customer data
+	 * @param  installedBaseCustomers map containing all requested installedbases for the customer, where key is
+	 *                                customerEngagementOrgId and value is response from InstalledBase service
+	 * @return                        A InstalledBase object containing provided installed base customer data
 	 */
 	public EneoModel toIntricModel(final Map<String, InstalledBaseCustomer> installedBaseCustomers) {
 		final var intricModel = ofNullable(installedBaseCustomers)

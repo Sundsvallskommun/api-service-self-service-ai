@@ -66,7 +66,7 @@ integration:
     url: http://localhost:${wiremock.server.port}/installedbase
   eneo:
     assistant-id: 3e951939-18ea-402d-9d01-23d977624ad2
-    url: http://localhost:${wiremock.server.port}/intric
+    url: http://localhost:${wiremock.server.port}/eneo
     api-key: eneo-api-key
   invoices:
     url: http://localhost:${wiremock.server.port}/invoices

@@ -30,9 +30,9 @@ public class EneoIntegration {
 	/**
 	 * Asks and initial question to a given assistant
 	 *
-	 * @param assistantId The ID of the assistant to ask
-	 * @param input The question to ask
-	 * @return The response from the assistant or null if problems occurred during assistant interaction
+	 * @param  assistantId The ID of the assistant to ask
+	 * @param  input       The question to ask
+	 * @return             The response from the assistant or null if problems occurred during assistant interaction
 	 */
 	public AskResponse askAssistant(final String assistantId, final String input) {
 		LOG.debug("Asking assistant initial question");
@@ -43,11 +43,12 @@ public class EneoIntegration {
 	/**
 	 * Asks a followup question to a given assistant
 	 *
-	 * @param assistantId The ID of the assistant to ask
-	 * @param sessionId The ID of the session to ask in
-	 * @param input The question to ask
-	 * @param fileReferences List references to files that the assistant shall base its answer on
-	 * @return The response from the assistant or an <code>Optional.empty()</code> if problems occurred during assistant interaction
+	 * @param  assistantId    The ID of the assistant to ask
+	 * @param  sessionId      The ID of the session to ask in
+	 * @param  input          The question to ask
+	 * @param  fileReferences List references to files that the assistant shall base its answer on
+	 * @return                The response from the assistant or an <code>Optional.empty()</code> if problems occurred
+	 *                        during assistant interaction
 	 */
 	public Optional<AskResponse> askFollowUp(final String assistantId, final String sessionId, final String input, List<String> fileReferences) {
 		try {
@@ -64,9 +65,9 @@ public class EneoIntegration {
 	/**
 	 * Get complete history of session interaction
 	 *
-	 * @param assistantId The ID of the assistant to get history for
-	 * @param sessionId The ID of the session to get history for
-	 * @return Complete session history
+	 * @param  assistantId The ID of the assistant to get history for
+	 * @param  sessionId   The ID of the session to get history for
+	 * @return             Complete session history
 	 */
 	public SessionPublic getSession(final String assistantId, final String sessionId) {
 		LOG.debug("Retrieving history from assistant session");
@@ -76,9 +77,9 @@ public class EneoIntegration {
 	/**
 	 * Deletes an assistant session from Intric
 	 *
-	 * @param assistantId The ID of the assistant that owns the session to delete
-	 * @param sessionId The ID of the session to delete
-	 * @return Signal if the session was successfully deleted or not
+	 * @param  assistantId The ID of the assistant that owns the session to delete
+	 * @param  sessionId   The ID of the session to delete
+	 * @return             Signal if the session was successfully deleted or not
 	 */
 	public boolean deleteSession(final String assistantId, final String sessionId) {
 		try {
@@ -95,8 +96,8 @@ public class EneoIntegration {
 	/**
 	 * Uploads a file to Intric
 	 *
-	 * @param eneoModel The file content in the form of a installedBase object to store in intric
-	 * @return The ID of the uploaded file
+	 * @param  eneoModel The file content in the form of a installedBase object to store in intric
+	 * @return           The ID of the uploaded file
 	 */
 	public UUID uploadFile(final EneoModel eneoModel) {
 		final var content = jsonBuilder.toJsonString(eneoModel);
@@ -108,8 +109,8 @@ public class EneoIntegration {
 	/**
 	 * Deletes a file from Intric
 	 *
-	 * @param id The ID of the file to delete
-	 * @return Signal if the file was successfully deleted or not
+	 * @param  id The ID of the file to delete
+	 * @return    Signal if the file was successfully deleted or not
 	 */
 	public boolean deleteFile(final String id) {
 		try {

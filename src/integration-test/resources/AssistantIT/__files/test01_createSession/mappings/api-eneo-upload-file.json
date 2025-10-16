@@ -2,7 +2,7 @@
 	"request": {
 		"headers": {
 			"Authorization": {
-				"equalTo": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDEwNzg1MzQsImV4cCI6MTc0MTA4MjEzNCwiYXVkIjoid3d3Lml0dGVzdC5jb20iLCJzdWIiOiJpdHRlc3RAbm9yZXBseS5jb20ifQ.HQXOaHq4VNHpGxyfYKYOsSxpvScMgvqqhd702MlJ0YM"
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
 			}
 		},
 		"method": "POST",
@@ -3722,14 +3722,14 @@
 				]
 			}
 		],
-		"urlPath": "/intric/files/"
+		"urlPath": "/eneo/files/"
 	},
 	"response": {
 		"headers": {
 			"Content-Type": "application/json"
 		},
 		"status": 200,
-		"bodyFileName": "test01_createSession/responses/api-intric-upload-file-response.json"
+		"bodyFileName": "test01_createSession/responses/api-eneo-upload-file-response.json"
 	},
-	"name": "api-intric-upload-file"
+	"name": "api-eneo-upload-file"
 }

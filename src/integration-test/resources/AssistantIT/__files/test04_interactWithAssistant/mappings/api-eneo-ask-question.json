@@ -2,7 +2,7 @@
 	"request": {
 		"headers": {
 			"Authorization": {
-				"equalTo": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDEwNzg1MzQsImV4cCI6MTc0MTA4MjEzNCwiYXVkIjoid3d3Lml0dGVzdC5jb20iLCJzdWIiOiJpdHRlc3RAbm9yZXBseS5jb20ifQ.HQXOaHq4VNHpGxyfYKYOsSxpvScMgvqqhd702MlJ0YM"
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
 			}
 		},
 		"method": "POST",
@@ -22,14 +22,14 @@
 				"ignoreArrayOrder": true
 			}
 		],
-		"urlPath": "/intric/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/4dc21d5e-8a70-45fb-b225-367fcd383a2e/"
+		"urlPath": "/eneo/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/4dc21d5e-8a70-45fb-b225-367fcd383a2e/"
 	},
 	"response": {
 		"headers": {
 			"Content-Type": "application/json"
 		},
 		"status": 200,
-		"bodyFileName": "test04_interactWithAssistant/responses/api-intric-ask-question-response.json"
+		"bodyFileName": "test04_interactWithAssistant/responses/api-eneo-ask-question-response.json"
 	},
-	"name": "api-intric-ask-question"
+	"name": "api-eneo-ask-question"
 }

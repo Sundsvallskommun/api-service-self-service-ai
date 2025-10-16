@@ -187,8 +187,8 @@ public class AssistantService {
 					.filter(Objects::nonNull)
 					.findAny()
 					.ifPresent(this::deleteSession), () -> {
-					throw Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId));
-				});
+						throw Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId));
+					});
 		} finally {
 			RequestId.reset();
 		}
@@ -206,11 +206,12 @@ public class AssistantService {
 	}
 
 	/**
-	 * To be subject for removal the session must either have a last accessed timestamp, or a created timestamp that is before the defined threshold for inactivity
+	 * To be subject for removal the session must either have a last accessed timestamp, or a created timestamp that is
+	 * before the defined threshold for inactivity
 	 *
-	 * @param timestamp timestamp when session is interpreted as inactive
-	 * @param session session to evaluate
-	 * @return true if session is inactive and subject for removal, false otherwise
+	 * @param  timestamp timestamp when session is interpreted as inactive
+	 * @param  session   session to evaluate
+	 * @return           true if session is inactive and subject for removal, false otherwise
 	 */
 	private boolean isSubjectForRemoval(final OffsetDateTime timestamp, final SessionEntity session) {
 		return Objects.nonNull(session.getLastAccessed()) || session.getCreated().isBefore(timestamp);
