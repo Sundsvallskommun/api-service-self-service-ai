@@ -22,7 +22,7 @@ import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
 import se.sundsvall.selfserviceai.integration.db.model.HistoryEntity;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 @ExtendWith(MockitoExtension.class)

@@ -11,10 +11,10 @@ import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsMo
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import se.sundsvall.selfserviceai.integration.intric.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.intric.model.Message;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.intric.model.Tools;
+import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.Message;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
 
 public class LimeMapper {
 	private LimeMapper() {}

@@ -63,14 +63,14 @@ import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
+import se.sundsvall.selfserviceai.integration.eneo.EneoIntegration;
+import se.sundsvall.selfserviceai.integration.eneo.configuration.EneoProperties;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
+import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
-import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
-import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
-import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
-import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
@@ -88,13 +88,13 @@ class AssistantServiceTest {
 	private static final Set<String> CUSTOMER_ENGAGEMENT_ORG_IDS = Set.of(CUSTOMER_ENGAGEMENT_ORG_ID);
 
 	@Spy
-	private IntricMapper intricMapperSpy;
+	private EneoMapper eneoMapperSpy;
 
 	@Mock
-	private IntricProperties intricPropertiesMock;
+	private EneoProperties eneoPropertiesMock;
 
 	@Mock
-	private IntricIntegration intricIntegrationMock;
+	private EneoIntegration eneoIntegrationMock;
 
 	@Mock
 	private AgreementIntegration agreementIntegrationMock;
@@ -127,14 +127,14 @@ class AssistantServiceTest {
 	private ArgumentCaptor<FileEntity> fileEntityCaptor;
 
 	@Captor
-	private ArgumentCaptor<IntricModel> installedBaseCaptor;
+	private ArgumentCaptor<EneoModel> installedBaseCaptor;
 
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
 		RequestId.reset();
 		verifyNoMoreInteractions(
-			intricPropertiesMock,
-			intricIntegrationMock,
+			eneoPropertiesMock,
+			eneoIntegrationMock,
 			agreementIntegrationMock,
 			installedbaseIntegrationMock,
 			invoicesIntegrationMock,
@@ -147,8 +147,8 @@ class AssistantServiceTest {
 	@Test
 	void createSession() {
 		// Arrange
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(intricIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenReturn(AskResponse.builder()
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenReturn(AskResponse.builder()
 			.withSessionId(SESSION_ID)
 			.build());
 
@@ -156,8 +156,8 @@ class AssistantServiceTest {
 		final var response = assistantService.createSession(MUNICIPALITY_ID, PARTY_ID);
 
 		// Assert and verify
-		verify(intricPropertiesMock, times(2)).assistantId();
-		verify(intricIntegrationMock).askAssistant(ASSISTANT_ID, "Påbörjar session för party id '%s'".formatted(PARTY_ID));
+		verify(eneoPropertiesMock, times(2)).assistantId();
+		verify(eneoIntegrationMock).askAssistant(ASSISTANT_ID, "Påbörjar session för party id '%s'".formatted(PARTY_ID));
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(response).isNotNull()
@@ -181,15 +181,15 @@ class AssistantServiceTest {
 		// Arrange
 		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(intricIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenThrow(exception);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenThrow(exception);
 
 		// Act
 		final var e = assertThrows(ThrowableProblem.class, () -> assistantService.createSession(MUNICIPALITY_ID, PARTY_ID));
 
 		// Assert and verify
-		verify(intricPropertiesMock).assistantId();
-		verify(intricIntegrationMock).askAssistant(ASSISTANT_ID, "Påbörjar session för party id '%s'".formatted(PARTY_ID));
+		verify(eneoPropertiesMock).assistantId();
+		verify(eneoIntegrationMock).askAssistant(ASSISTANT_ID, "Påbörjar session för party id '%s'".formatted(PARTY_ID));
 
 		assertThat(e).isSameAs(exception);
 	}
@@ -242,7 +242,7 @@ class AssistantServiceTest {
 		when(installedbaseIntegrationMock.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS)).thenReturn(installedBaseResponse);
 		when(invoicesIntegrationMock.getInvoices(MUNICIPALITY_ID, PARTY_ID)).thenReturn(invoices);
 		when(measurementDataIntegrationMock.getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList())).thenReturn(measurementDatas);
-		when(intricIntegrationMock.uploadFile(any(IntricModel.class))).thenReturn(fileId);
+		when(eneoIntegrationMock.uploadFile(any(EneoModel.class))).thenReturn(fileId);
 		when(fileRepositoryMock.save(any(FileEntity.class))).then(args -> args.getArgument(0));
 
 		// Act
@@ -254,8 +254,8 @@ class AssistantServiceTest {
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
 		verify(measurementDataIntegrationMock).getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList());
-		verify(intricMapperSpy).toIntricModel(installedBaseResponse);
-		verify(intricIntegrationMock).uploadFile(installedBaseCaptor.capture());
+		verify(eneoMapperSpy).toIntricModel(installedBaseResponse);
+		verify(eneoIntegrationMock).uploadFile(installedBaseCaptor.capture());
 		verify(fileRepositoryMock).save(fileEntityCaptor.capture());
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 		verify(invoicesIntegrationMock, times(invoices.size())).getInvoiceDetails(eq(MUNICIPALITY_ID), any());
@@ -277,7 +277,7 @@ class AssistantServiceTest {
 			.toList())
 			.isEqualTo(installedBaseCaptor.getValue().getFacilities().stream()
 				.map(Facility::getAgreements).flatMap(List::stream)
-				.map(se.sundsvall.selfserviceai.integration.intric.model.filecontent.Agreement::getAgreementId)
+				.map(se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Agreement::getAgreementId)
 				.toList());
 
 		assertThat(invoices.stream()
@@ -285,7 +285,7 @@ class AssistantServiceTest {
 			.toList())
 			.isEqualTo(installedBaseCaptor.getValue().getFacilities().stream()
 				.map(Facility::getInvoices).flatMap(List::stream)
-				.map(se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice::getInvoiceNumber)
+				.map(se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice::getInvoiceNumber)
 				.toList());
 
 		assertThat(measurementDatas.stream()
@@ -294,7 +294,7 @@ class AssistantServiceTest {
 			.toList())
 			.isEqualTo(installedBaseCaptor.getValue().getFacilities().stream()
 				.map(Facility::getMeasurements).flatMap(List::stream)
-				.map(se.sundsvall.selfserviceai.integration.intric.model.filecontent.MeasurementData::getCategory)
+				.map(se.sundsvall.selfserviceai.integration.eneo.model.filecontent.MeasurementData::getCategory)
 				.toList());
 	}
 
@@ -342,12 +342,12 @@ class AssistantServiceTest {
 			.withPartyId(PARTY_ID)
 			.build();
 		final var installedBases = Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer());
-		final var intricModel = IntricModel.builder().build();
+		final var intricModel = EneoModel.builder().build();
 
 		when(sessionRepositoryMock.findById(anyString())).thenReturn(Optional.of(sessionEntity));
 
 		when(installedbaseIntegrationMock.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS)).thenReturn(installedBases);
-		when(intricIntegrationMock.uploadFile(intricModel)).thenThrow(exception);
+		when(eneoIntegrationMock.uploadFile(intricModel)).thenThrow(exception);
 
 		// Act
 		assistantService.populateWithInformation(SESSION_ID, sessionRequest, isNull(uuid) ? null : UUID.fromString(uuid));
@@ -358,8 +358,8 @@ class AssistantServiceTest {
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
 		verify(measurementDataIntegrationMock).getMeasurementData(MUNICIPALITY_ID, PARTY_ID, emptyList());
-		verify(intricMapperSpy).toIntricModel(installedBases);
-		verify(intricIntegrationMock).uploadFile(intricModel);
+		verify(eneoMapperSpy).toIntricModel(installedBases);
+		verify(eneoIntegrationMock).uploadFile(intricModel);
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
@@ -430,17 +430,17 @@ class AssistantServiceTest {
 					.build()))
 			.build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()))).thenReturn(Optional.of(AskResponse.builder().withAnswer(answer).build()));
+		when(eneoIntegrationMock.askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()))).thenReturn(Optional.of(AskResponse.builder().withAnswer(answer).build()));
 
 		// Act
 		final var result = assistantService.askQuestion(MUNICIPALITY_ID, SESSION_ID, question);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock).assistantId();
-		verify(intricIntegrationMock).askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()));
+		verify(eneoPropertiesMock).assistantId();
+		verify(eneoIntegrationMock).askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()));
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(result.getAnswer()).isEqualTo(answer);
@@ -462,17 +462,17 @@ class AssistantServiceTest {
 					.build()))
 			.build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()))).thenReturn(Optional.empty());
+		when(eneoIntegrationMock.askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()))).thenReturn(Optional.empty());
 
 		// Act
 		final var result = assistantService.askQuestion(MUNICIPALITY_ID, SESSION_ID, question);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock).assistantId();
-		verify(intricIntegrationMock).askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()));
+		verify(eneoPropertiesMock).assistantId();
+		verify(eneoIntegrationMock).askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()));
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(result).isNull();
@@ -525,17 +525,17 @@ class AssistantServiceTest {
 			.build();
 		SessionPublic.builder().build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
+		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock).assistantId();
-		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
+		verify(eneoPropertiesMock).assistantId();
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock).delete(sessionEntity);
 	}
 
@@ -555,22 +555,22 @@ class AssistantServiceTest {
 			.build();
 		final var session = SessionPublic.builder().build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
-		when(intricIntegrationMock.deleteFile(fileId.toString())).thenReturn(true);
-		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.deleteFile(fileId.toString())).thenReturn(true);
+		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock, times(2)).assistantId();
+		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
-		verify(intricIntegrationMock).deleteFile(fileId.toString());
+		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 		verify(fileRepositoryMock).delete(fileEntity);
-		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock).delete(sessionEntity);
 	}
 
@@ -585,19 +585,19 @@ class AssistantServiceTest {
 			.build();
 		final var session = SessionPublic.builder().build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
-		when(intricIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock, times(2)).assistantId();
+		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
-		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock).delete(sessionEntity);
 	}
 
@@ -617,9 +617,9 @@ class AssistantServiceTest {
 		final var session = SessionPublic.builder().build();
 		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
-		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
 		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
 
 		// Act
@@ -627,7 +627,7 @@ class AssistantServiceTest {
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock).assistantId();
+		verify(eneoPropertiesMock).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
 
 		if (isNull(uuid)) {
@@ -657,18 +657,18 @@ class AssistantServiceTest {
 			.build();
 		final var session = SessionPublic.builder().build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock).assistantId();
+		verify(eneoPropertiesMock).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
-		verify(intricIntegrationMock).deleteFile(fileId.toString());
+		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 		verify(fileRepositoryMock, never()).delete(fileEntity);
 		verify(sessionRepositoryMock, never()).delete(sessionEntity);
 
@@ -687,19 +687,19 @@ class AssistantServiceTest {
 			.build();
 		final var session = SessionPublic.builder().build();
 
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(intricIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(intricPropertiesMock, times(2)).assistantId();
-		verify(intricIntegrationMock).getSession(ASSISTANT_ID, SESSION_ID.toString());
+		verify(eneoPropertiesMock, times(2)).assistantId();
+		verify(eneoIntegrationMock).getSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
-		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock, never()).delete(sessionEntity);
 
 		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(requestId));
@@ -731,10 +731,10 @@ class AssistantServiceTest {
 		final var fileId = UUID.randomUUID();
 		final var session = SessionPublic.builder().build();
 		// Arrange
-		when(intricPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(intricIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(session);
-		when(intricIntegrationMock.deleteFile(any())).thenReturn(true);
-		when(intricIntegrationMock.deleteSession(any(), any())).thenReturn(true);
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(session);
+		when(eneoIntegrationMock.deleteFile(any())).thenReturn(true);
+		when(eneoIntegrationMock.deleteSession(any(), any())).thenReturn(true);
 		when(sessionRepositoryMock.findAllByLastAccessedBeforeOrLastAccessedIsNull(any())).thenReturn(List.of(
 			// Session that is never accessed and has reached threshold level
 			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), OffsetDateTime.now(), null),
@@ -751,8 +751,8 @@ class AssistantServiceTest {
 		}));
 
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
-		verify(intricIntegrationMock).deleteSession(ASSISTANT_ID, sessionId.toString());
-		verify(intricIntegrationMock).deleteFile(fileId.toString());
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, sessionId.toString());
+		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 		verify(fileRepositoryMock).delete(fileEntityCaptor.capture());
 		verify(sessionRepositoryMock).delete(sessionEntityCaptor.capture());
 

@@ -30,6 +30,9 @@ spring:
     oauth2:
       client:
         registration:
+          eneo:
+            authorization-grant-type: client_credentials
+            provider: eneo
           agreement:
             authorization-grant-type: client_credentials
             provider: agreement
@@ -56,7 +59,7 @@ integration:
   invoices:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
-  intric:
+  eneo:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
   lime:

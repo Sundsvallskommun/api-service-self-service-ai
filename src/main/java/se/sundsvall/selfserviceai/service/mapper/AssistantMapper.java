@@ -14,9 +14,9 @@ import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.Reference;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
 import se.sundsvall.selfserviceai.api.model.Tools;
-import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.intric.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
+import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
 
 public class AssistantMapper {
 	private AssistantMapper() {}
@@ -101,14 +101,14 @@ public class AssistantMapper {
 			.orElse(null);
 	}
 
-	static List<Reference> toReferences(List<se.sundsvall.selfserviceai.integration.intric.model.Reference> intricReferences) {
+	static List<Reference> toReferences(List<se.sundsvall.selfserviceai.integration.eneo.model.Reference> intricReferences) {
 		return ofNullable(intricReferences).orElse(emptyList()).stream()
 			.map(AssistantMapper::toReference)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static Reference toReference(se.sundsvall.selfserviceai.integration.intric.model.Reference intricReference) {
+	static Reference toReference(se.sundsvall.selfserviceai.integration.eneo.model.Reference intricReference) {
 		return ofNullable(intricReference)
 			.map(r -> Reference.builder()
 				.withCreatedAt(r.createdAt())
@@ -122,7 +122,7 @@ public class AssistantMapper {
 			.orElse(null);
 	}
 
-	static Metadata toMetadata(se.sundsvall.selfserviceai.integration.intric.model.Metadata intricMetadata) {
+	static Metadata toMetadata(se.sundsvall.selfserviceai.integration.eneo.model.Metadata intricMetadata) {
 		return ofNullable(intricMetadata)
 			.map(m -> Metadata.builder()
 				.withEmbeddingModelId(ofNullable(m.embeddingModelId()).map(UUID::toString).orElse(null))
@@ -133,7 +133,7 @@ public class AssistantMapper {
 			.orElse(null);
 	}
 
-	static Tools toTools(se.sundsvall.selfserviceai.integration.intric.model.Tools intricTools) {
+	static Tools toTools(se.sundsvall.selfserviceai.integration.eneo.model.Tools intricTools) {
 		return ofNullable(intricTools)
 			.map(t -> Tools.builder()
 				.withAssistants(toAssistants(t.assistants()))
@@ -141,14 +141,14 @@ public class AssistantMapper {
 			.orElse(null);
 	}
 
-	static List<Assistant> toAssistants(List<se.sundsvall.selfserviceai.integration.intric.model.Assistant> intricAssistants) {
+	static List<Assistant> toAssistants(List<se.sundsvall.selfserviceai.integration.eneo.model.Assistant> intricAssistants) {
 		return ofNullable(intricAssistants).orElse(emptyList()).stream()
 			.map(AssistantMapper::toAssistant)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static Assistant toAssistant(se.sundsvall.selfserviceai.integration.intric.model.Assistant intricAssistant) {
+	static Assistant toAssistant(se.sundsvall.selfserviceai.integration.eneo.model.Assistant intricAssistant) {
 		return ofNullable(intricAssistant)
 			.map(a -> Assistant.builder()
 				.withHandle(a.handle())

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 
 @Component
 public class JsonBuilder {
@@ -28,9 +28,9 @@ public class JsonBuilder {
 			.setSerializationInclusion(NON_NULL);
 	}
 
-	public String toJsonString(IntricModel intricModel) {
+	public String toJsonString(EneoModel eneoModel) {
 		try {
-			return objectMapper.writeValueAsString(intricModel);
+			return objectMapper.writeValueAsString(eneoModel);
 		} catch (final Exception e) {
 			final var formattedError = INTRIC_MODEL_SERIALIZATION_ERROR_MESSAGE.formatted(e.getClass().getSimpleName());
 			LOG.error(formattedError, e);

@@ -26,6 +26,8 @@ spring:
         client-secret: wso2-client-secret
       client:
         provider:
+          eneo:
+            token-uri: ${spring.security.oauth2.common.token-url}
           agreement:
             token-uri: ${spring.security.oauth2.common.token-url}
           installedbase:
@@ -38,6 +40,9 @@ spring:
             token-uri: ${spring.security.oauth2.common.token-url}
 
         registration:
+          eneo:
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
           agreement:
             client-id: ${spring.security.oauth2.common.client-id}
             client-secret: ${spring.security.oauth2.common.client-secret}
@@ -59,13 +64,10 @@ integration:
     url: http://localhost:${wiremock.server.port}/agreement
   installedbase:
     url: http://localhost:${wiremock.server.port}/installedbase
-  intric:
-    assistantId: 3e951939-18ea-402d-9d01-23d977624ad2
+  eneo:
+    assistant-id: 3e951939-18ea-402d-9d01-23d977624ad2
     url: http://localhost:${wiremock.server.port}/intric
-    oauth2:
-      username: intric-client-id
-      password: intric-client-secret
-      url: http://localhost:${wiremock.server.port}/intric/token
+    api-key: eneo-api-key
   invoices:
     url: http://localhost:${wiremock.server.port}/invoices
   lime:

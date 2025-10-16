@@ -22,19 +22,19 @@ import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.annotation.resource.Load.ResourceType;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
-import se.sundsvall.selfserviceai.integration.intric.mapper.AgreementDecorator;
-import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
-import se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator;
-import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator;
-import se.sundsvall.selfserviceai.integration.intric.model.Message;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.AgreementDecorator;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.MeasurementDecorator;
+import se.sundsvall.selfserviceai.integration.eneo.model.Message;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper;
 
 @ExtendWith(ResourceLoaderExtension.class)
 class JsonBuilderTest {
 
-	private static final IntricMapper INTRIC_MAPPER = new IntricMapper();
+	private static final EneoMapper INTRIC_MAPPER = new EneoMapper();
 
 	@Test
 	void toJsonFromIntricModel(@Load(value = "junit/expected-structure-intric-model.json", as = ResourceType.STRING) String expected) {
@@ -62,7 +62,7 @@ class JsonBuilderTest {
 		when(objectMapperMock.writeValueAsString(any())).thenThrow(new NullPointerException("test"));
 
 		final var jsonBuilder = new JsonBuilder(objectMapperMock);
-		final var e = assertThrows(ThrowableProblem.class, () -> jsonBuilder.toJsonString((IntricModel) null));
+		final var e = assertThrows(ThrowableProblem.class, () -> jsonBuilder.toJsonString((EneoModel) null));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getDetail()).isEqualTo("A NullPointerException occurred when serializing intric model object to json");

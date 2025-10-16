@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.ThrowableProblem;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 @Component
 public class MeasurementDataIntegration {

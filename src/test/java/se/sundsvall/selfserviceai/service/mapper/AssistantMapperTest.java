@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.selfserviceai.integration.intric.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.intric.model.Assistant;
-import se.sundsvall.selfserviceai.integration.intric.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.intric.model.Metadata;
-import se.sundsvall.selfserviceai.integration.intric.model.Reference;
-import se.sundsvall.selfserviceai.integration.intric.model.Tools;
+import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
+import se.sundsvall.selfserviceai.integration.eneo.model.Assistant;
+import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.Metadata;
+import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
+import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
 
 @ExtendWith(MockitoExtension.class)
 class AssistantMapperTest {

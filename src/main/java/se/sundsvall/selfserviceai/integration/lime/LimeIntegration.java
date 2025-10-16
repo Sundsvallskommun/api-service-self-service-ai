@@ -6,7 +6,7 @@ import static se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper.toCh
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 @Component

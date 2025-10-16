@@ -1,0 +1,33 @@
+package se.sundsvall.selfserviceai.integration.eneo.model;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+class SessionFeedbackTest {
+
+	private static final int VALUE = 1;
+	private static final String TEXT = "text";
+
+	@Test
+	void builderPatternTest() {
+		var bean = SessionFeedback.builder()
+			.withText(TEXT)
+			.withValue(VALUE)
+			.build();
+
+		assertThat(bean.text()).isEqualTo(TEXT);
+		assertThat(bean.value()).isEqualTo(VALUE);
+		assertThat(bean).hasOnlyFields("text", "value");
+	}
+
+	@Test
+	void constructorTest() {
+		var bean = new SessionFeedback(VALUE, TEXT);
+
+		assertThat(bean.text()).isEqualTo(TEXT);
+		assertThat(bean.value()).isEqualTo(VALUE);
+		assertThat(bean).hasOnlyFields("text", "value");
+	}
+
+}

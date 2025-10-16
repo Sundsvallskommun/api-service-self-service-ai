@@ -40,10 +40,10 @@ import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsMo
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
-import se.sundsvall.selfserviceai.integration.intric.model.Assistant;
-import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.intric.model.Reference;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.Assistant;
+import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 
 class LimeMapperTest {
 

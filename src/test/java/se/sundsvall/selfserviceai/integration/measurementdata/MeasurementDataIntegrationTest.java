@@ -28,7 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ThrowableProblem;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 @ExtendWith(MockitoExtension.class)
 class MeasurementDataIntegrationTest {
