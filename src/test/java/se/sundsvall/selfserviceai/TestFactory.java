@@ -19,19 +19,19 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
-import se.sundsvall.selfserviceai.integration.intric.model.Assistant;
-import se.sundsvall.selfserviceai.integration.intric.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.intric.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.intric.model.Message;
-import se.sundsvall.selfserviceai.integration.intric.model.Metadata;
-import se.sundsvall.selfserviceai.integration.intric.model.Reference;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionFeedback;
-import se.sundsvall.selfserviceai.integration.intric.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.intric.model.Tools;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Facility;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.InvoiceRow;
+import se.sundsvall.selfserviceai.integration.eneo.model.Assistant;
+import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.Message;
+import se.sundsvall.selfserviceai.integration.eneo.model.Metadata;
+import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionFeedback;
+import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
+import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.InvoiceRow;
 
 public class TestFactory {
 	private TestFactory() {}
@@ -140,7 +140,7 @@ public class TestFactory {
 	public static final OffsetDateTime IB2_AGREEMENT1_MEASUREMENT1_TIMESTAMP = LocalDate.of(2024, 6, 15).atStartOfDay().minusHours(1).atZone(ZoneId.systemDefault()).toOffsetDateTime();
 	public static final BigDecimal IB2_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal("500");
 
-	// Intric test-object constants
+	// Eneo test-object constants
 
 	public static final UUID SESSION_ID = UUID.randomUUID();
 	public static final OffsetDateTime SESSION_CREATED = OffsetDateTime.now().minusHours(12);
@@ -409,18 +409,18 @@ public class TestFactory {
 		return facility;
 	}
 
-	public static se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice createInvoice() {
+	public static se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice createInvoice() {
 		return createInvoice(null);
 	}
 
-	public static se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice createInvoice(final Consumer<Invoice> consumer) {
-		var invoice = se.sundsvall.selfserviceai.integration.intric.model.filecontent.Invoice.builder()
+	public static se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice createInvoice(final Consumer<Invoice> consumer) {
+		var invoice = se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice.builder()
 			.withAmountVatExcluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED)))
 			.withAmountVatIncluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_INCLUDED)))
 			.withCurrency(IB1_INVOICE1_CURRENCY)
 			.withDescription(IB1_INVOICE1_DESCRIPTION)
 			.withFacilityId(IB1_FACILITY_ID)
-			.withInvoiceAddress(se.sundsvall.selfserviceai.integration.intric.model.filecontent.Address.builder()
+			.withInvoiceAddress(se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address.builder()
 				.withCareOf(IB1_CARE_OF)
 				.withCity(IB1_CITY)
 				.withPostalCode(IB1_POSTAL_CODE)

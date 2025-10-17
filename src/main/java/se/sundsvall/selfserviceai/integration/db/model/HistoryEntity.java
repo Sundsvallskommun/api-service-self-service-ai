@@ -28,7 +28,7 @@ import org.hibernate.annotations.TimeZoneStorage;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class HistoryEntity {
 
-	@Id // No automatic generated value as this should be set to same uuid as the one from the intric create session response
+	@Id // No automatic generated value as this should be set to same uuid as the one from the Eneo create session response
 	private String sessionId;
 
 	private String partyId;

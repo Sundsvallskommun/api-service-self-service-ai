@@ -1,6 +1,7 @@
 # Self service AI service
 
-_The service orchestrates sessions and questions posted to an AI ​​assistant who answers questions about a customer's invoices, consumption, etc._
+_The service orchestrates sessions and questions posted to an AI ​​assistant who answers questions about a customer's
+invoices, consumption, etc._
 
 ## Getting Started
 
@@ -29,7 +30,8 @@ _The service orchestrates sessions and questions posted to an AI ​​assistant
 
 3. **Ensure dependent services are running:**
 
-   If this microservice depends on other services, make sure they are up and accessible. See [Dependencies](#dependencies) for more details.
+   If this microservice depends on other services, make sure they are up and accessible.
+   See [Dependencies](#dependencies) for more details.
 
 4. **Build and run the application:**
 
@@ -68,12 +70,12 @@ This microservice depends on the following services:
   - **Purpose:** Provides service with customer invoice information.
   - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/api-service-invoices)
   - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
-- **Intric**
+- **Eneo**
   - **Purpose:** Handles logic for AI assistants.
-  - **Repsitory:** External service.
+  - **Repository:** External service.
 - **Lime**
   - **Purpose:** Stores chat logs for historical purposes.
-  - **Repsitory:** External service.
+  - **Repository:** External service.
 
 Ensure that these services are running and properly configured before starting this microservice.
 
@@ -83,7 +85,8 @@ Access the API documentation via Swagger UI:
 
 - **Swagger UI:** [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
 
-Alternatively, refer to the `openapi.yml` file located in directory `/src/test/resources/api` for the OpenAPI specification.
+Alternatively, refer to the `openapi.yml` file located in directory `/src/test/resources/api` for the OpenAPI
+specification.
 
 ## Usage
 
@@ -99,7 +102,8 @@ curl -X POST 'http://localhost:8080/2281/session
 
 ## Configuration
 
-Configuration is crucial for the application to run successfully. Ensure all necessary settings are configured in `application.yml`.
+Configuration is crucial for the application to run successfully. Ensure all necessary settings are configured in
+`application.yml`.
 
 ### Key Configuration Parameters
 
@@ -142,7 +146,7 @@ Configuration is crucial for the application to run successfully. Ensure all nec
       url: http://dependency_service_url
       connect-timeout: connect_timeout_in_seconds
       read-timeout: read_timeout_in_seconds
-    intric:
+    eneo:
       url: http://dependency_service_url
       connect-timeout: connect_timeout_in_seconds
       read-timeout: read_timeout_in_seconds
@@ -166,7 +170,7 @@ Configuration is crucial for the application to run successfully. Ensure all nec
               token-uri: https://token_url
             invoices:
               token-uri: https://token_url
-            intric:
+            eneo:
               token-uri: https://token_url
             lime:
               token-uri: https://token_url
@@ -186,7 +190,7 @@ Configuration is crucial for the application to run successfully. Ensure all nec
             invoices:
               client-id: client_id
               client-secret: client_secret
-            intric:
+            eneo:
               client-id: client_id
               client-secret: client_secret
             lime:
@@ -196,7 +200,8 @@ Configuration is crucial for the application to run successfully. Ensure all nec
 
 ### Database Initialization
 
-The project is set up with [Flyway](https://github.com/flyway/flyway) for database migrations. Flyway is disabled by default so you will have to enable it to automatically populate the database schema upon application startup.
+The project is set up with [Flyway](https://github.com/flyway/flyway) for database migrations. Flyway is disabled by
+default so you will have to enable it to automatically populate the database schema upon application startup.
 
 ```yaml
 spring:
@@ -204,7 +209,8 @@ spring:
     enabled: true
 ```
 
-- **No additional setup is required** for database initialization, as long as the database connection settings are correctly configured.
+- **No additional setup is required** for database initialization, as long as the database connection settings are
+  correctly configured.
 
 ### Additional Notes
 
@@ -218,7 +224,8 @@ spring:
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/Sundsvallskommun/.github/blob/main/.github/CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please
+see [CONTRIBUTING.md](https://github.com/Sundsvallskommun/.github/blob/main/.github/CONTRIBUTING.md) for guidelines.
 
 ## License
 

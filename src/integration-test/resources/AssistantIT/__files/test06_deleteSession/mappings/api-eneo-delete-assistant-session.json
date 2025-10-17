@@ -1,0 +1,19 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			}
+		},
+		"method": "DELETE",
+		"urlPath": "/eneo/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/158cfabe-1c3d-433c-b71f-1c909beaa291/"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test06_deleteSession/responses/api-eneo-delete-assistant-session-response.json"
+	},
+	"name": "api-eneo-delete-assistant-session"
+}

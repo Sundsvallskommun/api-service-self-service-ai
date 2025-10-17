@@ -1,0 +1,35 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			}
+		},
+		"method": "POST",
+		"bodyPatterns": [
+			{
+				"equalToJson": {
+					"question": "What is the answer to the ultimate question of life%2C the universe and everything%3F",
+					"files": [
+						{
+							"id": "5ef193cd-96a7-4861-a33d-e01528618f2e"
+						},
+						{
+							"id": "2f60ca4c-828b-4f4e-818f-432d53d61f83"
+						}
+					]
+				},
+				"ignoreArrayOrder": true
+			}
+		],
+		"urlPath": "/eneo/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/4dc21d5e-8a70-45fb-b225-367fcd383a2e/"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test04_interactWithAssistant/responses/api-eneo-ask-question-response.json"
+	},
+	"name": "api-eneo-ask-question"
+}

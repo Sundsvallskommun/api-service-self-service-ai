@@ -1,0 +1,18 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI4"
+			}
+		},
+		"method": "DELETE",
+		"urlPath": "/eneo/files/811bcd0e-fe12-448e-85c5-2248a4a12e6d/"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 204
+	},
+	"name": "api-eneo-delete-file"
+}

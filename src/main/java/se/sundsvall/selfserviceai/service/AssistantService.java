@@ -8,7 +8,7 @@ import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
-import static se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator.toDecoratedInvoice;
+import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.toDecoratedInvoice;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 import static se.sundsvall.selfserviceai.service.util.StringUtils.sanitizeAndCompress;
@@ -34,14 +34,14 @@ import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
+import se.sundsvall.selfserviceai.integration.eneo.EneoIntegration;
+import se.sundsvall.selfserviceai.integration.eneo.configuration.EneoProperties;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.AgreementDecorator;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator;
+import se.sundsvall.selfserviceai.integration.eneo.mapper.MeasurementDecorator;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
-import se.sundsvall.selfserviceai.integration.intric.IntricIntegration;
-import se.sundsvall.selfserviceai.integration.intric.configuration.IntricProperties;
-import se.sundsvall.selfserviceai.integration.intric.mapper.AgreementDecorator;
-import se.sundsvall.selfserviceai.integration.intric.mapper.IntricMapper;
-import se.sundsvall.selfserviceai.integration.intric.mapper.InvoiceDecorator;
-import se.sundsvall.selfserviceai.integration.intric.mapper.MeasurementDecorator;
-import se.sundsvall.selfserviceai.integration.intric.model.filecontent.IntricModel;
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
@@ -56,9 +56,9 @@ public class AssistantService {
 	private final AgreementIntegration agreementIntegration;
 	private final FileRepository fileRepository;
 	private final InstalledbaseIntegration installedbaseIntegration;
-	private final IntricIntegration intricIntegration;
-	private final IntricMapper intricMapper;
-	private final IntricProperties intricProperties;
+	private final EneoIntegration eneoIntegration;
+	private final EneoMapper eneoMapper;
+	private final EneoProperties eneoProperties;
 	private final InvoicesIntegration invoicesIntegration;
 	private final LimeIntegration limeIntegration;
 	private final MeasurementDataIntegration measurementDataIntegration;
@@ -68,9 +68,9 @@ public class AssistantService {
 		final AgreementIntegration agreementIntegration,
 		final FileRepository fileRepository,
 		final InstalledbaseIntegration installedbaseIntegration,
-		final IntricIntegration intricIntegration,
-		final IntricMapper intricMapper,
-		final IntricProperties intricProperties,
+		final EneoIntegration eneoIntegration,
+		final EneoMapper eneoMapper,
+		final EneoProperties eneoProperties,
 		final InvoicesIntegration invoicesIntegration,
 		final LimeIntegration limeIntegration,
 		final MeasurementDataIntegration measurementDataIntegration,
@@ -79,9 +79,9 @@ public class AssistantService {
 		this.agreementIntegration = agreementIntegration;
 		this.fileRepository = fileRepository;
 		this.installedbaseIntegration = installedbaseIntegration;
-		this.intricIntegration = intricIntegration;
-		this.intricMapper = intricMapper;
-		this.intricProperties = intricProperties;
+		this.eneoIntegration = eneoIntegration;
+		this.eneoMapper = eneoMapper;
+		this.eneoProperties = eneoProperties;
 		this.invoicesIntegration = invoicesIntegration;
 		this.limeIntegration = limeIntegration;
 		this.measurementDataIntegration = measurementDataIntegration;
@@ -89,10 +89,10 @@ public class AssistantService {
 	}
 
 	public SessionResponse createSession(String municipalityId, String partyId) {
-		final var session = intricIntegration.askAssistant(intricProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
+		final var session = eneoIntegration.askAssistant(eneoProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
 		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId(), partyId));
 
-		return toSessionResponse(intricProperties.assistantId(), session);
+		return toSessionResponse(eneoProperties.assistantId(), session);
 	}
 
 	@Async
@@ -110,15 +110,15 @@ public class AssistantService {
 
 			if (isNotEmpty(installedBases)) {
 				// Build file content
-				final var intricModel = buildIntricModel(municipalityId, partyId, installedBases);
+				final var eneoModel = buildEneoModel(municipalityId, partyId, installedBases);
 
-				// Save information in intric and update database with id of stored file
-				final var fileId = intricIntegration.uploadFile(intricModel);
+				// Save information in Eneo and update database with id of stored file
+				final var fileId = eneoIntegration.uploadFile(eneoModel);
 				final var fileEntity = fileRepository.save(toFileEntity(fileId));
 
 				// Add file to session, update with success information
 				sessionEntity.getFiles().add(fileEntity);
-				sessionEntity.setCustomerNbr(intricModel.getCustomerNumber());
+				sessionEntity.setCustomerNbr(eneoModel.getCustomerNumber());
 				sessionEntity.setStatus("Successfully initialized");
 			} else {
 				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizeAndCompress(partyId), sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
@@ -138,11 +138,11 @@ public class AssistantService {
 		}
 	}
 
-	private IntricModel buildIntricModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
-		final var intricModel = intricMapper.toIntricModel(installedBases);
+	private EneoModel buildEneoModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
+		final var eneoModel = eneoMapper.toEneoModel(installedBases);
 
 		// Enrich all facility with agreement, invoice and measurement information
-		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());
+		final var facilities = ofNullable(eneoModel.getFacilities()).orElse(emptyList());
 
 		// Fetch all invoices and their respective details.
 		final var decoratedInvoices = invoicesIntegration.getInvoices(municipalityId, partyId).stream()
@@ -153,7 +153,7 @@ public class AssistantService {
 		InvoiceDecorator.addInvoices(facilities, decoratedInvoices);
 		MeasurementDecorator.addMeasurements(facilities, measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities));
 
-		return intricModel;
+		return eneoModel;
 	}
 
 	public boolean isSessionReady(String municipalityId, UUID sessionId) {
@@ -168,11 +168,11 @@ public class AssistantService {
 			return toQuestionResponse("Assistant is not ready yet");
 		}
 
-		final var intricResponse = intricIntegration.askFollowUp(intricProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
+		final var eneoResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
 		session.setLastAccessed(OffsetDateTime.now());
 		sessionRepository.save(session);
 
-		return intricResponse.map(AssistantMapper::toQuestionResponse).orElse(null);
+		return eneoResponse.map(AssistantMapper::toQuestionResponse).orElse(null);
 	}
 
 	@Async
@@ -221,7 +221,7 @@ public class AssistantService {
 		try {
 			// Only save chathistory if session has been successfully initialized (i.e. the session has been possible to use)
 			if (nonNull(sessionEntity.getInitialized())) {
-				final var session = intricIntegration.getSession(intricProperties.assistantId(), sessionEntity.getSessionId());
+				final var session = eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId());
 				limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
 			}
 			return sessionEntity;
@@ -235,14 +235,14 @@ public class AssistantService {
 
 	private void deleteSession(final SessionEntity sessionEntity) {
 		sessionEntity.getFiles().removeIf(file -> {
-			final var isRemoved = intricIntegration.deleteFile(file.getFileId());
+			final var isRemoved = eneoIntegration.deleteFile(file.getFileId());
 			if (isRemoved) {
 				fileRepository.delete(file);
 			}
 			return isRemoved;
 		});
 
-		if (sessionEntity.getFiles().isEmpty() && intricIntegration.deleteSession(intricProperties.assistantId(), sessionEntity.getSessionId())) {
+		if (sessionEntity.getFiles().isEmpty() && eneoIntegration.deleteSession(eneoProperties.assistantId(), sessionEntity.getSessionId())) {
 			sessionRepository.delete(sessionEntity);
 			return;
 		}

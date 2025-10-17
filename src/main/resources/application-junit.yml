@@ -39,6 +39,8 @@ spring:
         client-secret: client-secret
       client:
         provider:
+          eneo:
+            token-uri: ${spring.security.oauth2.common.token-url}
           agreement:
             token-uri: ${spring.security.oauth2.common.token-url}
           installedbase:
@@ -50,6 +52,9 @@ spring:
           measurement-data:
             token-uri: ${spring.security.oauth2.common.token-url}
         registration:
+          eneo:
+            client-id: ${spring.security.oauth2.common.client-id}
+            client-secret: ${spring.security.oauth2.common.client-secret}
           agreement:
             client-id: ${spring.security.oauth2.common.client-id}
             client-secret: ${spring.security.oauth2.common.client-secret}
@@ -75,15 +80,12 @@ integration:
     connect-timeout-in-seconds: 3
     read-timeout-in-seconds: 4
     url: installedbase-integration-url
-  intric:
+  eneo:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 6
-    assistantId: intric-assistant-uuid
-    url: intric-integration-url
-    oauth2:
-      username: override
-      password: override
-      url: intric-token-url
+    assistant-id: eneo-assistant-uuid
+    url: eneo-integration-url
+    api-key: eneo-api-key
   invoices:
     connect-timeout-in-seconds: 7
     read-timeout-in-seconds: 8

@@ -27,6 +27,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileEntity {
 
-	@Id // No automatic generated value as this should be set to uuid from the intric upload file response
+	@Id // No automatic generated value as this should be set to uuid from the Eneo upload file response
 	private String fileId;
 }
