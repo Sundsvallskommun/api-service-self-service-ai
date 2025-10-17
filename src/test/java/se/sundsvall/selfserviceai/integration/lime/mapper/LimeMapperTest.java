@@ -60,7 +60,7 @@ class LimeMapperTest {
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getPartyId()).isEqualTo(PARTY_ID);
-		assertThat(bean.getKundnummer()).isEqualTo(String.valueOf(customerNbr));
+		assertThat(bean.getKundnummer()).isEqualTo(customerNbr);
 		assertThat(bean.getChatSession()).satisfies(this::assertChatSession);
 
 	}
