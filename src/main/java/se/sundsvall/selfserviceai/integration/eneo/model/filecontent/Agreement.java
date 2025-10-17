@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder(setterPrefix = "with")
-@Schema(description = "Model for agreement data sent to intric")
+@Schema(description = "Model for agreement data sent to Eneo")
 public class Agreement {
 
 	private String agreementId;

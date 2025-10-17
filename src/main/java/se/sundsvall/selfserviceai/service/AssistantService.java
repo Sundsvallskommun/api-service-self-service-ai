@@ -110,15 +110,15 @@ public class AssistantService {
 
 			if (isNotEmpty(installedBases)) {
 				// Build file content
-				final var intricModel = buildIntricModel(municipalityId, partyId, installedBases);
+				final var eneoModel = buildEneoModel(municipalityId, partyId, installedBases);
 
-				// Save information in intric and update database with id of stored file
-				final var fileId = eneoIntegration.uploadFile(intricModel);
+				// Save information in Eneo and update database with id of stored file
+				final var fileId = eneoIntegration.uploadFile(eneoModel);
 				final var fileEntity = fileRepository.save(toFileEntity(fileId));
 
 				// Add file to session, update with success information
 				sessionEntity.getFiles().add(fileEntity);
-				sessionEntity.setCustomerNbr(intricModel.getCustomerNumber());
+				sessionEntity.setCustomerNbr(eneoModel.getCustomerNumber());
 				sessionEntity.setStatus("Successfully initialized");
 			} else {
 				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizeAndCompress(partyId), sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
@@ -138,11 +138,11 @@ public class AssistantService {
 		}
 	}
 
-	private EneoModel buildIntricModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
-		final var intricModel = eneoMapper.toIntricModel(installedBases);
+	private EneoModel buildEneoModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
+		final var eneoModel = eneoMapper.toEneoModel(installedBases);
 
 		// Enrich all facility with agreement, invoice and measurement information
-		final var facilities = ofNullable(intricModel.getFacilities()).orElse(emptyList());
+		final var facilities = ofNullable(eneoModel.getFacilities()).orElse(emptyList());
 
 		// Fetch all invoices and their respective details.
 		final var decoratedInvoices = invoicesIntegration.getInvoices(municipalityId, partyId).stream()
@@ -153,7 +153,7 @@ public class AssistantService {
 		InvoiceDecorator.addInvoices(facilities, decoratedInvoices);
 		MeasurementDecorator.addMeasurements(facilities, measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities));
 
-		return intricModel;
+		return eneoModel;
 	}
 
 	public boolean isSessionReady(String municipalityId, UUID sessionId) {
@@ -168,11 +168,11 @@ public class AssistantService {
 			return toQuestionResponse("Assistant is not ready yet");
 		}
 
-		final var intricResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
+		final var eneoResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
 		session.setLastAccessed(OffsetDateTime.now());
 		sessionRepository.save(session);
 
-		return intricResponse.map(AssistantMapper::toQuestionResponse).orElse(null);
+		return eneoResponse.map(AssistantMapper::toQuestionResponse).orElse(null);
 	}
 
 	@Async

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder(setterPrefix = "with")
-@Schema(description = "Model for measurement data sent to intric")
+@Schema(description = "Model for measurement data sent to Eneo")
 public class MeasurementData {
 
 	private String category;

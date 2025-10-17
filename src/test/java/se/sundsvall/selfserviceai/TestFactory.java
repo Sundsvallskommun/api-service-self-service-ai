@@ -140,7 +140,7 @@ public class TestFactory {
 	public static final OffsetDateTime IB2_AGREEMENT1_MEASUREMENT1_TIMESTAMP = LocalDate.of(2024, 6, 15).atStartOfDay().minusHours(1).atZone(ZoneId.systemDefault()).toOffsetDateTime();
 	public static final BigDecimal IB2_AGREEMENT1_MEASUREMENT1_VALUE = new BigDecimal("500");
 
-	// Intric test-object constants
+	// Eneo test-object constants
 
 	public static final UUID SESSION_ID = UUID.randomUUID();
 	public static final OffsetDateTime SESSION_CREATED = OffsetDateTime.now().minusHours(12);

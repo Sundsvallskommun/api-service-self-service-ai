@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder(setterPrefix = "with")
-@Schema(description = "Model for installed base data sent to intric")
+@Schema(description = "Model for installed base data sent to Eneo")
 public class InstalledBase {
 
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor(access = AccessLevel.PACKAGE)
 	@Builder(setterPrefix = "with")
-	@Schema(description = "Model for installed base meta data sent to intric")
+	@Schema(description = "Model for installed base meta data sent to Eneo")
 	public static class Metadata {
 
 		private String name;

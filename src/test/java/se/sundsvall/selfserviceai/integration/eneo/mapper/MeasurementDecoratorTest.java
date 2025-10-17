@@ -14,11 +14,11 @@ import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 class MeasurementDecoratorTest {
 
-	private static final EneoMapper INTRIC_MAPPER = new EneoMapper();
+	private static final EneoMapper ENEO_MAPPER = new EneoMapper();
 
 	@Test
 	void addMeasurements() {
-		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = ENEO_MAPPER.toEneoModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(true));
 		measurements.add(null);
 
@@ -52,7 +52,7 @@ class MeasurementDecoratorTest {
 	@Test
 	void addMeasurementsNoMatches() {
 		// Arrange
-		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = ENEO_MAPPER.toEneoModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(false));
 
 		// Act
@@ -65,7 +65,7 @@ class MeasurementDecoratorTest {
 	@Test
 	void addMeasurementsFromNull() {
 		// Arrange
-		final var installedBase = INTRIC_MAPPER.toIntricModel(Map.of("123456", createCustomer()));
+		final var installedBase = ENEO_MAPPER.toEneoModel(Map.of("123456", createCustomer()));
 
 		// Act
 		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), null);

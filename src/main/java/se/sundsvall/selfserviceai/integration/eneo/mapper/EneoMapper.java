@@ -89,14 +89,14 @@ public class EneoMapper {
 	}
 
 	/**
-	 * Method for mapping installed base customer object into a intric information model
+	 * Method for mapping installed base customer object into an Eneo information model
 	 *
 	 * @param  installedBaseCustomers map containing all requested installedbases for the customer, where key is
 	 *                                customerEngagementOrgId and value is response from InstalledBase service
 	 * @return                        A InstalledBase object containing provided installed base customer data
 	 */
-	public EneoModel toIntricModel(final Map<String, InstalledBaseCustomer> installedBaseCustomers) {
-		final var intricModel = ofNullable(installedBaseCustomers)
+	public EneoModel toEneoModel(final Map<String, InstalledBaseCustomer> installedBaseCustomers) {
+		final var eneoModel = ofNullable(installedBaseCustomers)
 			.filter(MapUtils::isNotEmpty)
 			.map(ibc -> EneoModel.builder()
 				.withCustomerNumber(ibc.values().iterator().next().getCustomerNumber()) // Use first entry to retrieve customer nr and party id (as its always the same for all ib:s)
@@ -106,16 +106,16 @@ public class EneoMapper {
 			.orElse(null);
 
 		// Attach matching installed bases to each facility
-		if (nonNull(intricModel)) {
+		if (nonNull(eneoModel)) {
 			final var installedBases = Optional.of(installedBaseCustomers).orElse(emptyMap()).values().stream()
 				.map(InstalledBaseCustomer::getItems)
 				.flatMap(List::stream)
 				.toList();
 
-			intricModel.getFacilities().forEach(facility -> addInstalledBases(facility, installedBases));
+			eneoModel.getFacilities().forEach(facility -> addInstalledBases(facility, installedBases));
 		}
 
-		return intricModel;
+		return eneoModel;
 	}
 
 	List<Facility> toFacilities(final Map<String, InstalledBaseCustomer> installedBases) {

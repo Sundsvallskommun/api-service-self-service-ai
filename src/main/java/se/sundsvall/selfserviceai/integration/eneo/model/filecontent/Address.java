@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder(setterPrefix = "with")
-@Schema(description = "Model for address data sent to intric")
+@Schema(description = "Model for address data sent to Eneo")
 public class Address {
 
 	private String careOf;

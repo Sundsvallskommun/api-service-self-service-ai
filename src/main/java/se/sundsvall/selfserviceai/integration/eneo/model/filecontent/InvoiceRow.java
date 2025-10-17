@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder(setterPrefix = "with")
-@Schema(description = "Model for invoice rows data sent to intric")
+@Schema(description = "Model for invoice rows data sent to Eneo")
 public class InvoiceRow {
 
 	private BigDecimal amount;

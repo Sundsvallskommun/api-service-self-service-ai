@@ -412,7 +412,7 @@ class EneoMapperTest {
 	}
 
 	@Test
-	void toIntricModel() {
+	void toEneoModel() {
 		// Arrange
 		final var facilityId = "facilityId";
 		final var type1 = "type1";
@@ -423,7 +423,7 @@ class EneoMapperTest {
 		when(installedBaseItemMock.getType()).thenReturn(type1, type2);
 
 		// Act
-		final var result = eneoMapper.toIntricModel(Map.of("123456", installedBaseCustomerMock));
+		final var result = eneoMapper.toEneoModel(Map.of("123456", installedBaseCustomerMock));
 
 		// Assert and verify
 		assertThat(result.getFacilities()).hasSize(1);
@@ -446,18 +446,18 @@ class EneoMapperTest {
 	}
 
 	@Test
-	void toIntricModelFromNull() {
-		assertThat(eneoMapper.toIntricModel(null)).isNull();
+	void toEneoModelFromNull() {
+		assertThat(eneoMapper.toEneoModel(null)).isNull();
 	}
 
 	@Test
-	void toIntricModelFromEmptyMap() {
-		assertThat(eneoMapper.toIntricModel(emptyMap())).isNull();
+	void toEneoModelFromEmptyMap() {
+		assertThat(eneoMapper.toEneoModel(emptyMap())).isNull();
 	}
 
 	@Test
-	void toIntricModelFromEmptyObject() {
-		final var result = eneoMapper.toIntricModel(Map.of("123456", installedBaseCustomerMock));
+	void toEneoModelFromEmptyObject() {
+		final var result = eneoMapper.toEneoModel(Map.of("123456", installedBaseCustomerMock));
 
 		assertThat(result)
 			.hasAllNullFieldsOrPropertiesExcept("facilities")

@@ -75,7 +75,7 @@ public class EneoIntegration {
 	}
 
 	/**
-	 * Deletes an assistant session from Intric
+	 * Deletes an assistant session from Eneo
 	 *
 	 * @param  assistantId The ID of the assistant that owns the session to delete
 	 * @param  sessionId   The ID of the session to delete
@@ -94,9 +94,9 @@ public class EneoIntegration {
 	}
 
 	/**
-	 * Uploads a file to Intric
+	 * Uploads a file to Eneo
 	 *
-	 * @param  eneoModel The file content in the form of a installedBase object to store in intric
+	 * @param  eneoModel The file content in the form of a installedBase object to store in Eneo
 	 * @return           The ID of the uploaded file
 	 */
 	public UUID uploadFile(final EneoModel eneoModel) {
@@ -107,7 +107,7 @@ public class EneoIntegration {
 	}
 
 	/**
-	 * Deletes a file from Intric
+	 * Deletes a file from Eneo
 	 *
 	 * @param  id The ID of the file to delete
 	 * @return    Signal if the file was successfully deleted or not

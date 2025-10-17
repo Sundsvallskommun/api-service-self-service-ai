@@ -34,26 +34,26 @@ import se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper;
 @ExtendWith(ResourceLoaderExtension.class)
 class JsonBuilderTest {
 
-	private static final EneoMapper INTRIC_MAPPER = new EneoMapper();
+	private static final EneoMapper ENEO_MAPPER = new EneoMapper();
 
 	@Test
-	void toJsonFromIntricModel(@Load(value = "junit/expected-structure-intric-model.json", as = ResourceType.STRING) String expected) {
-		final var intricModel = INTRIC_MAPPER.toIntricModel(Map.of("123456789", createCustomer()));
+	void toJsonFromEneoModel(@Load(value = "junit/expected-structure-eneo-model.json", as = ResourceType.STRING) String expected) {
+		final var eneoModel = ENEO_MAPPER.toEneoModel(Map.of("123456789", createCustomer()));
 
 		final var invoice1 = createInvoice();
 		final var invoice2 = createInvoice();
 		final var invoices = List.of(invoice1, invoice2);
 
-		AgreementDecorator.addAgreements(intricModel.getFacilities(), createAgreements(true));
-		MeasurementDecorator.addMeasurements(intricModel.getFacilities(), createMeasurements(true));
-		InvoiceDecorator.addInvoices(intricModel.getFacilities(), invoices);
+		AgreementDecorator.addAgreements(eneoModel.getFacilities(), createAgreements(true));
+		MeasurementDecorator.addMeasurements(eneoModel.getFacilities(), createMeasurements(true));
+		InvoiceDecorator.addInvoices(eneoModel.getFacilities(), invoices);
 
 		final var jsonBuilder = new JsonBuilder(new ObjectMapper());
-		assertThat(jsonBuilder.toJsonString(intricModel)).isEqualToIgnoringWhitespace(expected);
+		assertThat(jsonBuilder.toJsonString(eneoModel)).isEqualToIgnoringWhitespace(expected);
 	}
 
 	@Test
-	void toJsonFromNonValidIntricModel() throws Exception {
+	void toJsonFromNonValidEneoModel() throws Exception {
 		final var objectMapperMock = Mockito.mock(ObjectMapper.class);
 
 		when(objectMapperMock.findAndRegisterModules()).thenReturn(objectMapperMock);
@@ -65,11 +65,11 @@ class JsonBuilderTest {
 		final var e = assertThrows(ThrowableProblem.class, () -> jsonBuilder.toJsonString((EneoModel) null));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
-		assertThat(e.getDetail()).isEqualTo("A NullPointerException occurred when serializing intric model object to json");
+		assertThat(e.getDetail()).isEqualTo("A NullPointerException occurred when serializing Eneo model object to json");
 	}
 
 	@Test
-	void toJsonFromLimeChathistorikRequest(@Load(value = "junit/expected-structure-chathistory.json", as = ResourceType.STRING) String expected) {
+	void toJsonFromLimeChatHistoryRequest(@Load(value = "junit/expected-structure-chathistory.json", as = ResourceType.STRING) String expected) {
 		final var sessionId = UUID.fromString("ec8fccba-318d-4c67-9251-c7acdb1f8f47");
 		final var name = "name";
 		final var partyId = "9b4d1641-a868-401b-a1a1-f393e291a80c";

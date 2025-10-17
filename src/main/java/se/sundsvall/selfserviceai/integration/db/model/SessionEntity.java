@@ -32,7 +32,7 @@ import org.hibernate.annotations.TimeZoneStorage;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionEntity {
 
-	@Id // No automatic generated value as this should be set to uuid from the intric create session response
+	@Id // No automatic generated value as this should be set to uuid from the Eneo create session response
 	private String sessionId;
 
 	@Column(name = "municipality_id", nullable = false)

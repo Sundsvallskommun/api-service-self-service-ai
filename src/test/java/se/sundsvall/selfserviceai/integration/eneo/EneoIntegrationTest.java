@@ -164,8 +164,8 @@ class EneoIntegrationTest {
 	 * Test scenario where everything works as expected
 	 */
 	@Test
-	void uploadFile_1() throws Exception {
-		final var intricModel = EneoModel.builder().build();
+	void uploadFile_1() {
+		final var eneoModel = EneoModel.builder().build();
 		final var id = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
 		final var filePublic = FilePublic.builder()
 			.withId(UUID.fromString(id))
@@ -177,11 +177,11 @@ class EneoIntegrationTest {
 		when(eneoMapperMock.toInformationFile(any())).thenReturn(InformationFile.create());
 		when(eneoClientMock.uploadFile(any(MultipartFile.class))).thenReturn(filePublic);
 
-		final var result = integration.uploadFile(intricModel);
+		final var result = integration.uploadFile(eneoModel);
 
 		assertThat(result).isEqualTo(UUID.fromString(id));
 
-		verify(jsonBuilderMock).toJsonString(intricModel);
+		verify(jsonBuilderMock).toJsonString(eneoModel);
 		verify(eneoMapperMock).toInformationFile(any());
 		verify(eneoClientMock).uploadFile(any(MultipartFile.class));
 	}
@@ -190,18 +190,18 @@ class EneoIntegrationTest {
 	 * Test scenario where the client throws an exception
 	 */
 	@Test
-	void uploadFile_2() throws Exception {
-		final var intricModel = EneoModel.builder().build();
+	void uploadFile_2() {
+		final var eneoModel = EneoModel.builder().build();
 		final var exception = new RuntimeException("Something went wrong");
 
 		when(eneoMapperMock.toInformationFile(any())).thenReturn(InformationFile.create());
 		when(eneoClientMock.uploadFile(any(MultipartFile.class))).thenThrow(exception);
 
-		final var e = assertThrows(RuntimeException.class, () -> integration.uploadFile(intricModel));
+		final var e = assertThrows(RuntimeException.class, () -> integration.uploadFile(eneoModel));
 
 		assertThat(e).isSameAs(exception);
 
-		verify(jsonBuilderMock).toJsonString(intricModel);
+		verify(jsonBuilderMock).toJsonString(eneoModel);
 		verify(eneoMapperMock).toInformationFile(any());
 		verify(eneoClientMock).uploadFile(any(MultipartFile.class));
 	}

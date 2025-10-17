@@ -254,7 +254,7 @@ class AssistantServiceTest {
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
 		verify(measurementDataIntegrationMock).getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList());
-		verify(eneoMapperSpy).toIntricModel(installedBaseResponse);
+		verify(eneoMapperSpy).toEneoModel(installedBaseResponse);
 		verify(eneoIntegrationMock).uploadFile(installedBaseCaptor.capture());
 		verify(fileRepositoryMock).save(fileEntityCaptor.capture());
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
@@ -331,7 +331,7 @@ class AssistantServiceTest {
 		"be61d7c3-5534-47b9-88da-ce325b9c8426"
 	})
 	@NullSource
-	void populateWithInformationWhenIntricThrowsException(String uuid) {
+	void populateWithInformationWhenEneoThrowsException(final String uuid) {
 		// Arrange
 		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 		final var sessionEntity = SessionEntity.builder()
@@ -342,12 +342,12 @@ class AssistantServiceTest {
 			.withPartyId(PARTY_ID)
 			.build();
 		final var installedBases = Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer());
-		final var intricModel = EneoModel.builder().build();
+		final var eneoModel = EneoModel.builder().build();
 
 		when(sessionRepositoryMock.findById(anyString())).thenReturn(Optional.of(sessionEntity));
 
 		when(installedbaseIntegrationMock.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS)).thenReturn(installedBases);
-		when(eneoIntegrationMock.uploadFile(intricModel)).thenThrow(exception);
+		when(eneoIntegrationMock.uploadFile(eneoModel)).thenThrow(exception);
 
 		// Act
 		assistantService.populateWithInformation(SESSION_ID, sessionRequest, isNull(uuid) ? null : UUID.fromString(uuid));
@@ -358,8 +358,8 @@ class AssistantServiceTest {
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
 		verify(measurementDataIntegrationMock).getMeasurementData(MUNICIPALITY_ID, PARTY_ID, emptyList());
-		verify(eneoMapperSpy).toIntricModel(installedBases);
-		verify(eneoIntegrationMock).uploadFile(intricModel);
+		verify(eneoMapperSpy).toEneoModel(installedBases);
+		verify(eneoIntegrationMock).uploadFile(eneoModel);
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
@@ -449,7 +449,7 @@ class AssistantServiceTest {
 	}
 
 	@Test
-	void askQuestionToReadySessionWhenIntricDoesNotReturnResponse() {
+	void askQuestionToReadySessionWhenEneoDoesNotReturnResponse() {
 		// Arrange
 		final var question = "question";
 		final var fileId = UUID.randomUUID();

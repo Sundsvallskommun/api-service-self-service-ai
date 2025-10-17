@@ -83,7 +83,7 @@ integration:
   eneo:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 6
-    assistant-id: intric-assistant-uuid
+    assistant-id: eneo-assistant-uuid
     url: eneo-integration-url
     api-key: eneo-api-key
   invoices:

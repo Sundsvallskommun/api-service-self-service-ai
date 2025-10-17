@@ -17,7 +17,7 @@ class EneoPropertiesTest {
 
 	@Test
 	void testProperties() {
-		assertThat(properties.assistantId()).isEqualTo("intric-assistant-uuid");
+		assertThat(properties.assistantId()).isEqualTo("eneo-assistant-uuid");
 		assertThat(properties.connectTimeoutInSeconds()).isEqualTo(5);
 		assertThat(properties.readTimeoutInSeconds()).isEqualTo(6);
 	}

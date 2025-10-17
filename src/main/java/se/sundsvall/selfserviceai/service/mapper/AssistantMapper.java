@@ -23,9 +23,9 @@ public class AssistantMapper {
 
 	public static SessionResponse toSessionResponse(final String assistantId, final AskResponse askResponse) {
 		return ofNullable(askResponse)
-			.map(r -> SessionResponse.builder()
+			.map(askResponse1 -> SessionResponse.builder()
 				.withAssistantId(assistantId)
-				.withSessionId(ofNullable(r.sessionId()).map(UUID::toString).orElse(null))
+				.withSessionId(ofNullable(askResponse1.sessionId()).map(UUID::toString).orElse(null))
 				.build())
 			.orElse(SessionResponse.builder()
 				.withAssistantId(assistantId)
@@ -34,14 +34,14 @@ public class AssistantMapper {
 
 	public static QuestionResponse toQuestionResponse(final AskResponse askResponse) {
 		return ofNullable(askResponse)
-			.map(r -> QuestionResponse.builder()
-				.withAnswer(r.answer())
-				.withFiles(toFiles(r.files()))
-				.withModel(toModel(r.completionModel()))
-				.withQuestion(r.question())
-				.withReferences(toReferences(r.references()))
-				.withSessionId(ofNullable(r.sessionId()).map(UUID::toString).orElse(null))
-				.withTools(toTools(r.tools()))
+			.map(askResponse1 -> QuestionResponse.builder()
+				.withAnswer(askResponse1.answer())
+				.withFiles(toFiles(askResponse1.files()))
+				.withModel(toModel(askResponse1.completionModel()))
+				.withQuestion(askResponse1.question())
+				.withReferences(toReferences(askResponse1.references()))
+				.withSessionId(ofNullable(askResponse1.sessionId()).map(UUID::toString).orElse(null))
+				.withTools(toTools(askResponse1.tools()))
 				.build())
 			.orElse(null);
 	}
@@ -52,107 +52,107 @@ public class AssistantMapper {
 			.build();
 	}
 
-	static List<File> toFiles(List<FilePublic> intricFiles) {
-		return ofNullable(intricFiles).orElse(emptyList()).stream()
+	static List<File> toFiles(final List<FilePublic> eneoFiles) {
+		return ofNullable(eneoFiles).orElse(emptyList()).stream()
 			.map(AssistantMapper::toFile)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static File toFile(FilePublic intricFile) {
-		return ofNullable(intricFile)
-			.map(f -> File.builder()
-				.withCreatedAt(f.createdAt())
-				.withId(ofNullable(f.id()).map(UUID::toString).orElse(null))
-				.withMimeType(f.mimeType())
-				.withName(f.name())
-				.withSize(ofNullable(f.size()).orElse(0))
-				.withTranscription(f.transcription())
-				.withUpdatedAt(f.updatedAt())
+	static File toFile(final FilePublic eneoFile) {
+		return ofNullable(eneoFile)
+			.map(filePublic -> File.builder()
+				.withCreatedAt(filePublic.createdAt())
+				.withId(ofNullable(filePublic.id()).map(UUID::toString).orElse(null))
+				.withMimeType(filePublic.mimeType())
+				.withName(filePublic.name())
+				.withSize(ofNullable(filePublic.size()).orElse(0))
+				.withTranscription(filePublic.transcription())
+				.withUpdatedAt(filePublic.updatedAt())
 				.build())
 			.orElse(null);
 	}
 
-	static Model toModel(CompletionModel intricModel) {
-		return ofNullable(intricModel)
-			.map(m -> Model.builder()
-				.withBaseUrl(m.baseUrl())
-				.withCreatedAt(m.createdAt())
-				.withDeploymentName(m.deploymentName())
-				.withDeprecated(m.isDeprecated())
-				.withDescription(m.description())
-				.withFamily(m.family())
-				.withHfLink(m.hfLink())
-				.withHosting(m.hosting())
-				.withId(ofNullable(m.id()).map(UUID::toString).orElse(null))
-				.withName(m.name())
-				.withNickname(m.nickname())
-				.withNrBillionParameters(ofNullable(m.nrBillionParameters()).orElse(0))
-				.withOpenSource(m.openSource())
-				.withOrg(m.org())
-				.withOrgDefault(m.isOrgDefault())
-				.withOrgEnabled(m.isOrgEnabled())
-				.withReasoning(m.reasoning())
-				.withStability(m.stability())
-				.withTokenLimit(m.tokenLimit())
-				.withUpdatedAt(m.updatedAt())
-				.withVision(m.vision())
+	static Model toModel(final CompletionModel eneoModel) {
+		return ofNullable(eneoModel)
+			.map(completionModel -> Model.builder()
+				.withBaseUrl(completionModel.baseUrl())
+				.withCreatedAt(completionModel.createdAt())
+				.withDeploymentName(completionModel.deploymentName())
+				.withDeprecated(completionModel.isDeprecated())
+				.withDescription(completionModel.description())
+				.withFamily(completionModel.family())
+				.withHfLink(completionModel.hfLink())
+				.withHosting(completionModel.hosting())
+				.withId(ofNullable(completionModel.id()).map(UUID::toString).orElse(null))
+				.withName(completionModel.name())
+				.withNickname(completionModel.nickname())
+				.withNrBillionParameters(ofNullable(completionModel.nrBillionParameters()).orElse(0))
+				.withOpenSource(completionModel.openSource())
+				.withOrg(completionModel.org())
+				.withOrgDefault(completionModel.isOrgDefault())
+				.withOrgEnabled(completionModel.isOrgEnabled())
+				.withReasoning(completionModel.reasoning())
+				.withStability(completionModel.stability())
+				.withTokenLimit(completionModel.tokenLimit())
+				.withUpdatedAt(completionModel.updatedAt())
+				.withVision(completionModel.vision())
 				.build())
 			.orElse(null);
 	}
 
-	static List<Reference> toReferences(List<se.sundsvall.selfserviceai.integration.eneo.model.Reference> intricReferences) {
-		return ofNullable(intricReferences).orElse(emptyList()).stream()
+	static List<Reference> toReferences(final List<se.sundsvall.selfserviceai.integration.eneo.model.Reference> eneoReferences) {
+		return ofNullable(eneoReferences).orElse(emptyList()).stream()
 			.map(AssistantMapper::toReference)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static Reference toReference(se.sundsvall.selfserviceai.integration.eneo.model.Reference intricReference) {
-		return ofNullable(intricReference)
-			.map(r -> Reference.builder()
-				.withCreatedAt(r.createdAt())
-				.withGroupId(ofNullable(r.groupId()).map(UUID::toString).orElse(null))
-				.withId(ofNullable(r.id()).map(UUID::toString).orElse(null))
-				.withMetadata(toMetadata(r.metadata()))
-				.withScore(r.score())
-				.withUpdatedAt(r.updatedAt())
-				.withWebsiteId(ofNullable(r.websiteId()).map(UUID::toString).orElse(null))
+	static Reference toReference(final se.sundsvall.selfserviceai.integration.eneo.model.Reference eneoReference) {
+		return ofNullable(eneoReference)
+			.map(reference -> Reference.builder()
+				.withCreatedAt(reference.createdAt())
+				.withGroupId(ofNullable(reference.groupId()).map(UUID::toString).orElse(null))
+				.withId(ofNullable(reference.id()).map(UUID::toString).orElse(null))
+				.withMetadata(toMetadata(reference.metadata()))
+				.withScore(reference.score())
+				.withUpdatedAt(reference.updatedAt())
+				.withWebsiteId(ofNullable(reference.websiteId()).map(UUID::toString).orElse(null))
 				.build())
 			.orElse(null);
 	}
 
-	static Metadata toMetadata(se.sundsvall.selfserviceai.integration.eneo.model.Metadata intricMetadata) {
-		return ofNullable(intricMetadata)
-			.map(m -> Metadata.builder()
-				.withEmbeddingModelId(ofNullable(m.embeddingModelId()).map(UUID::toString).orElse(null))
-				.withSize(m.size())
-				.withTitle(m.title())
-				.withUrl(m.url())
+	static Metadata toMetadata(final se.sundsvall.selfserviceai.integration.eneo.model.Metadata eneoMetadata) {
+		return ofNullable(eneoMetadata)
+			.map(metadata -> Metadata.builder()
+				.withEmbeddingModelId(ofNullable(metadata.embeddingModelId()).map(UUID::toString).orElse(null))
+				.withSize(metadata.size())
+				.withTitle(metadata.title())
+				.withUrl(metadata.url())
 				.build())
 			.orElse(null);
 	}
 
-	static Tools toTools(se.sundsvall.selfserviceai.integration.eneo.model.Tools intricTools) {
-		return ofNullable(intricTools)
-			.map(t -> Tools.builder()
-				.withAssistants(toAssistants(t.assistants()))
+	static Tools toTools(final se.sundsvall.selfserviceai.integration.eneo.model.Tools eneoTools) {
+		return ofNullable(eneoTools)
+			.map(tools -> Tools.builder()
+				.withAssistants(toAssistants(tools.assistants()))
 				.build())
 			.orElse(null);
 	}
 
-	static List<Assistant> toAssistants(List<se.sundsvall.selfserviceai.integration.eneo.model.Assistant> intricAssistants) {
-		return ofNullable(intricAssistants).orElse(emptyList()).stream()
+	static List<Assistant> toAssistants(final List<se.sundsvall.selfserviceai.integration.eneo.model.Assistant> eneoAssistants) {
+		return ofNullable(eneoAssistants).orElse(emptyList()).stream()
 			.map(AssistantMapper::toAssistant)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static Assistant toAssistant(se.sundsvall.selfserviceai.integration.eneo.model.Assistant intricAssistant) {
-		return ofNullable(intricAssistant)
-			.map(a -> Assistant.builder()
-				.withHandle(a.handle())
-				.withId(ofNullable(a.id()).map(UUID::toString).orElse(null))
+	static Assistant toAssistant(final se.sundsvall.selfserviceai.integration.eneo.model.Assistant eneoAssistant) {
+		return ofNullable(eneoAssistant)
+			.map(assistant -> Assistant.builder()
+				.withHandle(assistant.handle())
+				.withId(ofNullable(assistant.id()).map(UUID::toString).orElse(null))
 				.build())
 			.orElse(null);
 	}
