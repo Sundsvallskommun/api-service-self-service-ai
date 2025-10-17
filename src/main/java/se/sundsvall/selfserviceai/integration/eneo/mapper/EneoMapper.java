@@ -39,8 +39,8 @@ public class EneoMapper {
 	/**
 	 * Maps incoming question string into an AskAssistant request
 	 *
-	 * @param  input question to be asked
-	 * @return       AskAssistant object with provided data
+	 * @param input question to be asked
+	 * @return AskAssistant object with provided data
 	 */
 	public AskAssistant toAskAssistant(final String input) {
 		return toAskAssistant(input, emptyList());
@@ -49,9 +49,9 @@ public class EneoMapper {
 	/**
 	 * Maps incoming question string into an AskAssistant request
 	 *
-	 * @param  input          question to be asked
-	 * @param  fileReferences id of previously stored files that shall be used to answer question
-	 * @return                AskAssistant object with provided data
+	 * @param input question to be asked
+	 * @param fileReferences id of previously stored files that shall be used to answer question
+	 * @return AskAssistant object with provided data
 	 */
 	public AskAssistant toAskAssistant(final String input, List<String> fileReferences) {
 		return AskAssistant.builder()
@@ -79,8 +79,8 @@ public class EneoMapper {
 	/**
 	 * Maps incoming data to a InformationFile object implementing the MultipartFile interface
 	 *
-	 * @param  data string of json data that is to be the content of the file
-	 * @return      a InformationFile object representing the provided data
+	 * @param data string of json data that is to be the content of the file
+	 * @return a InformationFile object representing the provided data
 	 */
 	public InformationFile toInformationFile(final String data) {
 		return InformationFile
@@ -91,17 +91,16 @@ public class EneoMapper {
 	/**
 	 * Method for mapping installed base customer object into an Eneo information model
 	 *
-	 * @param  installedBaseCustomers map containing all requested installedbases for the customer, where key is
-	 *                                customerEngagementOrgId and value is response from InstalledBase service
-	 * @return                        A InstalledBase object containing provided installed base customer data
+	 * @param installedBaseCustomers map containing all requested installedbases for the customer, where key is customerEngagementOrgId and value is response from InstalledBase service
+	 * @return A InstalledBase object containing provided installed base customer data
 	 */
 	public EneoModel toEneoModel(final Map<String, InstalledBaseCustomer> installedBaseCustomers) {
 		final var eneoModel = ofNullable(installedBaseCustomers)
 			.filter(MapUtils::isNotEmpty)
-			.map(ibc -> EneoModel.builder()
-				.withCustomerNumber(ibc.values().iterator().next().getCustomerNumber()) // Use first entry to retrieve customer nr and party id (as its always the same for all ib:s)
-				.withPartyId(ibc.values().iterator().next().getPartyId())
-				.withFacilities(toFacilities(ibc))
+			.map(installedBaseCustomerMap -> EneoModel.builder()
+				.withCustomerNumber(installedBaseCustomerMap.values().iterator().next().getCustomerNumber()) // Use first entry to retrieve customer nr and party id (as its always the same for all ib:s)
+				.withPartyId(installedBaseCustomerMap.values().iterator().next().getPartyId())
+				.withFacilities(toFacilities(installedBaseCustomerMap))
 				.build())
 			.orElse(null);
 
@@ -139,15 +138,15 @@ public class EneoMapper {
 
 	Facility toFacility(final InstalledBaseItem item) {
 		return ofNullable(item)
-			.map(i -> Facility.builder()
-				.withAddress(toAddress(i.getAddress()))
-				.withFacilityId(i.getFacilityId())
+			.map(installedBaseItem -> Facility.builder()
+				.withAddress(toAddress(installedBaseItem.getAddress()))
+				.withFacilityId(installedBaseItem.getFacilityId())
 				.build())
 			.orElse(null);
 	}
 
 	void addInstalledBases(final Facility facility, final List<InstalledBaseItem> installedBaseItems) {
-		ofNullable(facility).ifPresent(f -> f.getInstalledBases().addAll(
+		ofNullable(facility).ifPresent(facility1 -> facility1.getInstalledBases().addAll(
 			ofNullable(installedBaseItems).orElse(emptyList()).stream()
 				.filter(Objects::nonNull)
 				.filter(ib -> Objects.equals(facility.getFacilityId(), ib.getFacilityId()))
@@ -177,7 +176,7 @@ public class EneoMapper {
 
 	InstalledBase.Metadata toMetadata(final InstalledBaseItemMetaData metadata) {
 		return ofNullable(metadata)
-			.map(m -> InstalledBase.Metadata.builder()
+			.map(installedBaseItemMetaData -> InstalledBase.Metadata.builder()
 				.withDisplayName(metadata.getDisplayName())
 				.withName(metadata.getKey())
 				.withType(metadata.getType())
@@ -188,11 +187,11 @@ public class EneoMapper {
 
 	se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address toAddress(final InstalledBaseItemAddress address) {
 		return ofNullable(address)
-			.map(a -> se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address.builder()
-				.withCareOf(a.getCareOf())
-				.withCity(a.getCity())
-				.withPostalCode(a.getPostalCode())
-				.withStreet(a.getStreet())
+			.map(installedBaseItemAddress -> se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address.builder()
+				.withCareOf(installedBaseItemAddress.getCareOf())
+				.withCity(installedBaseItemAddress.getCity())
+				.withPostalCode(installedBaseItemAddress.getPostalCode())
+				.withStreet(installedBaseItemAddress.getStreet())
 				.build())
 			.orElse(null);
 	}

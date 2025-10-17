@@ -75,13 +75,13 @@ class InvoiceDecoratorTest {
 		assertThat(result.getInvoiceAddress()).usingRecursiveComparison().isEqualTo(InvoiceDecorator.toAddress(invoice.getInvoiceAddress()));
 		assertThat(result.getInvoiceName()).isEqualTo(invoice.getInvoiceName());
 		assertThat(result.getInvoiceNumber()).isEqualTo(invoice.getInvoiceNumber());
-		assertThat(result.getInvoiceType()).isEqualTo(invoice.getInvoiceType().toString());
+		assertThat(result.getInvoiceType()).isEqualTo(invoice.getInvoiceType().name());
 		assertThat(result.getInvoicingDate()).isEqualTo(invoice.getInvoiceDate());
 		assertThat(result.getOrganizationNumber()).isEqualTo(invoice.getOrganizationNumber());
 		assertThat(result.isPdfAvailable()).isEqualTo(toBoolean(invoice.getPdfAvailable()));
 		assertThat(result.isReversedVat()).isEqualTo(toBoolean(invoice.getReversedVat()));
 		assertThat(result.getRounding()).isEqualTo(toBigDecimal(invoice.getRounding(), DECIMAL_POINTS));
-		assertThat(result.getStatus()).isEqualTo(invoice.getInvoiceStatus().toString());
+		assertThat(result.getStatus()).isEqualTo(invoice.getInvoiceStatus().name());
 		assertThat(result.getTotalAmount()).isEqualTo(toBigDecimal(invoice.getTotalAmount(), DECIMAL_POINTS));
 		assertThat(result.getVat()).isEqualTo(toBigDecimal(invoice.getVat(), DECIMAL_POINTS));
 		assertThat(result.getVatEligibleAmount()).isEqualTo(toBigDecimal(invoice.getVatEligibleAmount(), DECIMAL_POINTS));

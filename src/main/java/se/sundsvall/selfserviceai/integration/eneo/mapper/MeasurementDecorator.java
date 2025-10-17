@@ -3,6 +3,7 @@ package se.sundsvall.selfserviceai.integration.eneo.mapper;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
+import generated.se.sundsvall.measurementdata.Category;
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementPoints;
 import generated.se.sundsvall.measurementdata.MeasurementSerie;
@@ -42,13 +43,13 @@ public class MeasurementDecorator {
 	private static List<MeasurementData> toMeasurementData(final Data data, final MeasurementSerie measurementSerie) {
 		return ofNullable(measurementSerie.getMeasurementPoints()).orElse(emptyList())
 			.stream()
-			.map(point -> toMeasurementData(data, measurementSerie, point))
+			.map(measurementPoints -> toMeasurementData(data, measurementSerie, measurementPoints))
 			.toList();
 	}
 
 	private static MeasurementData toMeasurementData(final Data data, final MeasurementSerie measurementSerie, final MeasurementPoints measurementPoint) {
 		return MeasurementData.builder()
-			.withCategory(Optional.ofNullable(data.getCategory()).map(Objects::toString).orElse(null))
+			.withCategory(Optional.ofNullable(data.getCategory()).map(Category::name).orElse(null))
 			.withMeasurementType(measurementSerie.getMeasurementType())
 			.withTimestamp(measurementPoint.getTimestamp())
 			.withUnit(measurementSerie.getUnit())

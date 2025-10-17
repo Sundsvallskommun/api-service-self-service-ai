@@ -32,9 +32,9 @@ public class InvoiceDecorator {
 	private static void attachToFacility(List<Facility> facilities, Invoice invoice) {
 		ofNullable(facilities).orElse(emptyList())
 			.stream()
-			.filter(f -> f.getFacilityId().equals(invoice.getFacilityId()))
+			.filter(facility -> facility.getFacilityId().equals(invoice.getFacilityId()))
 			.findFirst()
-			.ifPresent(f -> f.getInvoices().add(invoice));
+			.ifPresent(facility -> facility.getInvoices().add(invoice));
 	}
 
 	public static Invoice toDecoratedInvoice(final generated.se.sundsvall.invoices.Invoice invoice, final List<InvoiceDetail> invoiceDetails) {
@@ -84,11 +84,11 @@ public class InvoiceDecorator {
 
 	static Address toAddress(final generated.se.sundsvall.invoices.Address address) {
 		return ofNullable(address)
-			.map(a -> Address.builder()
-				.withCareOf(a.getCareOf())
-				.withCity(a.getCity())
-				.withPostalCode(a.getPostcode())
-				.withStreet(a.getStreet())
+			.map(address1 -> Address.builder()
+				.withCareOf(address1.getCareOf())
+				.withCity(address1.getCity())
+				.withPostalCode(address1.getPostcode())
+				.withStreet(address1.getStreet())
 				.build())
 			.orElse(null);
 	}
