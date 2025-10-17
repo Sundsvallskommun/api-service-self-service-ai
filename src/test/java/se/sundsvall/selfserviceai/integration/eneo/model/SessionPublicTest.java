@@ -50,4 +50,10 @@ class SessionPublicTest {
 		assertThat(bean).hasOnlyFields("id", "name", "createdAt", "updatedAt", "messages", "feedback");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = SessionPublic.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

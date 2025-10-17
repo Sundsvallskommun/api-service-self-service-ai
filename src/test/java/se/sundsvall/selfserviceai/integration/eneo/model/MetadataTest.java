@@ -39,4 +39,10 @@ class MetadataTest {
 		assertThat(bean).hasOnlyFields("embeddingModelId", "url", "title", "size");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = Metadata.builder().build();
+		assertThat(bean).hasAllNullFieldsOrPropertiesExcept("size");
+	}
+
 }

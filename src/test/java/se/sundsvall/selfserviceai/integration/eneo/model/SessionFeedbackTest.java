@@ -30,4 +30,11 @@ class SessionFeedbackTest {
 		assertThat(bean).hasOnlyFields("text", "value");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = SessionFeedback.builder().build();
+		assertThat(bean).hasAllNullFieldsOrPropertiesExcept("value");
+		assertThat(bean.value()).isEqualTo(0);
+	}
+
 }

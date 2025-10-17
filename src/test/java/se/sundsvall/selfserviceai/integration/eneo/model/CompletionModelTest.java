@@ -110,7 +110,16 @@ class CompletionModelTest {
 		assertThat(bean.baseUrl()).isEqualTo(BASE_URL);
 		assertThat(bean).hasOnlyFields("id", "name", "nickname", "family", "tokenLimit", "isDeprecated", "nrBillionParameters", "hfLink", "stability", "hosting",
 			"openSource", "description", "deploymentName", "org", "vision", "reasoning", "baseUrl", "isOrgEnabled", "isOrgDefault", "createdAt", "updatedAt");
+	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = CompletionModel.builder().build();
+		assertThat(bean).hasAllNullFieldsOrPropertiesExcept("vision", "reasoning", "isOrgEnabled", "isOrgDefault");
+		assertThat(bean.vision()).isFalse();
+		assertThat(bean.reasoning()).isFalse();
+		assertThat(bean.isOrgEnabled()).isFalse();
+		assertThat(bean.isOrgDefault()).isFalse();
 	}
 
 }

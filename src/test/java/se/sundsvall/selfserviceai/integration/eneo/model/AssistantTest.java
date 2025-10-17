@@ -31,4 +31,10 @@ class AssistantTest {
 		assertThat(bean).hasOnlyFields("id", "handle");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = Assistant.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

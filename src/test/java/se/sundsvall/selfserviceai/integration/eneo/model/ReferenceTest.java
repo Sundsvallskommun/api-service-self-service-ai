@@ -52,4 +52,11 @@ class ReferenceTest {
 		assertThat(bean).hasOnlyFields("id", "metadata", "groupId", "websiteId", "createdAt", "updatedAt", "score");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = Reference.builder().build();
+		assertThat(bean).hasAllNullFieldsOrPropertiesExcept("score");
+		assertThat(bean.score()).isEqualTo(0);
+	}
+
 }

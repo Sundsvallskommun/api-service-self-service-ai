@@ -56,4 +56,10 @@ class AskResponseTest {
 		assertThat(bean).hasOnlyFields("sessionId", "question", "answer", "files", "references", "completionModel", "tools");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = AskResponse.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

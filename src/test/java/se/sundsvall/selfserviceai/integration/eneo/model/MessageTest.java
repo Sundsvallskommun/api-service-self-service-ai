@@ -63,4 +63,10 @@ class MessageTest {
 		assertThat(bean).hasOnlyFields("id", "question", "answer", "completionModel", "references", "files", "tools", "createdAt", "updatedAt");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = Message.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

@@ -90,4 +90,10 @@ class InformationFileTest {
 		assertThat(InformationFile.create().withData("1").getBytes()).isNotEmpty();
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = InformationFile.create();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

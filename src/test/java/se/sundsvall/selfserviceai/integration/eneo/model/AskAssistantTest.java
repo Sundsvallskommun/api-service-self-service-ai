@@ -38,4 +38,10 @@ class AskAssistantTest {
 		assertThat(bean).hasOnlyFields("question", "files");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = AskAssistant.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

@@ -34,6 +34,7 @@ public class AgreementDecorator {
 			.withAgreementId(agreement.getAgreementId())
 			.withBound(toBoolean(agreement.getBinding()))
 			.withBindingRule(agreement.getBindingRule())
+			.withCategory(agreement.getCategory().name())
 			.withCategory(Optional.ofNullable(agreement.getCategory()).map(Object::toString).orElse(null))
 			.withDescription(agreement.getDescription())
 			.withFromDate(agreement.getFromDate())

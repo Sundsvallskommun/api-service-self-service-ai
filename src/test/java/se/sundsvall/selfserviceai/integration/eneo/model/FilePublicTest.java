@@ -52,4 +52,10 @@ class FilePublicTest {
 		assertThat(bean).hasOnlyFields("id", "name", "mimeType", "size", "createdAt", "updatedAt", "transcription");
 	}
 
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = FilePublic.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }

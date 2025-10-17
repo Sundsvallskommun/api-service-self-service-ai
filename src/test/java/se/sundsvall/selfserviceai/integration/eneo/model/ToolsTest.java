@@ -27,4 +27,11 @@ class ToolsTest {
 		assertThat(bean.assistants()).isEqualTo(ASSISTANTS);
 		assertThat(bean).hasOnlyFields("assistants");
 	}
+
+	@Test
+	void noDirtOnCreatedBean() {
+		var bean = Tools.builder().build();
+		assertThat(bean).hasAllNullFieldsOrProperties();
+	}
+
 }
