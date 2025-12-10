@@ -15,16 +15,16 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Model for file information")
 public class File {
 
-	@Schema(description = "Id of the file", example = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
+	@Schema(description = "Id of the file", examples = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
 	private String id;
 
-	@Schema(description = "Readable name for the file", example = "file-name.json")
+	@Schema(description = "Readable name for the file", examples = "file-name.json")
 	private String name;
 
-	@Schema(description = "Mime type for the file", example = "application/json")
+	@Schema(description = "Mime type for the file", examples = "application/json")
 	private String mimeType;
 
-	@Schema(description = "Size of the file", example = "12345")
+	@Schema(description = "Size of the file", examples = "12345")
 	private int size;
 
 	@Schema(description = "Timestamp when file was created")
@@ -33,6 +33,6 @@ public class File {
 	@Schema(description = "Timestamp when file was last updated")
 	private OffsetDateTime updatedAt;
 
-	@Schema(description = "Transcription of file", example = "transcription")
+	@Schema(description = "Transcription of file", examples = "transcription")
 	private String transcription;
 }

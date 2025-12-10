@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Model for assistant information")
 public class Assistant {
 
-	@Schema(description = "Id of the assistant", example = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
+	@Schema(description = "Id of the assistant", examples = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
 	private String id;
 
-	@Schema(description = "Readable handle name for the assistant", example = "Assistant name")
+	@Schema(description = "Readable handle name for the assistant", examples = "Assistant name")
 	private String handle;
 }
