@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Model for question response")
 public class QuestionResponse {
 
-	@Schema(description = "The id of the session to be used when interacting with the assistant", example = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
+	@Schema(description = "The id of the session to be used when interacting with the assistant", examples = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
 	private String sessionId;
 
-	@Schema(description = "The question to ask", example = "What is the answer to the ultimate question of life, the universe and everything?")
+	@Schema(description = "The question to ask", examples = "What is the answer to the ultimate question of life, the universe and everything?")
 	private String question;
 
-	@Schema(description = "Answer to asked question", example = "42")
+	@Schema(description = "Answer to asked question", examples = "42")
 	private String answer;
 
 	@ArraySchema(schema = @Schema(description = "Files used when answering asked question", implementation = File.class))

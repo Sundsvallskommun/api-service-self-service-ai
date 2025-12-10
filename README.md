@@ -7,7 +7,7 @@ invoices, consumption, etc._
 
 ### Prerequisites
 
-- **Java 21 or higher**
+- **Java 25 or higher**
 - **Maven**
 - **MariaDB**(if applicable)
 - **Git**
