@@ -1,8 +1,5 @@
 package se.sundsvall.selfserviceai.integration.lime.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikChatSessionDto;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikCompletionModelDto;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikMessageDto;
@@ -15,6 +12,9 @@ import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
 import se.sundsvall.selfserviceai.integration.eneo.model.Message;
 import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 public class LimeMapper {
 	private LimeMapper() {}

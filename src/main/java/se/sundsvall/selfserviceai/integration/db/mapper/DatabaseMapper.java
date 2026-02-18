@@ -1,11 +1,11 @@
 package se.sundsvall.selfserviceai.integration.db.mapper;
 
-import static java.util.Optional.ofNullable;
-
 import java.util.UUID;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
 import se.sundsvall.selfserviceai.integration.db.model.HistoryEntity;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
+
+import static java.util.Optional.ofNullable;
 
 public class DatabaseMapper {
 	private DatabaseMapper() {}

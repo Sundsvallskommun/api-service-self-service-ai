@@ -1,5 +1,13 @@
 package se.sundsvall.selfserviceai.integration.measurementdata;
 
+import generated.se.sundsvall.measurementdata.Data;
+import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.stereotype.Component;
+import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+
 import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum.MONTH;
 import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum.DISTRICT_HEATING;
 import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum.ELECTRICITY;
@@ -9,14 +17,6 @@ import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.BAD_GATEWAY;
-
-import generated.se.sundsvall.measurementdata.Data;
-import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum;
-import java.util.List;
-import java.util.Objects;
-import org.springframework.stereotype.Component;
-import org.zalando.problem.ThrowableProblem;
-import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 @Component
 public class MeasurementDataIntegration {

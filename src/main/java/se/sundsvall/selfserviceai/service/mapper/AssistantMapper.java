@@ -1,8 +1,5 @@
 package se.sundsvall.selfserviceai.service.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,6 +14,9 @@ import se.sundsvall.selfserviceai.api.model.Tools;
 import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
 import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
 import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 public class AssistantMapper {
 	private AssistantMapper() {}

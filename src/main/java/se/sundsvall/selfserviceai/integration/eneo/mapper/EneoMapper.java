@@ -1,10 +1,5 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
-
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
@@ -27,6 +22,11 @@ import se.sundsvall.selfserviceai.integration.eneo.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.InstalledBase;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 @Component
 public class EneoMapper {

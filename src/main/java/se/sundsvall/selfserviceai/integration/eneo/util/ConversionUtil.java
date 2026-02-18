@@ -1,9 +1,9 @@
 package se.sundsvall.selfserviceai.integration.eneo.util;
 
-import static java.util.Optional.ofNullable;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import static java.util.Optional.ofNullable;
 
 public class ConversionUtil {
 	private ConversionUtil() {}

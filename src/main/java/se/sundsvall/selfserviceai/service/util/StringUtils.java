@@ -1,9 +1,9 @@
 package se.sundsvall.selfserviceai.service.util;
 
+import java.util.Collection;
+
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
-
-import java.util.Collection;
 
 public final class StringUtils {
 	private StringUtils() {}

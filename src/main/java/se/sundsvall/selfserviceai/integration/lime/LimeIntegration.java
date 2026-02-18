@@ -1,13 +1,13 @@
 package se.sundsvall.selfserviceai.integration.lime;
 
-import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toHistoryEntity;
-import static se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper.toChatHistoryRequest;
-
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
 import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
+
+import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toHistoryEntity;
+import static se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper.toChatHistoryRequest;
 
 @Component
 public class LimeIntegration {

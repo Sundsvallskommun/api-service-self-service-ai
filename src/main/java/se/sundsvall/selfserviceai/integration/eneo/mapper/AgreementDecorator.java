@@ -1,15 +1,15 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBoolean;
-
 import generated.se.sundsvall.agreement.Agreement;
 import generated.se.sundsvall.agreement.Category;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBoolean;
 
 public class AgreementDecorator {
 

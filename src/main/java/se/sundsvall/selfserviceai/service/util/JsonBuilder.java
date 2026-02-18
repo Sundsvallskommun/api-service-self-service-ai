@@ -1,9 +1,5 @@
 package se.sundsvall.selfserviceai.service.util;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static org.apache.commons.lang3.time.DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest;
 import java.text.SimpleDateFormat;
@@ -12,6 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static org.apache.commons.lang3.time.DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 @Component
 public class JsonBuilder {

@@ -1,11 +1,11 @@
 package se.sundsvall.selfserviceai.integration.eneo.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageTest {
 

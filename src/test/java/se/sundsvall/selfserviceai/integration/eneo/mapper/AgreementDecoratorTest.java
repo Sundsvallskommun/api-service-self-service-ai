@@ -1,14 +1,14 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
-import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
-
 import java.util.ArrayList;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
+import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 
 class AgreementDecoratorTest {
 

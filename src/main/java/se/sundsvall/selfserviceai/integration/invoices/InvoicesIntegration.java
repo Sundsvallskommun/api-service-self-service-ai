@@ -1,10 +1,5 @@
 package se.sundsvall.selfserviceai.integration.invoices;
 
-import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.NOT_FOUND;
-
 import generated.se.sundsvall.invoices.Invoice;
 import generated.se.sundsvall.invoices.InvoiceDetail;
 import java.time.LocalDate;
@@ -14,6 +9,11 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.ThrowableProblem;
+
+import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static org.zalando.problem.Status.NOT_FOUND;
 
 @Component
 public class InvoicesIntegration {
