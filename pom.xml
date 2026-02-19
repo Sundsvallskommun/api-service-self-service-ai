@@ -13,7 +13,7 @@
 	<version>1.0</version>
 	<name>api-service-self-service-ai</name>
 	<properties>
-		<auth0.java-jwt.version>4.5.0</auth0.java-jwt.version>
+		<auth0.java-jwt.version>4.5.1</auth0.java-jwt.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<generated-sources-java-path>src/main/java</generated-sources-java-path>
 	</properties>
