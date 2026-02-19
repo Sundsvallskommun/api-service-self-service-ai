@@ -1,16 +1,5 @@
 package se.sundsvall.selfserviceai.integration.measurementdata;
 
-import static generated.se.sundsvall.measurementdata.Category.DISTRICT_HEATING;
-import static generated.se.sundsvall.measurementdata.Category.ELECTRICITY;
-import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum.MONTH;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.atMostOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.BAD_GATEWAY;
-
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters;
 import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum;
@@ -29,6 +18,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+
+import static generated.se.sundsvall.measurementdata.Category.DISTRICT_HEATING;
+import static generated.se.sundsvall.measurementdata.Category.ELECTRICITY;
+import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum.MONTH;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.BAD_GATEWAY;
 
 @ExtendWith(MockitoExtension.class)
 class MeasurementDataIntegrationTest {

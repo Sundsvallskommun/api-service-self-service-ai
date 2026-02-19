@@ -1,10 +1,5 @@
 package se.sundsvall.selfserviceai.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +16,11 @@ import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.Metadata;
 import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
 import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AssistantMapperTest {

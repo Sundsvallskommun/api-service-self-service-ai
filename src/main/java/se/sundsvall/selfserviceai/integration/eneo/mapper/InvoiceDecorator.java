@@ -1,10 +1,5 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBigDecimal;
-import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBoolean;
-
 import generated.se.sundsvall.invoices.InvoiceDetail;
 import generated.se.sundsvall.invoices.InvoiceStatus;
 import generated.se.sundsvall.invoices.InvoiceType;
@@ -15,6 +10,11 @@ import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.InvoiceRow;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBigDecimal;
+import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBoolean;
 
 public class InvoiceDecorator {
 

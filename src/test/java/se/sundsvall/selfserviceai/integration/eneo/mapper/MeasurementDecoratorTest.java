@@ -1,16 +1,16 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
-import static java.time.ZoneId.systemDefault;
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
-import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+
+import static java.time.ZoneId.systemDefault;
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
+import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
 
 class MeasurementDecoratorTest {
 

@@ -1,11 +1,5 @@
 package se.sundsvall.selfserviceai.integration.installedbase;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseResponse;
 import java.util.Map;
@@ -14,6 +8,12 @@ import java.util.Objects;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 @Component
 public class InstalledbaseIntegration {

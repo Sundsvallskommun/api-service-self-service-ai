@@ -1,18 +1,5 @@
 package se.sundsvall.selfserviceai.service;
 
-import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
-import static org.apache.commons.collections4.MapUtils.isNotEmpty;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
-import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
-import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.toDecoratedInvoice;
-import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
-import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
-import static se.sundsvall.selfserviceai.service.util.StringUtils.sanitizeAndCompress;
-
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -46,6 +33,19 @@ import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
 import se.sundsvall.selfserviceai.service.mapper.AssistantMapper;
+
+import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
+import static org.apache.commons.collections4.MapUtils.isNotEmpty;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
+import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
+import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.toDecoratedInvoice;
+import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
+import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
+import static se.sundsvall.selfserviceai.service.util.StringUtils.sanitizeAndCompress;
 
 @Service
 public class AssistantService {

@@ -1,9 +1,5 @@
 package se.sundsvall.selfserviceai.integration.eneo.model;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +7,10 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class InformationFile implements MultipartFile {
 

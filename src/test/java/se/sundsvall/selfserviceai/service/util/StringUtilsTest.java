@@ -1,10 +1,10 @@
 package se.sundsvall.selfserviceai.service.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class StringUtilsTest {
 

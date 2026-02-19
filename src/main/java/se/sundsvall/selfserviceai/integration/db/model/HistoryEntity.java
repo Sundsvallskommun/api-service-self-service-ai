@@ -1,7 +1,5 @@
 package se.sundsvall.selfserviceai.integration.db.model;
 
-import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,6 +14,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Length;
 import org.hibernate.annotations.TimeZoneStorage;
+
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 @Entity
 @Table(name = "history", indexes = {

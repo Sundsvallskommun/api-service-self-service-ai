@@ -1,15 +1,5 @@
 package se.sundsvall.selfserviceai.service.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
-import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
-import static se.sundsvall.selfserviceai.TestFactory.createInvoice;
-import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest;
 import java.util.List;
@@ -30,6 +20,16 @@ import se.sundsvall.selfserviceai.integration.eneo.model.Message;
 import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
+import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
+import static se.sundsvall.selfserviceai.TestFactory.createInvoice;
+import static se.sundsvall.selfserviceai.TestFactory.createMeasurements;
 
 @ExtendWith(ResourceLoaderExtension.class)
 class JsonBuilderTest {

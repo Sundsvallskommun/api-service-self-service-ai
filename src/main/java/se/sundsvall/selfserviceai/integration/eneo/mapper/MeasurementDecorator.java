@@ -1,8 +1,5 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-
 import generated.se.sundsvall.measurementdata.Category;
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementPoints;
@@ -12,6 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.MeasurementData;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 public class MeasurementDecorator {
 

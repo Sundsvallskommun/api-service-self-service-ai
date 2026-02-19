@@ -1,16 +1,5 @@
 package se.sundsvall.selfserviceai.integration.invoices;
 
-import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.BAD_GATEWAY;
-
 import generated.se.sundsvall.invoices.Invoice;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import generated.se.sundsvall.invoices.MetaData;
@@ -26,6 +15,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
+
+import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.BAD_GATEWAY;
 
 @ExtendWith(MockitoExtension.class)
 class InvoicesIntegrationTest {

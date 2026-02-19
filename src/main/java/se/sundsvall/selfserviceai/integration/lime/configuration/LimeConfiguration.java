@@ -1,8 +1,5 @@
 package se.sundsvall.selfserviceai.integration.lime.configuration;
 
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import feign.RequestInterceptor;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
@@ -12,6 +9,9 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import se.sundsvall.dept44.configuration.feign.FeignConfiguration;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
+
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Import(FeignConfiguration.class)
 public class LimeConfiguration {

@@ -1,8 +1,5 @@
 package se.sundsvall.selfserviceai.integration.invoices;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesConfiguration.CLIENT_ID;
-
 import generated.se.sundsvall.invoices.InvoiceDetailsResponse;
 import generated.se.sundsvall.invoices.InvoiceOrigin;
 import generated.se.sundsvall.invoices.InvoicesResponse;
@@ -12,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesConfiguration;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesConfiguration.CLIENT_ID;
 
 @CircuitBreaker(name = CLIENT_ID)
 @FeignClient(name = CLIENT_ID, url = "${integration.invoices.url}", configuration = InvoicesConfiguration.class)

@@ -1,5 +1,9 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.selfserviceai.TestFactory.createAddress;
 import static se.sundsvall.selfserviceai.TestFactory.createFacility;
@@ -9,10 +13,6 @@ import static se.sundsvall.selfserviceai.TestFactory.createInvoiceDetail;
 import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.DECIMAL_POINTS;
 import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBigDecimal;
 import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBoolean;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import org.junit.jupiter.api.Test;
 
 class InvoiceDecoratorTest {
 
