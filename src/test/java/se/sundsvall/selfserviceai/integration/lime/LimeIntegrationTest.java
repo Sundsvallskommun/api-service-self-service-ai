@@ -10,9 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
 import se.sundsvall.selfserviceai.integration.db.model.HistoryEntity;
 import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
@@ -24,6 +23,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.I_AM_A_TEAPOT;
 
 @ExtendWith(MockitoExtension.class)
 class LimeIntegrationTest {
@@ -72,7 +73,7 @@ class LimeIntegrationTest {
 		final var session = SessionPublic.builder().build();
 
 		when(limeClientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
-			.thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
+			.thenThrow(Problem.valueOf(I_AM_A_TEAPOT, "Big and stout"));
 
 		// Act
 		integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
@@ -90,9 +91,9 @@ class LimeIntegrationTest {
 		final var session = SessionPublic.builder().build();
 
 		when(limeClientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
-			.thenThrow(Problem.valueOf(Status.FORBIDDEN, "You shall not pass"));
+			.thenThrow(Problem.valueOf(FORBIDDEN, "You shall not pass"));
 		when(historyRepositoryMock.save(any()))
-			.thenThrow(Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout"));
+			.thenThrow(Problem.valueOf(I_AM_A_TEAPOT, "Big and stout"));
 
 		// Act
 		final var e = assertThrows(ThrowableProblem.class, () -> integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session));
@@ -101,7 +102,7 @@ class LimeIntegrationTest {
 		verify(limeClientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
 		verify(jsonBuilderMock).toJsonString(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
 		verify(historyRepositoryMock).save(any(HistoryEntity.class));
-		assertThat(e.getStatus()).isEqualTo(Status.I_AM_A_TEAPOT);
+		assertThat(e.getStatus()).isEqualTo(I_AM_A_TEAPOT);
 		assertThat(e.getMessage()).isEqualTo("I'm a teapot: Big and stout");
 	}
 
@@ -124,7 +125,7 @@ class LimeIntegrationTest {
 	void getHistoryThrowsException() {
 
 		// Arrange
-		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
 		when(limeClientMock.getChatHistory(SESSION_ID)).thenThrow(exception);
 
 		// Act

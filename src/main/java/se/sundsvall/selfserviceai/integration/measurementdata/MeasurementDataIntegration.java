@@ -5,7 +5,7 @@ import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.Ca
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum.MONTH;
@@ -16,7 +16,7 @@ import static java.time.ZoneId.systemDefault;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 
 @Component
 public class MeasurementDataIntegration {

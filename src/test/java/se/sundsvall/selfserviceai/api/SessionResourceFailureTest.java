@@ -12,12 +12,13 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.selfserviceai.Application;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.service.AssistantService;
@@ -27,9 +28,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
-import static org.zalando.problem.Status.BAD_REQUEST;
 
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class SessionResourceFailureTest {
@@ -73,7 +75,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("createAssistantSession.municipalityId", "not a valid municipality ID"));
 		});
@@ -84,7 +86,7 @@ class SessionResourceFailureTest {
 		"invalid"
 	})
 	@NullSource
-	void createAssistantSessionWithFaultyOrEmptyBodyValues(String value) {
+	void createAssistantSessionWithFaultyOrEmptyBodyValues(final String value) {
 		// Arrange
 		final var body = SessionRequest.builder()
 			.withCustomerEngagementOrgIds(Stream.of(value).collect(toCollection(HashSet::new)))
@@ -106,7 +108,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("customerEngagementOrgIds[]", "list members must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"),
 					tuple("partyId", "not a valid UUID"));
@@ -133,7 +135,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("customerEngagementOrgIds", "must not be null"),
 					tuple("partyId", "not a valid UUID"));
@@ -162,7 +164,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("customerEngagementOrgIds", "list must contain at least 1 entry"),
 					tuple("partyId", "not a valid UUID"));
@@ -185,10 +187,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
 			assertThat(r.getTitle()).isEqualTo("Bad Request");
-			assertThat(r.getDetail()).isEqualTo("""
-				Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.selfserviceai.api.model.SessionResponse> \
-				se.sundsvall.selfserviceai.api.AssistantResource.createAssistantSession(java.lang.String,se.sundsvall.selfserviceai.api.model.SessionRequest)\
-				""");
+			assertThat(r.getDetail()).isEqualTo("Failed to read request");
 		});
 	}
 
@@ -212,7 +211,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("isAssistantReady.municipalityId", "not a valid municipality ID"),
 					tuple("isAssistantReady.sessionId", "not a valid UUID"));
@@ -228,7 +227,7 @@ class SessionResourceFailureTest {
 		"", " "
 	})
 	@NullSource
-	void askAssistantWithFaultyPathParameters(String question) {
+	void askAssistantWithFaultyPathParameters(final String question) {
 		// Act
 		final var response = webTestClient.get()
 			.uri(builder -> builder.path("/{municipalityId}/session/{sessionId}")
@@ -245,7 +244,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("askAssistant.municipalityId", "not a valid municipality ID"),
 					tuple("askAssistant.sessionId", "not a valid UUID"),
@@ -273,7 +272,7 @@ class SessionResourceFailureTest {
 		assertThat(response).isNotNull().satisfies(r -> {
 			assertThat(r.getTitle()).isEqualTo("Constraint Violation");
 			assertThat(r.getStatus()).isEqualTo(BAD_REQUEST);
-			assertThat(r.getViolations()).extracting(Violation::getField, Violation::getMessage)
+			assertThat(r.getViolations()).extracting(Violation::field, Violation::message)
 				.containsExactlyInAnyOrder(
 					tuple("deleteAssistantSession.municipalityId", "not a valid municipality ID"),
 					tuple("deleteAssistantSession.sessionId", "not a valid UUID"));

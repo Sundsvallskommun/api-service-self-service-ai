@@ -33,9 +33,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
@@ -74,6 +73,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.I_AM_A_TEAPOT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class AssistantServiceTest {
@@ -129,6 +130,31 @@ class AssistantServiceTest {
 	@Captor
 	private ArgumentCaptor<EneoModel> installedBaseCaptor;
 
+	private static Stream<Arguments> informationArgumentProvider() {
+		return Stream.of(
+			Arguments.of(
+				null,
+				emptyList(),
+				emptyList()),
+			Arguments.of(
+				List.of(new Agreement()
+					.agreementId(String.valueOf(RandomUtils.secure().randomInt()))
+					.category(generated.se.sundsvall.agreement.Category.ELECTRICITY)
+					.facilityId(FACILITY_ID)),
+				List.of(new Invoice()
+					.invoiceNumber(String.valueOf(RandomUtils.secure().randomInt()))
+					.invoiceType(InvoiceType.INVOICE)
+					.invoiceStatus(InvoiceStatus.SENT)
+					.facilityId(FACILITY_ID)),
+				List.of(new Data()
+					.facilityId(FACILITY_ID)
+					.addMeasurementSeriesItem(new MeasurementSerie()
+						.addMeasurementPointsItem(new MeasurementPoints()))
+					.category(Category.ELECTRICITY)))
+
+		);
+	}
+
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
 		RequestId.reset();
@@ -179,7 +205,7 @@ class AssistantServiceTest {
 	@Test
 	void createSessionThrowsException() {
 		// Arrange
-		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(eneoIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenThrow(exception);
@@ -194,34 +220,9 @@ class AssistantServiceTest {
 		assertThat(e).isSameAs(exception);
 	}
 
-	private static Stream<Arguments> informationArgumentProvider() {
-		return Stream.of(
-			Arguments.of(
-				null,
-				emptyList(),
-				emptyList()),
-			Arguments.of(
-				List.of(new Agreement()
-					.agreementId(String.valueOf(RandomUtils.secure().randomInt()))
-					.category(generated.se.sundsvall.agreement.Category.ELECTRICITY)
-					.facilityId(FACILITY_ID)),
-				List.of(new Invoice()
-					.invoiceNumber(String.valueOf(RandomUtils.secure().randomInt()))
-					.invoiceType(InvoiceType.INVOICE)
-					.invoiceStatus(InvoiceStatus.SENT)
-					.facilityId(FACILITY_ID)),
-				List.of(new Data()
-					.facilityId(FACILITY_ID)
-					.addMeasurementSeriesItem(new MeasurementSerie()
-						.addMeasurementPointsItem(new MeasurementPoints()))
-					.category(Category.ELECTRICITY)))
-
-		);
-	}
-
 	@ParameterizedTest
 	@MethodSource("informationArgumentProvider")
-	void populateWithInformation(List<Agreement> agreements, List<Invoice> invoices, List<Data> measurementDatas) {
+	void populateWithInformation(final List<Agreement> agreements, final List<Invoice> invoices, final List<Data> measurementDatas) {
 		// Arrange
 		final var fileId = UUID.randomUUID();
 		final var installedBaseResponse = Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer()
@@ -271,7 +272,7 @@ class AssistantServiceTest {
 		});
 	}
 
-	private void assertListcontent(List<Agreement> agreements, List<Invoice> invoices, List<Data> measurementDatas) {
+	private void assertListcontent(final List<Agreement> agreements, final List<Invoice> invoices, final List<Data> measurementDatas) {
 		assertThat(Optional.ofNullable(agreements).orElse(emptyList()).stream()
 			.map(Agreement::getAgreementId)
 			.toList())
@@ -333,7 +334,7 @@ class AssistantServiceTest {
 	@NullSource
 	void populateWithInformationWhenEneoThrowsException(final String uuid) {
 		// Arrange
-		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
 		final var sessionEntity = SessionEntity.builder()
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.build();
@@ -386,7 +387,7 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
 
-		assertThat(exception.getStatus()).isEqualTo(Status.NOT_FOUND);
+		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getMessage()).isEqualTo("Not Found: Session with id '%s' could not be found".formatted(SESSION_ID));
 	}
 
@@ -511,7 +512,7 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 
-		assertThat(exception.getStatus()).isEqualTo(Status.NOT_FOUND);
+		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getMessage()).isEqualTo("Not Found: Session with id '%s' could not be found".formatted(SESSION_ID));
 	}
 
@@ -606,7 +607,7 @@ class AssistantServiceTest {
 		"be61d7c3-5534-47b9-88da-ce325b9c8426"
 	})
 	@NullSource
-	void deleteSessionWhenHistoryNotSuccessfullySaved(String uuid) {
+	void deleteSessionWhenHistoryNotSuccessfullySaved(final String uuid) {
 		// Arrange
 		final var entity = SessionEntity.builder()
 			.withCustomerNbr(CUSTOMER_NBR)
@@ -615,7 +616,7 @@ class AssistantServiceTest {
 			.withPartyId(PARTY_ID)
 			.build();
 		final var session = SessionPublic.builder().build();
-		final var exception = Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
@@ -720,7 +721,7 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 
-		assertThat(exception.getStatus()).isEqualTo(Status.NOT_FOUND);
+		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getMessage()).isEqualTo("Not Found: Session with id '%s' could not be found".formatted(SESSION_ID));
 	}
 
