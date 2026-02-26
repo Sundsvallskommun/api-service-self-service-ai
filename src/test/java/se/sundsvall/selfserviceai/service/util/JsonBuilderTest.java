@@ -1,6 +1,5 @@
 package se.sundsvall.selfserviceai.service.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.annotation.resource.Load.ResourceType;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
@@ -20,12 +19,13 @@ import se.sundsvall.selfserviceai.integration.eneo.model.Message;
 import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.selfserviceai.TestFactory.createAgreements;
 import static se.sundsvall.selfserviceai.TestFactory.createCustomer;
 import static se.sundsvall.selfserviceai.TestFactory.createInvoice;
@@ -37,7 +37,7 @@ class JsonBuilderTest {
 	private static final EneoMapper ENEO_MAPPER = new EneoMapper();
 
 	@Test
-	void toJsonFromEneoModel(@Load(value = "junit/expected-structure-eneo-model.json", as = ResourceType.STRING) String expected) {
+	void toJsonFromEneoModel(@Load(value = "junit/expected-structure-eneo-model.json", as = ResourceType.STRING) final String expected) {
 		final var eneoModel = ENEO_MAPPER.toEneoModel(Map.of("123456789", createCustomer()));
 
 		final var invoice1 = createInvoice();
@@ -48,7 +48,7 @@ class JsonBuilderTest {
 		MeasurementDecorator.addMeasurements(eneoModel.getFacilities(), createMeasurements(true));
 		InvoiceDecorator.addInvoices(eneoModel.getFacilities(), invoices);
 
-		final var jsonBuilder = new JsonBuilder(new ObjectMapper());
+		final var jsonBuilder = new JsonBuilder();
 		assertThat(jsonBuilder.toJsonString(eneoModel)).isEqualToIgnoringWhitespace(expected);
 	}
 
@@ -56,9 +56,6 @@ class JsonBuilderTest {
 	void toJsonFromNonValidEneoModel() throws Exception {
 		final var objectMapperMock = Mockito.mock(ObjectMapper.class);
 
-		when(objectMapperMock.findAndRegisterModules()).thenReturn(objectMapperMock);
-		when(objectMapperMock.setDateFormat(any())).thenReturn(objectMapperMock);
-		when(objectMapperMock.setSerializationInclusion(any())).thenReturn(objectMapperMock);
 		when(objectMapperMock.writeValueAsString(any())).thenThrow(new NullPointerException("test"));
 
 		final var jsonBuilder = new JsonBuilder(objectMapperMock);
@@ -69,7 +66,7 @@ class JsonBuilderTest {
 	}
 
 	@Test
-	void toJsonFromLimeChatHistoryRequest(@Load(value = "junit/expected-structure-chathistory.json", as = ResourceType.STRING) String expected) {
+	void toJsonFromLimeChatHistoryRequest(@Load(value = "junit/expected-structure-chathistory.json", as = ResourceType.STRING) final String expected) {
 		final var sessionId = UUID.fromString("ec8fccba-318d-4c67-9251-c7acdb1f8f47");
 		final var name = "name";
 		final var partyId = "9b4d1641-a868-401b-a1a1-f393e291a80c";
@@ -80,7 +77,7 @@ class JsonBuilderTest {
 			.withMessages(List.of(Message.builder().build()))
 			.build());
 
-		final var jsonBuilder = new JsonBuilder(new ObjectMapper());
+		final var jsonBuilder = new JsonBuilder();
 		assertThat(jsonBuilder.toJsonString(request)).isEqualToIgnoringWhitespace(expected);
 	}
 
@@ -88,9 +85,6 @@ class JsonBuilderTest {
 	void toJsonFromNonValidLimeChathistorikRequest() throws Exception {
 		final var objectMapperMock = Mockito.mock(ObjectMapper.class);
 
-		when(objectMapperMock.findAndRegisterModules()).thenReturn(objectMapperMock);
-		when(objectMapperMock.setDateFormat(any())).thenReturn(objectMapperMock);
-		when(objectMapperMock.setSerializationInclusion(any())).thenReturn(objectMapperMock);
 		when(objectMapperMock.writeValueAsString(any())).thenThrow(new NullPointerException("test"));
 
 		final var jsonBuilder = new JsonBuilder(objectMapperMock);
