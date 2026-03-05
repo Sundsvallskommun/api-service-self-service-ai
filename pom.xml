@@ -104,7 +104,8 @@
 							<hideGenerationTimestamp>true</hideGenerationTimestamp>
 							<interfaceOnly>true</interfaceOnly>
 							<useJakartaEe>true</useJakartaEe>
-							<useSpringBoot3>true</useSpringBoot3>
+							<useSpringBoot4>true</useSpringBoot4>
+							<useJackson3>true</useJackson3>
 						</configOptions>
 					</configuration>
 				</plugin>
@@ -145,7 +146,8 @@
 								<openApiNullable>false</openApiNullable>
 								<useBeanValidation>false</useBeanValidation>
 								<useSwaggerAnnotations>false</useSwaggerAnnotations>
-								<useSpringBoot3>true</useSpringBoot3>
+								<useSpringBoot4>true</useSpringBoot4>
+								<useJackson3>true</useJackson3>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -169,7 +171,8 @@
 								<openApiNullable>false</openApiNullable>
 								<useBeanValidation>false</useBeanValidation>
 								<useSwaggerAnnotations>false</useSwaggerAnnotations>
-								<useSpringBoot3>true</useSpringBoot3>
+								<useSpringBoot4>true</useSpringBoot4>
+								<useJackson3>true</useJackson3>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -193,7 +196,8 @@
 								<openApiNullable>false</openApiNullable>
 								<useBeanValidation>false</useBeanValidation>
 								<useSwaggerAnnotations>false</useSwaggerAnnotations>
-								<useSpringBoot3>true</useSpringBoot3>
+								<useSpringBoot4>true</useSpringBoot4>
+								<useJackson3>true</useJackson3>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -217,7 +221,8 @@
 								<openApiNullable>false</openApiNullable>
 								<useBeanValidation>false</useBeanValidation>
 								<useSwaggerAnnotations>false</useSwaggerAnnotations>
-								<useSpringBoot3>true</useSpringBoot3>
+								<useSpringBoot4>true</useSpringBoot4>
+								<useJackson3>true</useJackson3>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -241,7 +246,8 @@
 								<openApiNullable>false</openApiNullable>
 								<useBeanValidation>false</useBeanValidation>
 								<useSwaggerAnnotations>false</useSwaggerAnnotations>
-								<useSpringBoot3>true</useSpringBoot3>
+								<useSpringBoot4>true</useSpringBoot4>
+								<useJackson3>true</useJackson3>
 							</configOptions>
 						</configuration>
 					</execution>
