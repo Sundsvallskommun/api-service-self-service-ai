@@ -20,7 +20,5 @@ public interface SessionRepository extends JpaRepository<SessionEntity, String> 
 
 	void deleteBySessionIdAndMunicipalityId(String id, String municipalityId);
 
-	boolean existsBySessionIdAndMunicipalityIdAndInitializedIsNotNull(String id, String municipalityId); // Method to check if session is ready or not
-
 	List<SessionEntity> findAllByLastAccessedBeforeOrLastAccessedIsNull(OffsetDateTime timestamp); // Method for returning dangling sessions (not used after provided timestamp) within all municipalities
 }

@@ -1,6 +1,8 @@
 package se.sundsvall.selfserviceai.integration.invoices;
 
 import generated.se.sundsvall.invoices.Invoice;
+import generated.se.sundsvall.invoices.InvoiceDetail;
+import generated.se.sundsvall.invoices.InvoiceDetailsResponse;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import generated.se.sundsvall.invoices.MetaData;
 import java.time.LocalDate;
@@ -12,20 +14,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.dept44.problem.Problem;
-import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class InvoicesIntegrationTest {
@@ -95,10 +92,10 @@ class InvoicesIntegrationTest {
 	}
 
 	@Test
-	void getInvoicesThrows404Exception() {
+	void getInvoicesReturnsNullResponse() {
 
 		// Arrange
-		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenThrow(Problem.valueOf(NOT_FOUND));
+		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(null);
 
 		// Act
 		final var result = integration.getInvoices(MUNICIPALITY_ID, PARTY_ID);
@@ -109,17 +106,36 @@ class InvoicesIntegrationTest {
 	}
 
 	@Test
-	void getInvoicesThrowsException() {
+	void getInvoiceDetails() {
 
 		// Arrange
-		final var exception = Problem.valueOf(BAD_GATEWAY, "Bad to the bone");
-		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenThrow(exception);
+		final var invoice = new Invoice().organizationNumber("orgNr").invoiceNumber("invNr");
+		final var detail = new InvoiceDetail();
+		final var detailsResponse = new InvoiceDetailsResponse().details(List.of(detail));
+
+		when(clientMock.getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr")).thenReturn(detailsResponse);
 
 		// Act
-		final var e = assertThrows(ThrowableProblem.class, () -> integration.getInvoices(MUNICIPALITY_ID, PARTY_ID));
+		final var result = integration.getInvoiceDetails(MUNICIPALITY_ID, invoice);
 
 		// Assert and verify
-		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
-		assertThat(e).isSameAs(exception);
+		verify(clientMock).getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr");
+		assertThat(result).containsExactly(detail);
+	}
+
+	@Test
+	void getInvoiceDetailsReturnsNullResponse() {
+
+		// Arrange
+		final var invoice = new Invoice().organizationNumber("orgNr").invoiceNumber("invNr");
+
+		when(clientMock.getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr")).thenReturn(null);
+
+		// Act
+		final var result = integration.getInvoiceDetails(MUNICIPALITY_ID, invoice);
+
+		// Assert and verify
+		verify(clientMock).getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr");
+		assertThat(result).isEmpty();
 	}
 }
