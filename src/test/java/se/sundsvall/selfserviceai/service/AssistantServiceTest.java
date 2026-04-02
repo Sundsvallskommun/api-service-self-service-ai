@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -73,7 +74,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.I_AM_A_TEAPOT;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,7 +84,7 @@ class AssistantServiceTest {
 	private static final String ASSISTANT_ID = UUID.randomUUID().toString();
 	private static final String PARTY_ID = UUID.randomUUID().toString();
 	private static final UUID SESSION_ID = UUID.randomUUID();
-	private static final String CUSTOMER_NBR = "customerNbr";
+	private static final String CUSTOMER_NUMBER = "customerNumber";
 	private static final String FACILITY_ID = UUID.randomUUID().toString();
 	private static final String CUSTOMER_ENGAGEMENT_ORG_ID = "customerEngagementOrgId";
 	private static final Set<String> CUSTOMER_ENGAGEMENT_ORG_IDS = Set.of(CUSTOMER_ENGAGEMENT_ORG_ID);
@@ -205,7 +206,7 @@ class AssistantServiceTest {
 	@Test
 	void createSessionThrowsException() {
 		// Arrange
-		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(BAD_GATEWAY, "Big and stout");
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(eneoIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenThrow(exception);
@@ -268,11 +269,11 @@ class AssistantServiceTest {
 			assertThat(entity.getInitialized()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
 			assertThat(entity.getStatus()).isEqualTo("Successfully initialized");
 
-			assertListcontent(agreements, invoices, measurementDatas);
+			assertListContent(agreements, invoices, measurementDatas);
 		});
 	}
 
-	private void assertListcontent(final List<Agreement> agreements, final List<Invoice> invoices, final List<Data> measurementDatas) {
+	private void assertListContent(final List<Agreement> agreements, final List<Invoice> invoices, final List<Data> measurementDatas) {
 		assertThat(Optional.ofNullable(agreements).orElse(emptyList()).stream()
 			.map(Agreement::getAgreementId)
 			.toList())
@@ -291,6 +292,7 @@ class AssistantServiceTest {
 
 		assertThat(measurementDatas.stream()
 			.map(Data::getCategory)
+			.filter(Objects::nonNull)
 			.map(Category::toString)
 			.toList())
 			.isEqualTo(installedBaseCaptor.getValue().getFacilities().stream()
@@ -334,7 +336,7 @@ class AssistantServiceTest {
 	@NullSource
 	void populateWithInformationWhenEneoThrowsException(final String uuid) {
 		// Arrange
-		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(BAD_GATEWAY, "Big and stout");
 		final var sessionEntity = SessionEntity.builder()
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.build();
@@ -365,13 +367,13 @@ class AssistantServiceTest {
 
 		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
 			assertThat(entity.getFiles()).isEmpty();
-			assertThat(entity.getInitialized()).isNull();
+			assertThat(entity.getInitialized()).isNotNull();
 			if (isNull(uuid)) {
-				assertThat(entity.getStatus()).startsWith("Initialization failed. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '");
-				assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(94, 130)), "Log message does not contain a valid log id");
+				assertThat(entity.getStatus()).startsWith("Initialization failed. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '");
+				assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(93, 129)), "Log message does not contain a valid log id");
 				assertThat(entity.getStatus()).endsWith("' for more information.");
 			} else {
-				assertThat(entity.getStatus()).isEqualTo("Initialization failed. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
+				assertThat(entity.getStatus()).isEqualTo("Initialization failed. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
 			}
 		});
 	}
@@ -394,26 +396,70 @@ class AssistantServiceTest {
 	@Test
 	void isSessionReadyForReadySession() {
 		// Arrange
-		when(sessionRepositoryMock.existsBySessionIdAndMunicipalityIdAndInitializedIsNotNull(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(true);
+		final var sessionEntity = SessionEntity.builder()
+			.withInitialized(OffsetDateTime.now())
+			.withStatus("Successfully initialized")
+			.build();
+
+		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 
 		// Act
 		final var result = assistantService.isSessionReady(MUNICIPALITY_ID, SESSION_ID);
 
 		// Assert and verify
-		verify(sessionRepositoryMock).existsBySessionIdAndMunicipalityIdAndInitializedIsNotNull(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 
-		assertThat(result).isTrue();
+		assertThat(result.getStatus()).isEqualTo("READY");
+		assertThat(result.getDetail()).isNull();
 	}
 
 	@Test
-	void isSessionReadyForNonReadySession() {
+	void isSessionReadyForPendingSession() {
+		// Arrange
+		final var sessionEntity = SessionEntity.builder().build();
+
+		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+
 		// Act
 		final var result = assistantService.isSessionReady(MUNICIPALITY_ID, SESSION_ID);
 
 		// Assert and verify
-		verify(sessionRepositoryMock).existsBySessionIdAndMunicipalityIdAndInitializedIsNotNull(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 
-		assertThat(result).isFalse();
+		assertThat(result.getStatus()).isEqualTo("PENDING");
+		assertThat(result.getDetail()).isEqualTo("Session is being initialized");
+	}
+
+	@Test
+	void isSessionReadyForFailedSession() {
+		// Arrange
+		final var sessionEntity = SessionEntity.builder()
+			.withInitialized(OffsetDateTime.now())
+			.withStatus("Initialization failed. Error message is 'Not Found'. Filter logs on log id 'abc' for more information.")
+			.build();
+
+		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+
+		// Act
+		final var result = assistantService.isSessionReady(MUNICIPALITY_ID, SESSION_ID);
+
+		// Assert and verify
+		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+
+		assertThat(result.getStatus()).isEqualTo("FAILED");
+		assertThat(result.getDetail()).isEqualTo("Initialization failed. Error message is 'Not Found'. Filter logs on log id 'abc' for more information.");
+	}
+
+	@Test
+	void isSessionReadyForNonExistingSession() {
+		// Act
+		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.isSessionReady(MUNICIPALITY_ID, SESSION_ID));
+
+		// Assert and verify
+		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+
+		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
+		assertThat(exception.getMessage()).isEqualTo("Not Found: Session with id '%s' could not be found".formatted(SESSION_ID));
 	}
 
 	@Test
@@ -520,7 +566,7 @@ class AssistantServiceTest {
 	void deleteNonInitializedSession() {
 		// Arrange
 		final var sessionEntity = SessionEntity.builder()
-			.withCustomerNbr(CUSTOMER_NBR)
+			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withPartyId(PARTY_ID)
 			.build();
@@ -548,7 +594,7 @@ class AssistantServiceTest {
 			.withFileId(fileId.toString())
 			.build();
 		final var sessionEntity = SessionEntity.builder()
-			.withCustomerNbr(CUSTOMER_NBR)
+			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
 			.withFiles(new ArrayList<>(List.of(fileEntity)))
@@ -568,7 +614,7 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock, times(2)).assistantId();
-		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 		verify(fileRepositoryMock).delete(fileEntity);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
@@ -579,7 +625,7 @@ class AssistantServiceTest {
 	void deleteSessionWithoutFiles() {
 		// Arrange
 		final var sessionEntity = SessionEntity.builder()
-			.withCustomerNbr(CUSTOMER_NBR)
+			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
 			.withPartyId(PARTY_ID)
@@ -597,7 +643,7 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock, times(2)).assistantId();
-		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock).delete(sessionEntity);
 	}
@@ -610,18 +656,18 @@ class AssistantServiceTest {
 	void deleteSessionWhenHistoryNotSuccessfullySaved(final String uuid) {
 		// Arrange
 		final var entity = SessionEntity.builder()
-			.withCustomerNbr(CUSTOMER_NBR)
+			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
 			.withPartyId(PARTY_ID)
 			.build();
 		final var session = SessionPublic.builder().build();
-		final var exception = Problem.valueOf(I_AM_A_TEAPOT, "Big and stout");
+		final var exception = Problem.valueOf(BAD_GATEWAY, "Big and stout");
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
-		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, isNull(uuid) ? null : UUID.fromString(uuid));
@@ -629,14 +675,14 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock).assistantId();
-		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 
 		if (isNull(uuid)) {
-			assertThat(entity.getStatus()).startsWith("Failed to save chat history. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '");
-			assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(100, 136)), "Log message does not contain a valid log id");
+			assertThat(entity.getStatus()).startsWith("Failed to save chat history. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '");
+			assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(99, 135)), "Log message does not contain a valid log id");
 			assertThat(entity.getStatus()).endsWith("' for more information.");
 		} else {
-			assertThat(entity.getStatus()).isEqualTo("Failed to save chat history. Error message is 'I'm a teapot: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
+			assertThat(entity.getStatus()).isEqualTo("Failed to save chat history. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
 		}
 
 	}
@@ -650,7 +696,7 @@ class AssistantServiceTest {
 			.withFileId(fileId.toString())
 			.build();
 		final var sessionEntity = SessionEntity.builder()
-			.withCustomerNbr(CUSTOMER_NBR)
+			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
 			.withFiles(new ArrayList<>(List.of(fileEntity)))
@@ -668,7 +714,7 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock).assistantId();
-		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 		verify(fileRepositoryMock, never()).delete(fileEntity);
 		verify(sessionRepositoryMock, never()).delete(sessionEntity);
@@ -681,7 +727,7 @@ class AssistantServiceTest {
 		// Arrange
 		final var requestId = UUID.randomUUID();
 		final var sessionEntity = SessionEntity.builder()
-			.withCustomerNbr(CUSTOMER_NBR)
+			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
 			.withPartyId(PARTY_ID)
@@ -699,7 +745,7 @@ class AssistantServiceTest {
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(eneoIntegrationMock).getSession(ASSISTANT_ID, SESSION_ID.toString());
-		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(sessionRepositoryMock, never()).delete(sessionEntity);
 
@@ -738,9 +784,9 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.deleteSession(any(), any())).thenReturn(true);
 		when(sessionRepositoryMock.findAllByLastAccessedBeforeOrLastAccessedIsNull(any())).thenReturn(List.of(
 			// Session that is never accessed and has reached threshold level
-			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), OffsetDateTime.now(), null),
+			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), OffsetDateTime.now()),
 			// Session that is never accessed but has not reached threshold level (should not be purged)
-			createSession(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now().minusMinutes(inactiveThreshold).plusSeconds(10), OffsetDateTime.now(), null)));
+			createSession(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now().minusMinutes(inactiveThreshold).plusSeconds(10), OffsetDateTime.now())));
 
 		// Act
 		assistantService.cleanUpInactiveSessions(inactiveThreshold);
@@ -751,7 +797,7 @@ class AssistantServiceTest {
 			return true;
 		}));
 
-		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NBR, session);
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, sessionId.toString());
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 		verify(fileRepositoryMock).delete(fileEntityCaptor.capture());
@@ -761,12 +807,12 @@ class AssistantServiceTest {
 		assertThat(sessionEntityCaptor.getValue().getSessionId()).isEqualTo(sessionId.toString());
 	}
 
-	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime initialized, final OffsetDateTime lastAccessed) {
+	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime initialized) {
 		return SessionEntity.builder()
 			.withCreated(created)
 			.withInitialized(initialized)
-			.withCustomerNbr(CUSTOMER_NBR)
-			.withLastAccessed(lastAccessed)
+			.withCustomerNbr(CUSTOMER_NUMBER)
+			.withLastAccessed(null)
 			.withSessionId(sessionId.toString())
 			.withFiles(new ArrayList<>(List.of(
 				FileEntity.builder()

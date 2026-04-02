@@ -1,0 +1,5 @@
+{
+	"title": "Not Found",
+	"status": 404,
+	"detail": "${json-unit.any-string}"
+}

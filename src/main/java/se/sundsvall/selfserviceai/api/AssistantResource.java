@@ -28,6 +28,7 @@ import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
+import se.sundsvall.selfserviceai.api.model.SessionStatusResponse;
 import se.sundsvall.selfserviceai.service.AssistantService;
 
 import static java.util.Objects.nonNull;
@@ -80,7 +81,7 @@ class AssistantResource {
 		@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true)
 	})
 	@GetMapping(value = "/{id}/ready", produces = APPLICATION_JSON_VALUE)
-	ResponseEntity<Boolean> isAssistantReady(
+	ResponseEntity<SessionStatusResponse> isAssistantReady(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @PathVariable @ValidMunicipalityId final String municipalityId,
 		@Parameter(name = "id", description = "Session id", example = "f5211067-b3c7-4394-b84a-aa3fa65507e3") @PathVariable("id") @ValidUuid final String sessionId) {
 

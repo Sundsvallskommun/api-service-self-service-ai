@@ -14,7 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesConfiguration.CLIENT_ID;
 
 @CircuitBreaker(name = CLIENT_ID)
-@FeignClient(name = CLIENT_ID, url = "${integration.invoices.url}", configuration = InvoicesConfiguration.class)
+@FeignClient(name = CLIENT_ID, url = "${integration.invoices.url}", configuration = InvoicesConfiguration.class, dismiss404 = true)
 public interface InvoicesClient {
 
 	/**

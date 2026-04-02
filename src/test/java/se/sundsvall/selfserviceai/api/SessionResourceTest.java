@@ -17,6 +17,7 @@ import se.sundsvall.selfserviceai.Application;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
+import se.sundsvall.selfserviceai.api.model.SessionStatusResponse;
 import se.sundsvall.selfserviceai.service.AssistantService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,14 +91,15 @@ class SessionResourceTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(booleans = {
-		true, false
+	@ValueSource(strings = {
+		"PENDING", "READY", "FAILED"
 	})
-	void isAssistantReady(boolean isReady) {
+	void isAssistantReady(final String status) {
 		// Arrange
 		final var sessionId = UUID.randomUUID();
+		final var statusResponse = SessionStatusResponse.builder().withStatus(status).build();
 
-		when(mockService.isSessionReady(MUNICIPALITY_ID, sessionId)).thenReturn(isReady);
+		when(mockService.isSessionReady(MUNICIPALITY_ID, sessionId)).thenReturn(statusResponse);
 
 		// Act
 		final var response = webTestClient.get()
@@ -105,12 +107,13 @@ class SessionResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(Boolean.class)
+			.expectBody(SessionStatusResponse.class)
 			.returnResult()
 			.getResponseBody();
 
 		// Assert and verify
-		assertThat(response).isNotNull().isEqualTo(isReady);
+		assertThat(response).isNotNull();
+		assertThat(response.getStatus()).isEqualTo(status);
 		verify(mockService).isSessionReady(MUNICIPALITY_ID, sessionId);
 	}
 

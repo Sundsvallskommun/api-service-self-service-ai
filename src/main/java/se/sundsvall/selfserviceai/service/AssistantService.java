@@ -16,6 +16,7 @@ import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.QuestionResponse;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
+import se.sundsvall.selfserviceai.api.model.SessionStatusResponse;
 import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
@@ -40,6 +41,9 @@ import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static se.sundsvall.selfserviceai.api.model.SessionStatus.FAILED;
+import static se.sundsvall.selfserviceai.api.model.SessionStatus.PENDING;
+import static se.sundsvall.selfserviceai.api.model.SessionStatus.READY;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
 import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.toDecoratedInvoice;
@@ -88,7 +92,7 @@ public class AssistantService {
 		this.sessionRepository = sessionRepository;
 	}
 
-	public SessionResponse createSession(String municipalityId, String partyId) {
+	public SessionResponse createSession(final String municipalityId, final String partyId) {
 		final var session = eneoIntegration.askAssistant(eneoProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
 		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId(), partyId));
 
@@ -97,7 +101,7 @@ public class AssistantService {
 
 	@Async
 	@Transactional
-	public void populateWithInformation(UUID sessionId, SessionRequest sessionRequest, UUID requestId) {
+	public void populateWithInformation(final UUID sessionId, final SessionRequest sessionRequest, final UUID requestId) {
 		final var sessionEntity = sessionRepository.findById(sessionId.toString())
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
@@ -121,7 +125,8 @@ public class AssistantService {
 				sessionEntity.setCustomerNbr(eneoModel.getCustomerNumber());
 				sessionEntity.setStatus("Successfully initialized");
 			} else {
-				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizeAndCompress(partyId), sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
+				final var sanitizedPartyId = sanitizeAndCompress(partyId);
+				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizedPartyId, sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
 				sessionEntity.setStatus("No installed base information found for customer '%s' and counterparts %s".formatted(sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds()));
 			}
 
@@ -130,7 +135,7 @@ public class AssistantService {
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when populating session with customer information", e);
 			// Update with failed information
-			sessionEntity.setInitialized(null);
+			sessionEntity.setInitialized(OffsetDateTime.now());
 			sessionEntity.setStatus("Initialization failed. Error message is '%s'. Filter logs on log id '%s' for more information.".formatted(e.getMessage(), RequestId.get()));
 		} finally {
 			sessionRepository.save(sessionEntity);
@@ -156,11 +161,28 @@ public class AssistantService {
 		return eneoModel;
 	}
 
-	public boolean isSessionReady(String municipalityId, UUID sessionId) {
-		return sessionRepository.existsBySessionIdAndMunicipalityIdAndInitializedIsNotNull(sessionId.toString(), municipalityId);
+	public SessionStatusResponse isSessionReady(final String municipalityId, final UUID sessionId) {
+		final var session = sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
+
+		if (isNull(session.getInitialized())) {
+			return SessionStatusResponse.builder()
+				.withStatus(PENDING.name())
+				.withDetail("Session is being initialized")
+				.build();
+		}
+		if (ofNullable(session.getStatus()).map(status -> status.startsWith("Initialization failed")).orElse(false)) {
+			return SessionStatusResponse.builder()
+				.withStatus(FAILED.name())
+				.withDetail(session.getStatus())
+				.build();
+		}
+		return SessionStatusResponse.builder()
+			.withStatus(READY.name())
+			.build();
 	}
 
-	public QuestionResponse askQuestion(String municipalityId, UUID sessionId, String question) {
+	public QuestionResponse askQuestion(final String municipalityId, final UUID sessionId, final String question) {
 		final var session = sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
@@ -177,7 +199,7 @@ public class AssistantService {
 
 	@Async
 	@Transactional
-	public void deleteSessionById(final String municipalityId, final UUID sessionId, UUID requestId) {
+	public void deleteSessionById(final String municipalityId, final UUID sessionId, final UUID requestId) {
 		try {
 			RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
 
@@ -219,7 +241,7 @@ public class AssistantService {
 
 	private SessionEntity saveChatHistory(final SessionEntity sessionEntity) {
 		try {
-			// Only save chathistory if session has been successfully initialized (i.e. the session has been possible to use)
+			// Only save chat history if session has been successfully initialized (i.e. the session has been possible to use)
 			if (nonNull(sessionEntity.getInitialized())) {
 				final var session = eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId());
 				limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
