@@ -43,6 +43,7 @@ import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.FAILED;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.PENDING;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.READY;
@@ -98,7 +99,7 @@ public class AssistantService {
 		try {
 			return ofNullable(supplier.get()).orElse(emptyList());
 		} catch (final Exception e) {
-			LOG.warn("Could not fetch information from '{}': {}", source, e.getMessage());
+			LOG.warn("Could not fetch information from '{}': {}", source, sanitizeForLogging(e.getMessage()));
 			return emptyList();
 		}
 	}

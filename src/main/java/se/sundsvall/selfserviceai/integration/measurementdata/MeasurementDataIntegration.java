@@ -19,6 +19,7 @@ import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 @Component
 public class MeasurementDataIntegration {
@@ -67,10 +68,10 @@ public class MeasurementDataIntegration {
 
 			// Missing measurement data for a single facility/category should not fail the whole session — log and skip
 			// so the remaining facilities can still be enriched.
-			LOG.warn("Could not fetch measurement data for facility '{}' and category '{}': {}", facilityId, category, e.getMessage());
+			LOG.warn("Could not fetch measurement data for facility '{}' and category '{}': {}", sanitizeForLogging(facilityId), category, sanitizeForLogging(e.getMessage()));
 			return null;
 		} catch (final Exception e) {
-			LOG.warn("Could not fetch measurement data for facility '{}' and category '{}': {}", facilityId, category, e.getMessage());
+			LOG.warn("Could not fetch measurement data for facility '{}' and category '{}': {}", sanitizeForLogging(facilityId), category, sanitizeForLogging(e.getMessage()));
 			return null;
 		}
 	}

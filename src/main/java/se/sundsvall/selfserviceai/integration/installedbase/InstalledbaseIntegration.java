@@ -16,6 +16,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 @Component
 public class InstalledbaseIntegration {
@@ -59,7 +60,7 @@ public class InstalledbaseIntegration {
 			return response.isEmpty() ? null : Map.entry(customerEngagementOrgId, response.getFirst());
 		} catch (final Exception e) {
 			// A failure for one counterpart must not block enrichment from the others — log and skip this counterpart.
-			LOG.warn("Could not fetch installed base for counterpart '{}': {}", customerEngagementOrgId, e.getMessage());
+			LOG.warn("Could not fetch installed base for counterpart '{}': {}", sanitizeForLogging(customerEngagementOrgId), sanitizeForLogging(e.getMessage()));
 			return null;
 		}
 	}

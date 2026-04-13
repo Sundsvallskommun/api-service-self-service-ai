@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 @Component
 public class InvoicesIntegration {
@@ -34,7 +35,7 @@ public class InvoicesIntegration {
 			// Some invoices (e.g., samlingsfakturor) do not have details — don't fail the whole session if a single
 			// lookup fails. Return an empty list so the remaining invoices can still be processed.
 			LOG.warn("Could not fetch invoice details for organization '{}' and invoice number '{}': {}",
-				invoice.getOrganizationNumber(), invoice.getInvoiceNumber(), e.getMessage());
+				sanitizeForLogging(invoice.getOrganizationNumber()), sanitizeForLogging(invoice.getInvoiceNumber()), sanitizeForLogging(e.getMessage()));
 			return emptyList();
 		}
 	}
