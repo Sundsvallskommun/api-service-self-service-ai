@@ -32,7 +32,7 @@ public class InvoiceDecorator {
 	private static void attachToFacility(List<Facility> facilities, Invoice invoice) {
 		ofNullable(facilities).orElse(emptyList())
 			.stream()
-			.filter(facility -> facility.getFacilityId().equals(invoice.getFacilityId()))
+			.filter(facility -> Objects.equals(facility.getFacilityId(), invoice.getFacilityId()))
 			.findFirst()
 			.ifPresent(facility -> facility.getInvoices().add(invoice));
 	}

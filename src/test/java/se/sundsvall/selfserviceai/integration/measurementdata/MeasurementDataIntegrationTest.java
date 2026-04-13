@@ -16,15 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.problem.Problem;
-import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 import static generated.se.sundsvall.measurementdata.Category.DISTRICT_HEATING;
 import static generated.se.sundsvall.measurementdata.Category.ELECTRICITY;
 import static generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.AggregateOnEnum.MONTH;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -103,23 +100,48 @@ class MeasurementDataIntegrationTest {
 	}
 
 	@Test
-	void getMeasurementDataWhenServiceThrowsUnhandledException() {
+	void getMeasurementDataWhenServiceThrowsUnhandledExceptionIsSwallowed() {
 
-		// Arrange
+		// Arrange — a single failing call must not break the whole session; remaining facilities/categories
+		// should still produce data.
 		final var facilityId1 = "facilityId1";
+		final var data = new Data().category(ELECTRICITY).facilityId(facilityId1);
 		final var fromDate = LocalDate.now().minusMonths(12).atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime().format(DateTimeFormatter.ISO_DATE_TIME);
 		final var toDate = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime().format(DateTimeFormatter.ISO_DATE_TIME);
 		final var facilities = List.of(Facility.builder().withFacilityId(facilityId1).build());
 		final var exception = Problem.valueOf(BAD_GATEWAY, "Bad to the bone");
 
 		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1)).thenThrow(exception);
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId1)).thenReturn(data);
 
 		// Act
-		final var e = assertThrows(ThrowableProblem.class, () -> integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities));
+		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
 
 		// Assert and verify
-		assertThat(e).isSameAs(exception);
+		assertThat(result).containsExactly(data);
 		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1);
-		verify(clientMock, atMostOnce()).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId1);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId1);
+	}
+
+	@Test
+	void getMeasurementDataWhenServiceThrowsGenericException() {
+
+		// Arrange — non-Problem exceptions must also be swallowed per facility/category
+		final var facilityId1 = "facilityId1";
+		final var data = new Data().category(ELECTRICITY).facilityId(facilityId1);
+		final var fromDate = LocalDate.now().minusMonths(12).atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime().format(DateTimeFormatter.ISO_DATE_TIME);
+		final var toDate = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime().format(DateTimeFormatter.ISO_DATE_TIME);
+		final var facilities = List.of(Facility.builder().withFacilityId(facilityId1).build());
+
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1)).thenThrow(new RuntimeException("boom"));
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId1)).thenReturn(data);
+
+		// Act
+		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
+
+		// Assert and verify
+		assertThat(result).containsExactly(data);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.DISTRICT_HEATING, facilityId1);
+		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, fromDate, toDate, PARTY_ID, CategoryEnum.ELECTRICITY, facilityId1);
 	}
 }

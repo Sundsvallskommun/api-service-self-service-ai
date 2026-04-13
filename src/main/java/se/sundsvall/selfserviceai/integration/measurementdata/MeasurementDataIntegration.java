@@ -4,6 +4,8 @@ import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementDataSearchParameters.CategoryEnum;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
@@ -17,9 +19,11 @@ import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 @Component
 public class MeasurementDataIntegration {
+	private static final Logger LOG = LoggerFactory.getLogger(MeasurementDataIntegration.class);
 	private static final List<CategoryEnum> VALID_CATEGORIES = List.of(DISTRICT_HEATING, ELECTRICITY);
 
 	private final MeasurementDataClient measurementDataClient;
@@ -32,6 +36,7 @@ public class MeasurementDataIntegration {
 		return ofNullable(facilities).orElse(emptyList())
 			.stream()
 			.map(Facility::getFacilityId)
+			.filter(Objects::nonNull)
 			.map(facilityId -> getMeasurementData(municipalityId, partyId, facilityId))
 			.flatMap(List::stream)
 			.toList();
@@ -57,11 +62,17 @@ public class MeasurementDataIntegration {
 				facilityId);
 
 		} catch (final ThrowableProblem e) {
-			if (Objects.equals(BAD_GATEWAY, e.getStatus()) && e.getDetail().contains("category '%s', status=501 Not Implemented".formatted(CategoryEnum.fromValue(category.toString())))) {
+			if (Objects.equals(BAD_GATEWAY, e.getStatus()) && ofNullable(e.getDetail()).orElse("").contains("category '%s', status=501 Not Implemented".formatted(CategoryEnum.fromValue(category.toString())))) {
 				return null;
 			}
 
-			throw e;
+			// Missing measurement data for a single facility/category should not fail the whole session — log and skip
+			// so the remaining facilities can still be enriched.
+			LOG.warn("Could not fetch measurement data for facility '{}' and category '{}': {}", sanitizeForLogging(facilityId), category, sanitizeForLogging(e.getMessage()));
+			return null;
+		} catch (final Exception e) {
+			LOG.warn("Could not fetch measurement data for facility '{}' and category '{}': {}", sanitizeForLogging(facilityId), category, sanitizeForLogging(e.getMessage()));
+			return null;
 		}
 	}
 }

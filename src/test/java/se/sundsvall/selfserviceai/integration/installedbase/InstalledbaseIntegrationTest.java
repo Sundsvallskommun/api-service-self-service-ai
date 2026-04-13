@@ -11,18 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.problem.Problem;
-import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledbaseIntegrationTest {
@@ -89,37 +85,53 @@ class InstalledbaseIntegrationTest {
 	}
 
 	@Test
-	void getInstalledbaseWhenMultipleMatches() {
-		// Arrange
-		when(clientMock.getInstalledbase(eq(MUNICIPALITY_ID), any(), eq(PARTY_ID))).thenReturn(new InstalledBaseResponse()
+	void getInstalledbaseWhenMultipleMatchesIsSwallowed() {
+		// Arrange — a counterpart with multiple matches is now skipped, the other is still returned
+		final var ib = new InstalledBaseCustomer().customerNumber(CUSTOMER_NBR).partyId(PARTY_ID);
+
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenReturn(new InstalledBaseResponse()
 			.addInstalledBaseCustomersItem(new InstalledBaseCustomer())
 			.addInstalledBaseCustomersItem(new InstalledBaseCustomer()));
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID)).thenReturn(new InstalledBaseResponse().addInstalledBaseCustomersItem(ib));
 
 		// Act
-		final var exception = assertThrows(ThrowableProblem.class, () -> integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS));
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 
 		// Assert and verify
-		verify(clientMock, atMostOnce()).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
-		verify(clientMock, atMostOnce()).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
-		assertThat(exception.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
-		assertThat(exception.getMessage()).isEqualTo("Internal Server Error: Installed base response can not be interpreted as it contains more than one match (size is 2)");
-
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
+		assertThat(result).containsOnly(java.util.Map.entry(CUSTOMER_ENGAGEMENT_ORG_ID2, ib));
 	}
 
 	@Test
-	void getInstalledbaseThrowsException() {
+	void getInstalledbaseSwallowsExceptionPerCounterpart() {
+		// Arrange — a transport failure for one counterpart must not block the other
+		final var ib = new InstalledBaseCustomer().customerNumber(CUSTOMER_NBR).partyId(PARTY_ID);
 
-		// Arrange
-		final var exception = Problem.valueOf(BAD_GATEWAY, "Bad to the bone");
-		when(clientMock.getInstalledbase(eq(MUNICIPALITY_ID), any(), eq(PARTY_ID))).thenThrow(exception);
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenThrow(Problem.valueOf(BAD_GATEWAY, "Bad to the bone"));
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID)).thenReturn(new InstalledBaseResponse().addInstalledBaseCustomersItem(ib));
 
 		// Act
-		final var e = assertThrows(ThrowableProblem.class, () -> integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS));
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
 
 		// Assert and verify
-		verify(clientMock, atMostOnce()).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
-		verify(clientMock, atMostOnce()).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
-		assertThat(e).isSameAs(exception);
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
+		assertThat(result).containsOnly(java.util.Map.entry(CUSTOMER_ENGAGEMENT_ORG_ID2, ib));
+	}
+
+	@Test
+	void getInstalledbaseSwallowsExceptionForAllCounterparts() {
+		// Arrange — when all counterparts fail the result is simply empty (and the caller skips enrichment)
+		when(clientMock.getInstalledbase(eq(MUNICIPALITY_ID), any(), eq(PARTY_ID))).thenThrow(Problem.valueOf(BAD_GATEWAY, "Bad to the bone"));
+
+		// Act
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
+
+		// Assert and verify
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
+		assertThat(result).isEmpty();
 	}
 
 }

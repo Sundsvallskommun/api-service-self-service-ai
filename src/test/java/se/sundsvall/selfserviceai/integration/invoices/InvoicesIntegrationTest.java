@@ -138,4 +138,20 @@ class InvoicesIntegrationTest {
 		verify(clientMock).getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr");
 		assertThat(result).isEmpty();
 	}
+
+	@Test
+	void getInvoiceDetailsReturnsEmptyListWhenClientThrows() {
+
+		// Arrange — invoices that lack details (e.g. samlingsfakturor) must not break the whole flow
+		final var invoice = new Invoice().organizationNumber("orgNr").invoiceNumber("invNr");
+
+		when(clientMock.getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr")).thenThrow(new RuntimeException("No details available"));
+
+		// Act
+		final var result = integration.getInvoiceDetails(MUNICIPALITY_ID, invoice);
+
+		// Assert and verify
+		verify(clientMock).getInvoiceDetails(MUNICIPALITY_ID, "orgNr", "invNr");
+		assertThat(result).isEmpty();
+	}
 }

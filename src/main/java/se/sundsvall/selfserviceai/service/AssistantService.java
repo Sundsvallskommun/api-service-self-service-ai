@@ -2,9 +2,11 @@ package se.sundsvall.selfserviceai.service;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.FAILED;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.PENDING;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.READY;
@@ -90,6 +93,15 @@ public class AssistantService {
 		this.limeIntegration = limeIntegration;
 		this.measurementDataIntegration = measurementDataIntegration;
 		this.sessionRepository = sessionRepository;
+	}
+
+	private static <T> List<T> safeCall(final String source, final Supplier<List<T>> supplier) {
+		try {
+			return ofNullable(supplier.get()).orElse(emptyList());
+		} catch (final Exception e) {
+			LOG.warn("Could not fetch information from '{}': {}", source, sanitizeForLogging(e.getMessage()));
+			return emptyList();
+		}
 	}
 
 	public SessionResponse createSession(final String municipalityId, final String partyId) {
@@ -146,17 +158,18 @@ public class AssistantService {
 	private EneoModel buildEneoModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
 		final var eneoModel = eneoMapper.toEneoModel(installedBases);
 
-		// Enrich all facility with agreement, invoice and measurement information
+		// Enrich all facility with agreement, invoice and measurement information. Each integration call is wrapped
+		// individually so a failure in one source does not prevent enrichment from the others.
 		final var facilities = ofNullable(eneoModel.getFacilities()).orElse(emptyList());
 
-		// Fetch all invoices and their respective details.
-		final var decoratedInvoices = invoicesIntegration.getInvoices(municipalityId, partyId).stream()
+		final var invoices = safeCall("invoices", () -> invoicesIntegration.getInvoices(municipalityId, partyId));
+		final var decoratedInvoices = invoices.stream()
 			.map(invoice -> toDecoratedInvoice(invoice, invoicesIntegration.getInvoiceDetails(municipalityId, invoice)))
 			.toList();
 
-		AgreementDecorator.addAgreements(facilities, agreementIntegration.getAgreements(municipalityId, partyId));
+		AgreementDecorator.addAgreements(facilities, safeCall("agreements", () -> agreementIntegration.getAgreements(municipalityId, partyId)));
 		InvoiceDecorator.addInvoices(facilities, decoratedInvoices);
-		MeasurementDecorator.addMeasurements(facilities, measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities));
+		MeasurementDecorator.addMeasurements(facilities, safeCall("measurementdata", () -> measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities)));
 
 		return eneoModel;
 	}
@@ -228,12 +241,12 @@ public class AssistantService {
 	}
 
 	/**
-	 * To be subject for removal the session must either have a last accessed timestamp, or a created timestamp that is
+	 * To be subject for removal, the session must either have a last accessed timestamp, or a created timestamp that is
 	 * before the defined threshold for inactivity
 	 *
-	 * @param  timestamp timestamp when session is interpreted as inactive
+	 * @param  timestamp timestamp when a session is interpreted as inactive
 	 * @param  session   session to evaluate
-	 * @return           true if session is inactive and subject for removal, false otherwise
+	 * @return           true if the session is inactive and subject for removal, false otherwise
 	 */
 	private boolean isSubjectForRemoval(final OffsetDateTime timestamp, final SessionEntity session) {
 		return Objects.nonNull(session.getLastAccessed()) || session.getCreated().isBefore(timestamp);
