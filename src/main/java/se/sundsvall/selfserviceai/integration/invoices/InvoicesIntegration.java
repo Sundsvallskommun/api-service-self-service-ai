@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
@@ -14,18 +16,27 @@ import static java.util.Optional.ofNullable;
 
 @Component
 public class InvoicesIntegration {
+	private static final Logger LOG = LoggerFactory.getLogger(InvoicesIntegration.class);
 	private static final String ORGANIZATION_GROUP = "stadsbacken";
 
 	private final InvoicesClient invoicesClient;
 
-	InvoicesIntegration(InvoicesClient invoicesClient) {
+	InvoicesIntegration(final InvoicesClient invoicesClient) {
 		this.invoicesClient = invoicesClient;
 	}
 
 	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final Invoice invoice) {
-		return ofNullable(invoicesClient.getInvoiceDetails(municipalityId, invoice.getOrganizationNumber(), invoice.getInvoiceNumber()))
-			.map(response -> ofNullable(response.getDetails()).orElse(emptyList()))
-			.orElse(emptyList());
+		try {
+			return ofNullable(invoicesClient.getInvoiceDetails(municipalityId, invoice.getOrganizationNumber(), invoice.getInvoiceNumber()))
+				.map(response -> ofNullable(response.getDetails()).orElse(emptyList()))
+				.orElse(emptyList());
+		} catch (final Exception e) {
+			// Some invoices (e.g., samlingsfakturor) do not have details — don't fail the whole session if a single
+			// lookup fails. Return an empty list so the remaining invoices can still be processed.
+			LOG.warn("Could not fetch invoice details for organization '{}' and invoice number '{}': {}",
+				invoice.getOrganizationNumber(), invoice.getInvoiceNumber(), e.getMessage());
+			return emptyList();
+		}
 	}
 
 	public List<Invoice> getInvoices(final String municipalityId, final String partyId) {
@@ -45,9 +56,9 @@ public class InvoicesIntegration {
 
 		ofNullable(response.getInvoices()).ifPresent(invoices::addAll);
 
-		if (response.getMeta().getPage() < response.getMeta().getTotalPages()) {
-			getInvoices(municipalityId, partyId, fromDate, toDate, page + 1, invoices);
-		}
+		ofNullable(response.getMeta())
+			.filter(meta -> ofNullable(meta.getPage()).orElse(0) < ofNullable(meta.getTotalPages()).orElse(0))
+			.ifPresent(_ -> getInvoices(municipalityId, partyId, fromDate, toDate, page + 1, invoices));
 
 		return invoices;
 	}

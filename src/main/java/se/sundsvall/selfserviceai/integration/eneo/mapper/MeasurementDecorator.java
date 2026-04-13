@@ -27,7 +27,7 @@ public class MeasurementDecorator {
 	private static void attachToFacility(final List<Facility> facilities, final Data data) {
 		ofNullable(facilities).orElse(emptyList())
 			.stream()
-			.filter(facility -> facility.getFacilityId().equals(data.getFacilityId()))
+			.filter(facility -> Objects.equals(facility.getFacilityId(), data.getFacilityId()))
 			.findFirst()
 			.ifPresent(facility -> facility.getMeasurements().addAll(toMeasurementDatas(data)));
 	}

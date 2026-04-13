@@ -25,7 +25,7 @@ public class AgreementDecorator {
 	private static void attachToFacility(final List<Facility> facilities, final Agreement agreement) {
 		ofNullable(facilities).orElse(emptyList())
 			.stream()
-			.filter(facility -> facility.getFacilityId().equals(agreement.getFacilityId()))
+			.filter(facility -> Objects.equals(facility.getFacilityId(), agreement.getFacilityId()))
 			.findFirst()
 			.ifPresent(facility -> facility.getAgreements().add(toAgreement(agreement)));
 	}
