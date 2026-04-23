@@ -68,4 +68,19 @@ integration:
   measurement-data:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
-    
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      agreement:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      installedbase:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      invoices:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      eneo:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      lime:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      measurement-data:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
