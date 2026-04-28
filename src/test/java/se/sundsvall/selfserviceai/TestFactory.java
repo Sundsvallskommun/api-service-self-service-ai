@@ -458,7 +458,7 @@ public class TestFactory {
 			.toDate(LocalDate.now())
 			.vat(10f)
 			.vatRate(10f)
-			.quantity(10f)
+			.quantity(0.08493151f)
 			.description("description")
 			.productCode("productCode")
 			.productName("productName")

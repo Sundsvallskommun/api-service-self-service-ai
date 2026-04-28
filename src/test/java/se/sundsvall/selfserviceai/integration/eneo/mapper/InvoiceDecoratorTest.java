@@ -11,6 +11,7 @@ import static se.sundsvall.selfserviceai.TestFactory.createGeneratedInvoice;
 import static se.sundsvall.selfserviceai.TestFactory.createInvoice;
 import static se.sundsvall.selfserviceai.TestFactory.createInvoiceDetail;
 import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.DECIMAL_POINTS;
+import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.QUANTITY_DECIMAL_POINTS;
 import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBigDecimal;
 import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.toBoolean;
 
@@ -98,7 +99,7 @@ class InvoiceDecoratorTest {
 		assertThat(result.getAmountVatExcluded()).isEqualTo(toBigDecimal(invoiceDetail.getAmountVatExcluded(), DECIMAL_POINTS));
 		assertThat(result.getVat()).isEqualTo(toBigDecimal(invoiceDetail.getVat(), DECIMAL_POINTS));
 		assertThat(result.getVatRate()).isEqualTo(toBigDecimal(invoiceDetail.getVatRate(), DECIMAL_POINTS));
-		assertThat(result.getQuantity()).isEqualTo(toBigDecimal(invoiceDetail.getQuantity(), DECIMAL_POINTS));
+		assertThat(result.getQuantity()).isEqualTo(toBigDecimal(invoiceDetail.getQuantity(), QUANTITY_DECIMAL_POINTS));
 		assertThat(result.getUnit()).isEqualTo(invoiceDetail.getUnit());
 		assertThat(result.getUnitPrice()).isEqualTo(toBigDecimal(invoiceDetail.getUnitPrice(), DECIMAL_POINTS));
 		assertThat(result.getDescription()).isEqualTo(invoiceDetail.getDescription());

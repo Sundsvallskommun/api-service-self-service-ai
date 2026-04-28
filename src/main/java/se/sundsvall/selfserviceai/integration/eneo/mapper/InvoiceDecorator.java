@@ -19,6 +19,7 @@ import static se.sundsvall.selfserviceai.integration.eneo.util.ConversionUtil.to
 public class InvoiceDecorator {
 
 	static final int DECIMAL_POINTS = 2;
+	static final int QUANTITY_DECIMAL_POINTS = 8;
 
 	private InvoiceDecorator() {}
 
@@ -71,7 +72,7 @@ public class InvoiceDecorator {
 			.withAmountVatExcluded(toBigDecimal(invoiceDetail.getAmountVatExcluded(), DECIMAL_POINTS))
 			.withVat(toBigDecimal(invoiceDetail.getVat(), DECIMAL_POINTS))
 			.withVatRate(toBigDecimal(invoiceDetail.getVatRate(), DECIMAL_POINTS))
-			.withQuantity(toBigDecimal(invoiceDetail.getQuantity(), DECIMAL_POINTS))
+			.withQuantity(toBigDecimal(invoiceDetail.getQuantity(), QUANTITY_DECIMAL_POINTS))
 			.withUnit(invoiceDetail.getUnit())
 			.withUnitPrice(toBigDecimal(invoiceDetail.getUnitPrice(), DECIMAL_POINTS))
 			.withDescription(invoiceDetail.getDescription())
