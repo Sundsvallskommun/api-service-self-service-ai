@@ -5,7 +5,7 @@
 			"amountVatExcluded": 8,
 			"vat": 2,
 			"vatRate": 20,
-			"quantity": 10,
+			"quantity": 0.08493151,
 			"unit": "unit",
 			"unitPrice": 1,
 			"description": "description",

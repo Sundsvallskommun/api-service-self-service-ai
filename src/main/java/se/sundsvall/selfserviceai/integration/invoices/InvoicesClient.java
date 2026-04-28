@@ -24,8 +24,8 @@ public interface InvoicesClient {
 	 */
 	@GetMapping(path = "/{municipalityId}/{invoiceOrigin}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	InvoicesResponse getInvoices(
-		@PathVariable("municipalityId") final String municipalityId,
-		@PathVariable("invoiceOrigin") final InvoiceOrigin origin,
+		@PathVariable final String municipalityId,
+		@PathVariable final InvoiceOrigin invoiceOrigin,
 		@RequestParam("page") final int page,
 		@RequestParam("limit") final int limit,
 		@RequestParam("partyId") final String partyId,
@@ -43,7 +43,7 @@ public interface InvoicesClient {
 	 */
 	@GetMapping(path = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	InvoiceDetailsResponse getInvoiceDetails(
-		@PathVariable("municipalityId") final String municipalityId,
-		@PathVariable("organizationNumber") final String organizationNumber,
-		@PathVariable("invoiceNumber") final String invoiceNumber);
+		@PathVariable final String municipalityId,
+		@PathVariable final String organizationNumber,
+		@PathVariable final String invoiceNumber);
 }
