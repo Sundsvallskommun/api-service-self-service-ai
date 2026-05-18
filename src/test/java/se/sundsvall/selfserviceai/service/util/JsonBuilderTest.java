@@ -1,5 +1,7 @@
 package se.sundsvall.selfserviceai.service.util;
 
+import generated.se.sundsvall.eneo.Message;
+import generated.se.sundsvall.eneo.SessionPublic;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +17,6 @@ import se.sundsvall.selfserviceai.integration.eneo.mapper.AgreementDecorator;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.MeasurementDecorator;
-import se.sundsvall.selfserviceai.integration.eneo.model.Message;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.lime.mapper.LimeMapper;
 import tools.jackson.databind.ObjectMapper;
@@ -71,11 +71,10 @@ class JsonBuilderTest {
 		final var name = "name";
 		final var partyId = "9b4d1641-a868-401b-a1a1-f393e291a80c";
 		final var customerNbr = "customerNbr";
-		final var request = LimeMapper.toChatHistoryRequest(partyId, customerNbr, SessionPublic.builder()
-			.withId(sessionId)
-			.withName(name)
-			.withMessages(List.of(Message.builder().build()))
-			.build());
+		final var request = LimeMapper.toChatHistoryRequest(partyId, customerNbr, new SessionPublic()
+			.id(sessionId)
+			.name(name)
+			.messages(List.of(new Message())));
 
 		final var jsonBuilder = new JsonBuilder();
 		assertThat(jsonBuilder.toJsonString(request)).isEqualToIgnoringWhitespace(expected);

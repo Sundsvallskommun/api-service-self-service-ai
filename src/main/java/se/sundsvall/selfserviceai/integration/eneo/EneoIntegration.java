@@ -1,5 +1,7 @@
 package se.sundsvall.selfserviceai.integration.eneo;
 
+import generated.se.sundsvall.eneo.AskResponse;
+import generated.se.sundsvall.eneo.SessionPublic;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -7,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
@@ -103,7 +103,7 @@ public class EneoIntegration {
 		final var content = jsonBuilder.toJsonString(eneoModel);
 
 		LOG.debug("Uploading file with content '{}'", content);
-		return client.uploadFile(mapper.toInformationFile(content)).id();
+		return client.uploadFile(mapper.toInformationFile(content)).getId();
 	}
 
 	/**

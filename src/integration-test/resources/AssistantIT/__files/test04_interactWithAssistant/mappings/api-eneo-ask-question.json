@@ -19,7 +19,8 @@
 						}
 					]
 				},
-				"ignoreArrayOrder": true
+				"ignoreArrayOrder": true,
+				"ignoreExtraElements": true
 			}
 		],
 		"urlPath": "/eneo/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/4dc21d5e-8a70-45fb-b225-367fcd383a2e/"

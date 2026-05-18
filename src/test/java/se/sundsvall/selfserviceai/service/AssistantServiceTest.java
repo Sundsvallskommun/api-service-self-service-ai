@@ -1,6 +1,8 @@
 package se.sundsvall.selfserviceai.service;
 
 import generated.se.sundsvall.agreement.Agreement;
+import generated.se.sundsvall.eneo.AskResponse;
+import generated.se.sundsvall.eneo.SessionPublic;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.invoices.Invoice;
@@ -47,8 +49,6 @@ import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 import se.sundsvall.selfserviceai.integration.eneo.EneoIntegration;
 import se.sundsvall.selfserviceai.integration.eneo.configuration.EneoProperties;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
@@ -175,9 +175,8 @@ class AssistantServiceTest {
 	void createSession() {
 		// Arrange
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(eneoIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenReturn(AskResponse.builder()
-			.withSessionId(SESSION_ID)
-			.build());
+		when(eneoIntegrationMock.askAssistant(eq(ASSISTANT_ID), anyString())).thenReturn(new AskResponse()
+			.sessionId(SESSION_ID));
 
 		// Act
 		final var response = assistantService.createSession(MUNICIPALITY_ID, PARTY_ID);
@@ -479,7 +478,7 @@ class AssistantServiceTest {
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(eneoIntegrationMock.askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()))).thenReturn(Optional.of(AskResponse.builder().withAnswer(answer).build()));
+		when(eneoIntegrationMock.askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()))).thenReturn(Optional.of(new AskResponse().answer(answer)));
 
 		// Act
 		final var result = assistantService.askQuestion(MUNICIPALITY_ID, SESSION_ID, question);
@@ -570,7 +569,7 @@ class AssistantServiceTest {
 			.withSessionId(SESSION_ID.toString())
 			.withPartyId(PARTY_ID)
 			.build();
-		SessionPublic.builder().build();
+		new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
@@ -600,7 +599,7 @@ class AssistantServiceTest {
 			.withFiles(new ArrayList<>(List.of(fileEntity)))
 			.withPartyId(PARTY_ID)
 			.build();
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
@@ -630,7 +629,7 @@ class AssistantServiceTest {
 			.withInitialized(OffsetDateTime.now())
 			.withPartyId(PARTY_ID)
 			.build();
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
@@ -661,7 +660,7 @@ class AssistantServiceTest {
 			.withInitialized(OffsetDateTime.now())
 			.withPartyId(PARTY_ID)
 			.build();
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 		final var exception = Problem.valueOf(BAD_GATEWAY, "Big and stout");
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
@@ -702,7 +701,7 @@ class AssistantServiceTest {
 			.withFiles(new ArrayList<>(List.of(fileEntity)))
 			.withPartyId(PARTY_ID)
 			.build();
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
@@ -732,7 +731,7 @@ class AssistantServiceTest {
 			.withInitialized(OffsetDateTime.now())
 			.withPartyId(PARTY_ID)
 			.build();
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
@@ -776,7 +775,7 @@ class AssistantServiceTest {
 		final var inactiveThreshold = 10;
 		final var sessionId = UUID.randomUUID();
 		final var fileId = UUID.randomUUID();
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 		// Arrange
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(session);

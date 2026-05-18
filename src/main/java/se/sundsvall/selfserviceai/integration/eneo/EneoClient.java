@@ -1,5 +1,9 @@
 package se.sundsvall.selfserviceai.integration.eneo;
 
+import generated.se.sundsvall.eneo.AskAssistant;
+import generated.se.sundsvall.eneo.AskResponse;
+import generated.se.sundsvall.eneo.FilePublic;
+import generated.se.sundsvall.eneo.SessionPublic;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import se.sundsvall.selfserviceai.integration.eneo.configuration.EneoConfiguration;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskAssistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;

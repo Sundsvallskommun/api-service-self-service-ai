@@ -106,7 +106,7 @@ public class AssistantService {
 
 	public SessionResponse createSession(final String municipalityId, final String partyId) {
 		final var session = eneoIntegration.askAssistant(eneoProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
-		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId(), partyId));
+		sessionRepository.save(toSessionEntity(municipalityId, session.getSessionId(), partyId));
 
 		return toSessionResponse(eneoProperties.assistantId(), session);
 	}

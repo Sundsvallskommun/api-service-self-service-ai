@@ -1,5 +1,7 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
+import generated.se.sundsvall.eneo.AskAssistant;
+import generated.se.sundsvall.eneo.ModelId;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
@@ -16,8 +18,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskAssistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
@@ -54,25 +54,22 @@ public class EneoMapper {
 	 * @return                AskAssistant object with provided data
 	 */
 	public AskAssistant toAskAssistant(final String input, List<String> fileReferences) {
-		return AskAssistant.builder()
-			.withQuestion(input)
-			.withFiles(toFilesPublic(fileReferences))
-			.build();
+		return new AskAssistant()
+			.question(input)
+			.files(toModelIds(fileReferences));
 	}
 
-	static List<FilePublic> toFilesPublic(final List<String> fileReferences) {
+	static List<ModelId> toModelIds(final List<String> fileReferences) {
 		return ofNullable(fileReferences).orElse(emptyList()).stream()
-			.map(EneoMapper::toFilePublic)
+			.map(EneoMapper::toModelId)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	static FilePublic toFilePublic(final String fileId) {
+	static ModelId toModelId(final String fileId) {
 		return ofNullable(fileId)
 			.map(UUID::fromString)
-			.map(id -> FilePublic.builder()
-				.withId(id)
-				.build())
+			.map(id -> new ModelId().id(id))
 			.orElse(null);
 	}
 

@@ -1,9 +1,9 @@
 package se.sundsvall.selfserviceai.integration.lime;
 
+import generated.se.sundsvall.eneo.SessionPublic;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsResponsesChathistorikChathistorikResponse;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toHistoryEntity;
@@ -32,7 +32,7 @@ public class LimeIntegration {
 			limeClient.saveChatHistory(chatHistory);
 		} catch (final Exception e) {
 			final var limeHistory = jsonBuilder.toJsonString(chatHistory);
-			final var historyEntity = toHistoryEntity(customerNbr, limeHistory, partyId, session.id());
+			final var historyEntity = toHistoryEntity(customerNbr, limeHistory, partyId, session.getId());
 
 			historyRepository.save(historyEntity);
 		}

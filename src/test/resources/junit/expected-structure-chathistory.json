@@ -2,7 +2,10 @@
 	"chatSession": {
 		"id": "ec8fccba-318d-4c67-9251-c7acdb1f8f47",
 		"messages": [
-			{}
+			{
+				"files": [],
+				"references": []
+			}
 		],
 		"name": "name"
 	},

@@ -2,6 +2,16 @@ package se.sundsvall.selfserviceai;
 
 import generated.se.sundsvall.agreement.Agreement;
 import generated.se.sundsvall.agreement.Category;
+import generated.se.sundsvall.eneo.CompletionModel;
+import generated.se.sundsvall.eneo.FilePublic;
+import generated.se.sundsvall.eneo.InfoBlobAskAssistantPublic;
+import generated.se.sundsvall.eneo.InfoBlobMetadata;
+import generated.se.sundsvall.eneo.InfoBlobPublicNoText;
+import generated.se.sundsvall.eneo.Message;
+import generated.se.sundsvall.eneo.SessionFeedback;
+import generated.se.sundsvall.eneo.SessionPublic;
+import generated.se.sundsvall.eneo.ToolAssistant;
+import generated.se.sundsvall.eneo.UseTools;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
@@ -19,15 +29,6 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
-import se.sundsvall.selfserviceai.integration.eneo.model.Assistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.eneo.model.Message;
-import se.sundsvall.selfserviceai.integration.eneo.model.Metadata;
-import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionFeedback;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice;
@@ -158,7 +159,8 @@ public class TestFactory {
 	public static final String ANSWER = "answer";
 	public static final String QUESTION = "question";
 	public static final String TEXT = "text";
-	public static final int VALUE = 456;
+	public static final SessionFeedback.ValueEnum VALUE = SessionFeedback.ValueEnum.NUMBER_1;
+	public static final BigDecimal REFERENCE_SCORE = new BigDecimal("0.95");
 	public static final UUID ASSISTANT_ID = UUID.randomUUID();
 	public static final UUID REFERENCE_ID = UUID.randomUUID();
 	public static final UUID GROUP_ID = UUID.randomUUID();
@@ -192,100 +194,101 @@ public class TestFactory {
 	public static final boolean VISION = true;
 
 	public static SessionPublic createSession() {
-		return SessionPublic.builder()
-			.withCreatedAt(SESSION_CREATED)
-			.withFeedback(createSessionFeedback())
-			.withId(SESSION_ID)
-			.withMessages(List.of(Message.builder()
-				.withAnswer(ANSWER)
-				.withCompletionModel(createCompletionModel())
-				.withCreatedAt(MESSAGE_CREATED)
-				.withFiles(List.of(createFilePublic()))
-				.withId(MESSAGE_ID)
-				.withQuestion(QUESTION)
-				.withReferences(List.of(createReference()))
-				.withTools(createTools())
-				.withUpdatedAt(MESSAGE_UPDATED)
-				.build()))
-			.withName(SESSION_NAME)
-			.withUpdatedAt(SESSION_UPDATED)
-			.build();
+		return new SessionPublic()
+			.createdAt(SESSION_CREATED)
+			.feedback(createSessionFeedback())
+			.id(SESSION_ID)
+			.messages(List.of(new Message()
+				.answer(ANSWER)
+				.completionModel(createCompletionModel())
+				.createdAt(MESSAGE_CREATED)
+				.files(List.of(createFilePublic()))
+				.id(MESSAGE_ID)
+				.question(QUESTION)
+				.references(List.of(createMessageReference()))
+				.tools(createTools())
+				.updatedAt(MESSAGE_UPDATED)))
+			.name(SESSION_NAME)
+			.updatedAt(SESSION_UPDATED);
 	}
 
-	private static Tools createTools() {
-		return Tools.builder()
-			.withAssistants(List.of(createAssistant()))
-			.build();
+	private static UseTools createTools() {
+		return new UseTools()
+			.assistants(List.of(createAssistant()));
 	}
 
-	public static Assistant createAssistant() {
-		return Assistant.builder()
-			.withId(ASSISTANT_ID)
-			.build();
+	public static ToolAssistant createAssistant() {
+		return new ToolAssistant().id(ASSISTANT_ID);
 	}
 
-	public static Reference createReference() {
-		return Reference.builder()
-			.withCreatedAt(REFERENCE_CREATED)
-			.withGroupId(GROUP_ID)
-			.withId(REFERENCE_ID)
-			.withMetadata(createMetadata())
-			.withUpdatedAt(REFERENCE_UPDATED)
-			.withWebsiteId(WEBSITE_ID)
-			.build();
+	public static InfoBlobAskAssistantPublic createReference() {
+		return new InfoBlobAskAssistantPublic()
+			.createdAt(REFERENCE_CREATED)
+			.groupId(GROUP_ID)
+			.id(REFERENCE_ID)
+			.metadata(createMetadata())
+			.score(REFERENCE_SCORE)
+			.updatedAt(REFERENCE_UPDATED)
+			.websiteId(WEBSITE_ID);
 	}
 
-	private static Metadata createMetadata() {
-		return Metadata.builder()
-			.withEmbeddingModelId(EMBEDDING_MODEL_ID)
-			.withSize(METADATA_SIZE)
-			.withTitle(METADATA_TITLE)
-			.withUrl(METADATA_URL)
-			.build();
+	public static InfoBlobPublicNoText createMessageReference() {
+		return new InfoBlobPublicNoText()
+			.createdAt(REFERENCE_CREATED)
+			.groupId(GROUP_ID)
+			.id(REFERENCE_ID)
+			.metadata(createMetadata())
+			.updatedAt(REFERENCE_UPDATED)
+			.websiteId(WEBSITE_ID);
+	}
+
+	private static InfoBlobMetadata createMetadata() {
+		return new InfoBlobMetadata()
+			.embeddingModelId(EMBEDDING_MODEL_ID)
+			.size(METADATA_SIZE)
+			.title(METADATA_TITLE)
+			.url(METADATA_URL);
 	}
 
 	private static CompletionModel createCompletionModel() {
-		return CompletionModel.builder()
-			.withBaseUrl(BASE_URL)
-			.withCreatedAt(COMPLETION_MODEL_CREATED)
-			.withDeploymentName(DEPLOYMENT_NAME)
-			.withDescription(DESCRIPTION)
-			.withFamily(FAMILY)
-			.withHfLink(HF_LINK)
-			.withHosting(HOSTING)
-			.withId(COMPLETION_MODEL_ID)
-			.withIsDeprecated(DEPRECATED)
-			.withIsOrgDefault(ORG_DEFAULT)
-			.withIsOrgEnabled(ORG_ENABLED)
-			.withName(NAME)
-			.withNickname(NICKNAME)
-			.withNrBillionParameters(NR_BILLION_PARAMETERS)
-			.withOpenSource(OPEN_SOURCE)
-			.withOrg(ORG)
-			.withReasoning(REASONING)
-			.withStability(STABILITY)
-			.withTokenLimit(TOKEN_LIMIT)
-			.withUpdatedAt(COMPLETION_MODEL_UPDATED)
-			.withVision(VISION)
-			.build();
+		return new CompletionModel()
+			.baseUrl(BASE_URL)
+			.createdAt(COMPLETION_MODEL_CREATED)
+			.deploymentName(DEPLOYMENT_NAME)
+			.description(DESCRIPTION)
+			.family(FAMILY)
+			.hfLink(HF_LINK)
+			.hosting(HOSTING)
+			.id(COMPLETION_MODEL_ID)
+			.isDeprecated(DEPRECATED)
+			.isOrgDefault(ORG_DEFAULT)
+			.isOrgEnabled(ORG_ENABLED)
+			.name(NAME)
+			.nickname(NICKNAME)
+			.nrBillionParameters(NR_BILLION_PARAMETERS)
+			.openSource(OPEN_SOURCE)
+			.org(ORG)
+			.reasoning(REASONING)
+			.stability(STABILITY)
+			.tokenLimit(TOKEN_LIMIT)
+			.updatedAt(COMPLETION_MODEL_UPDATED)
+			.vision(VISION);
 	}
 
 	public static SessionFeedback createSessionFeedback() {
-		return SessionFeedback.builder()
-			.withText(TEXT)
-			.withValue(VALUE)
-			.build();
+		return new SessionFeedback()
+			.text(TEXT)
+			.value(VALUE);
 	}
 
 	public static FilePublic createFilePublic() {
-		return FilePublic.builder()
-			.withCreatedAt(FILE_CREATED)
-			.withId(FILE_ID)
-			.withMimeType(FILE_MIME_TYPE)
-			.withName(FILE_NAME)
-			.withSize(FILE_SIZE)
-			.withUpdatedAt(FILE_UPDATED)
-			.build();
+		return new FilePublic()
+			.createdAt(FILE_CREATED)
+			.id(FILE_ID)
+			.mimetype(FILE_MIME_TYPE)
+			.name(FILE_NAME)
+			.size(FILE_SIZE)
+			.updatedAt(FILE_UPDATED);
 	}
 
 	public static InstalledBaseCustomer createCustomer() {
