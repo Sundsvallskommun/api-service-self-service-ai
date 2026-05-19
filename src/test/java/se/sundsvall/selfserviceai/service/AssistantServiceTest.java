@@ -247,7 +247,7 @@ class AssistantServiceTest {
 		when(fileRepositoryMock.save(any(FileEntity.class))).then(args -> args.getArgument(0));
 
 		// Act
-		assistantService.populateWithInformation(SESSION_ID, sessionRequest, null);
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, (String) null);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -314,7 +314,7 @@ class AssistantServiceTest {
 		when(sessionRepositoryMock.findById(anyString())).thenReturn(Optional.of(sessionEntity));
 
 		// Act
-		assistantService.populateWithInformation(SESSION_ID, sessionRequest, null);
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, (String) null);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -352,7 +352,7 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.uploadFile(eneoModel)).thenThrow(exception);
 
 		// Act
-		assistantService.populateWithInformation(SESSION_ID, sessionRequest, isNull(uuid) ? null : UUID.fromString(uuid));
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, uuid);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
@@ -519,11 +519,10 @@ class AssistantServiceTest {
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock).assistantId();
 		verify(eneoIntegrationMock).askFollowUp(ASSISTANT_ID, SESSION_ID.toString(), question, List.of(fileId.toString()));
-		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
+		verify(sessionRepositoryMock, never()).save(any(SessionEntity.class));
 
 		assertThat(result).isNull();
-		assertThat(sessionEntityCaptor.getValue()).isSameAs(sessionEntity);
-		assertThat(sessionEntityCaptor.getValue().getLastAccessed()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
+		assertThat(sessionEntity.getLastAccessed()).isNull();
 	}
 
 	@Test
@@ -541,6 +540,30 @@ class AssistantServiceTest {
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+
+		assertThat(result).isNotNull();
+		assertThat(result.getAnswer()).isEqualTo("Assistant is not ready yet");
+	}
+
+	@Test
+	void askQuestionToFailedSession() {
+		// Arrange
+		final var question = "question";
+		final var sessionEntity = SessionEntity.builder()
+			.withSessionId(SESSION_ID.toString())
+			.withInitialized(OffsetDateTime.now())
+			.withStatus("Initialization failed. Error message is 'boom'. Filter logs on log id 'abc' for more information.")
+			.build();
+
+		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+
+		// Act
+		final var result = assistantService.askQuestion(MUNICIPALITY_ID, SESSION_ID, question);
+
+		// Assert and verify
+		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(eneoIntegrationMock, never()).askFollowUp(any(), any(), any(), any());
+		verify(sessionRepositoryMock, never()).save(any(SessionEntity.class));
 
 		assertThat(result).isNotNull();
 		assertThat(result.getAnswer()).isEqualTo("Assistant is not ready yet");
@@ -576,7 +599,7 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID().toString());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -608,7 +631,7 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID().toString());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -637,7 +660,7 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID());
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID().toString());
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -669,7 +692,7 @@ class AssistantServiceTest {
 		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 
 		// Act
-		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, isNull(uuid) ? null : UUID.fromString(uuid));
+		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, uuid);
 
 		// Assert and verify
 		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
@@ -689,7 +712,7 @@ class AssistantServiceTest {
 	@Test
 	void deleteSessionWhenFilesNotSuccessfullyDeleted() {
 		// Arrange
-		final var requestId = UUID.randomUUID();
+		final var requestId = UUID.randomUUID().toString();
 		final var fileId = UUID.randomUUID();
 		final var fileEntity = FileEntity.builder()
 			.withFileId(fileId.toString())
@@ -724,7 +747,7 @@ class AssistantServiceTest {
 	@Test
 	void deleteSessionWhenSessionNotSuccessfullyDeleted() {
 		// Arrange
-		final var requestId = UUID.randomUUID();
+		final var requestId = UUID.randomUUID().toString();
 		final var sessionEntity = SessionEntity.builder()
 			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
@@ -754,7 +777,7 @@ class AssistantServiceTest {
 	@Test
 	void deleteSessionForNonExistingSession() {
 		// Arrange
-		final var requestId = UUID.randomUUID();
+		final var requestId = UUID.randomUUID().toString();
 		SessionEntity.builder()
 			.withSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())

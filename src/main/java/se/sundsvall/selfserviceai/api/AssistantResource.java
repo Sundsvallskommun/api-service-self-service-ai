@@ -70,7 +70,7 @@ class AssistantResource {
 		final var sessionResponse = assistantService.createSession(municipalityId, request.getPartyId());
 
 		// Populate session with information (asynchronously)
-		assistantService.populateWithInformation(UUID.fromString(sessionResponse.getSessionId()), request, UUID.fromString(RequestId.get()));
+		assistantService.populateWithInformation(UUID.fromString(sessionResponse.getSessionId()), request, RequestId.get());
 
 		// Return created with body (as location does not fit here)
 		return status(CREATED).body(sessionResponse);
@@ -113,7 +113,7 @@ class AssistantResource {
 		@Parameter(name = "id", description = "Session id", example = "f5211067-b3c7-4394-b84a-aa3fa65507e3") @PathVariable("id") @ValidUuid final String sessionId) {
 
 		// Handle removal of session (asynchronously)
-		assistantService.deleteSessionById(municipalityId, UUID.fromString(sessionId), UUID.fromString(RequestId.get()));
+		assistantService.deleteSessionById(municipalityId, UUID.fromString(sessionId), RequestId.get());
 
 		return status(NO_CONTENT).header(CONTENT_TYPE, ALL_VALUE).build();
 	}
