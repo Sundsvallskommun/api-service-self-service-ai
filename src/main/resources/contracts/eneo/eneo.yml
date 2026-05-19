@@ -16045,7 +16045,8 @@ components:
           type: array
           default: []
           items:
-            $ref: '#/components/schemas/ModelId'
+            type: string
+            format: uuid
           maxItems: 20
           title: Files
         stream:

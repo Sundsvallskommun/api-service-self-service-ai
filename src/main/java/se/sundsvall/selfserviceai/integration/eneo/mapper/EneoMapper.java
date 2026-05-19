@@ -1,7 +1,6 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
 import generated.se.sundsvall.eneo.AskAssistant;
-import generated.se.sundsvall.eneo.ModelId;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
@@ -56,21 +55,14 @@ public class EneoMapper {
 	public AskAssistant toAskAssistant(final String input, List<String> fileReferences) {
 		return new AskAssistant()
 			.question(input)
-			.files(toModelIds(fileReferences));
+			.files(toFileIds(fileReferences));
 	}
 
-	static List<ModelId> toModelIds(final List<String> fileReferences) {
+	static List<UUID> toFileIds(final List<String> fileReferences) {
 		return ofNullable(fileReferences).orElse(emptyList()).stream()
-			.map(EneoMapper::toModelId)
 			.filter(Objects::nonNull)
-			.toList();
-	}
-
-	static ModelId toModelId(final String fileId) {
-		return ofNullable(fileId)
 			.map(UUID::fromString)
-			.map(id -> new ModelId().id(id))
-			.orElse(null);
+			.toList();
 	}
 
 	/**

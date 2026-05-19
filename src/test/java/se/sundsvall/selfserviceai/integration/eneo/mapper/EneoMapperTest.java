@@ -81,11 +81,7 @@ class EneoMapperTest {
 
 		// Assert
 		assertThat(result.getQuestion()).isEqualTo(input);
-		assertThat(result.getFiles()).hasSize(2)
-			.allSatisfy(modelId -> assertThat(modelId).hasAllNullFieldsOrPropertiesExcept("id"))
-			.satisfiesExactlyInAnyOrder(
-				modelId -> assertThat(modelId.getId()).isEqualTo(UUID.fromString(fileId1)),
-				modelId -> assertThat(modelId.getId()).isEqualTo(UUID.fromString(fileId2)));
+		assertThat(result.getFiles()).containsExactlyInAnyOrder(UUID.fromString(fileId1), UUID.fromString(fileId2));
 	}
 
 	@Test

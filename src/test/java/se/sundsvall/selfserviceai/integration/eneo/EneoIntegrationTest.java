@@ -3,7 +3,6 @@ package se.sundsvall.selfserviceai.integration.eneo;
 import generated.se.sundsvall.eneo.AskAssistant;
 import generated.se.sundsvall.eneo.AskResponse;
 import generated.se.sundsvall.eneo.FilePublic;
-import generated.se.sundsvall.eneo.ModelId;
 import generated.se.sundsvall.eneo.SessionPublic;
 import java.util.List;
 import java.util.UUID;
@@ -120,16 +119,14 @@ class EneoIntegrationTest {
 		when(eneoClientMock.askFollowUp(eq(assistantId), eq(sessionId), askAssistantCaptor.capture())).thenReturn(response);
 		when(eneoMapperMock.toAskAssistant(input, List.of(fileId))).thenReturn(new AskAssistant()
 			.question(input)
-			.files(List.of(new ModelId().id(UUID.fromString(fileId)))));
+			.files(List.of(UUID.fromString(fileId))));
 
 		final var result = integration.askFollowUp(assistantId, sessionId, input, List.of(fileId));
 		final var askAssistant = askAssistantCaptor.getValue();
 
 		assertThat(result).isPresent().hasValue(response);
 		assertThat(askAssistant.getQuestion()).isEqualTo(input);
-		assertThat(askAssistant.getFiles()).hasSize(1).satisfiesExactly(f -> {
-			assertThat(f.getId()).isEqualTo(UUID.fromString(fileId));
-		});
+		assertThat(askAssistant.getFiles()).containsExactly(UUID.fromString(fileId));
 
 		verify(eneoMapperMock).toAskAssistant(input, List.of(fileId));
 		verify(eneoClientMock).askFollowUp(assistantId, sessionId, askAssistant);
@@ -152,9 +149,7 @@ class EneoIntegrationTest {
 		final var askAssistant = askAssistantCaptor.getValue();
 		assertThat(result).isEmpty();
 		assertThat(askAssistant.getQuestion()).isEqualTo(input);
-		assertThat(askAssistant.getFiles()).hasSize(1).satisfiesExactly(fp -> {
-			assertThat(fp.getId()).isEqualTo(UUID.fromString(fileId));
-		});
+		assertThat(askAssistant.getFiles()).containsExactly(UUID.fromString(fileId));
 
 		verify(eneoMapperMock).toAskAssistant(input, List.of(fileId));
 		verify(eneoClientMock).askFollowUp(assistantId, sessionId, askAssistant);
