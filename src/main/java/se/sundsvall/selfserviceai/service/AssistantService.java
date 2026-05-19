@@ -207,8 +207,11 @@ public class AssistantService {
 		final var session = sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
-		if (isNull(session.getInitialized()) || isInitializationFailed(session)) {
+		if (isNull(session.getInitialized())) {
 			return toQuestionResponse("Assistant is not ready yet");
+		}
+		if (isInitializationFailed(session)) {
+			return toQuestionResponse("Assistant initialization failed, please create a new session");
 		}
 
 		final var eneoResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());

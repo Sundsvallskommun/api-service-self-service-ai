@@ -566,7 +566,7 @@ class AssistantServiceTest {
 		verify(sessionRepositoryMock, never()).save(any(SessionEntity.class));
 
 		assertThat(result).isNotNull();
-		assertThat(result.getAnswer()).isEqualTo("Assistant is not ready yet");
+		assertThat(result.getAnswer()).isEqualTo("Assistant initialization failed, please create a new session");
 	}
 
 	@Test
