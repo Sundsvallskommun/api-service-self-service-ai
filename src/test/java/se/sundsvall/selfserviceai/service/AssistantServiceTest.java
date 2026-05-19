@@ -603,7 +603,7 @@ class AssistantServiceTest {
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 		when(eneoIntegrationMock.deleteFile(fileId.toString())).thenReturn(true);
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
@@ -633,7 +633,7 @@ class AssistantServiceTest {
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
@@ -665,7 +665,7 @@ class AssistantServiceTest {
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
-		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 
 		// Act
@@ -705,7 +705,7 @@ class AssistantServiceTest {
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
@@ -735,7 +735,7 @@ class AssistantServiceTest {
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
-		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
@@ -778,7 +778,7 @@ class AssistantServiceTest {
 		final var session = new SessionPublic();
 		// Arrange
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(eneoIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(session);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(Optional.of(session));
 		when(eneoIntegrationMock.deleteFile(any())).thenReturn(true);
 		when(eneoIntegrationMock.deleteSession(any(), any())).thenReturn(true);
 		when(sessionRepositoryMock.findAllByLastAccessedBeforeOrLastAccessedIsNull(any())).thenReturn(List.of(

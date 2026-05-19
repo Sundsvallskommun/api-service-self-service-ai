@@ -256,8 +256,8 @@ public class AssistantService {
 		try {
 			// Only save chat history if session has been successfully initialized (i.e. the session has been possible to use)
 			if (nonNull(sessionEntity.getInitialized())) {
-				final var session = eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId());
-				limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
+				eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId())
+					.ifPresent(session -> limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session));
 			}
 			return sessionEntity;
 		} catch (final Exception e) {

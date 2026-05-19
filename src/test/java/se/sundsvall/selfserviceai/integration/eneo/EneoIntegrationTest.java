@@ -4,6 +4,7 @@ import generated.se.sundsvall.eneo.AskAssistant;
 import generated.se.sundsvall.eneo.AskResponse;
 import generated.se.sundsvall.eneo.FilePublic;
 import generated.se.sundsvall.eneo.ModelId;
+import generated.se.sundsvall.eneo.SessionPublic;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+import se.sundsvall.dept44.exception.ClientProblem;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
 import se.sundsvall.selfserviceai.integration.eneo.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
@@ -28,6 +30,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class EneoIntegrationTest {
@@ -205,6 +209,58 @@ class EneoIntegrationTest {
 	 * Test scenario where everything works as expected
 	 */
 	@Test
+	void getSession_1() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+		final var session = new SessionPublic().id(UUID.fromString(sessionId));
+
+		when(eneoClientMock.getSession(assistantId, sessionId)).thenReturn(session);
+
+		final var result = integration.getSession(assistantId, sessionId);
+
+		assertThat(result).isPresent().hasValue(session);
+
+		verify(eneoClientMock).getSession(assistantId, sessionId);
+	}
+
+	/**
+	 * 404 from Eneo means the session is already gone; treat as empty rather than rethrowing.
+	 */
+	@Test
+	void getSession_returnsEmptyOnNotFound() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+
+		when(eneoClientMock.getSession(assistantId, sessionId)).thenThrow(new ClientProblem(NOT_FOUND, "gone"));
+
+		final var result = integration.getSession(assistantId, sessionId);
+
+		assertThat(result).isEmpty();
+
+		verify(eneoClientMock).getSession(assistantId, sessionId);
+	}
+
+	/**
+	 * Non-404 client problems still propagate.
+	 */
+	@Test
+	void getSession_rethrowsOtherClientProblems() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+		final var exception = new ClientProblem(BAD_GATEWAY, "down");
+
+		doThrow(exception).when(eneoClientMock).getSession(assistantId, sessionId);
+
+		final var thrown = assertThrows(ClientProblem.class, () -> integration.getSession(assistantId, sessionId));
+		assertThat(thrown).isSameAs(exception);
+
+		verify(eneoClientMock).getSession(assistantId, sessionId);
+	}
+
+	/**
+	 * Test scenario where everything works as expected
+	 */
+	@Test
 	void deleteFile_1() {
 		final var fileId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
 
@@ -228,6 +284,22 @@ class EneoIntegrationTest {
 		final var result = integration.deleteFile(fileId);
 
 		assertThat(result).isFalse();
+
+		verify(eneoClientMock).deleteFile(fileId);
+	}
+
+	/**
+	 * 404 from Eneo means the file is already gone; treat as a successful deletion so callers can clean up locally.
+	 */
+	@Test
+	void deleteFile_returnsTrueOnNotFound() {
+		final var fileId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+
+		doThrow(new ClientProblem(NOT_FOUND, "gone")).when(eneoClientMock).deleteFile(fileId);
+
+		final var result = integration.deleteFile(fileId);
+
+		assertThat(result).isTrue();
 
 		verify(eneoClientMock).deleteFile(fileId);
 	}
@@ -261,6 +333,23 @@ class EneoIntegrationTest {
 		final var result = integration.deleteSession(assistantId, sessionId);
 
 		assertThat(result).isFalse();
+
+		verify(eneoClientMock).deleteSession(assistantId, sessionId);
+	}
+
+	/**
+	 * 404 from Eneo means the session is already gone; treat as a successful deletion so the local row gets cleaned up.
+	 */
+	@Test
+	void deleteSession_returnsTrueOnNotFound() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+
+		doThrow(new ClientProblem(NOT_FOUND, "gone")).when(eneoClientMock).deleteSession(assistantId, sessionId);
+
+		final var result = integration.deleteSession(assistantId, sessionId);
+
+		assertThat(result).isTrue();
 
 		verify(eneoClientMock).deleteSession(assistantId, sessionId);
 	}
