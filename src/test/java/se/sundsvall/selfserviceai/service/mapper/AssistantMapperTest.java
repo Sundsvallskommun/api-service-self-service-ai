@@ -1,5 +1,13 @@
 package se.sundsvall.selfserviceai.service.mapper;
 
+import generated.se.sundsvall.eneo.AskResponse;
+import generated.se.sundsvall.eneo.CompletionModelPublic;
+import generated.se.sundsvall.eneo.FilePublic;
+import generated.se.sundsvall.eneo.InfoBlobAskAssistantPublic;
+import generated.se.sundsvall.eneo.InfoBlobMetadata;
+import generated.se.sundsvall.eneo.ToolAssistant;
+import generated.se.sundsvall.eneo.UseTools;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.eneo.model.Assistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.eneo.model.Metadata;
-import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
-import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -29,22 +30,22 @@ class AssistantMapperTest {
 	private AskResponse askResponseMock;
 
 	@Mock
-	private Assistant assistantMock;
+	private ToolAssistant assistantMock;
 
 	@Mock
-	private CompletionModel completionModelMock;
+	private CompletionModelPublic completionModelMock;
 
 	@Mock
 	private FilePublic fileMock;
 
 	@Mock
-	private Metadata metadataMock;
+	private InfoBlobMetadata metadataMock;
 
 	@Mock
-	private Reference referenceMock;
+	private InfoBlobAskAssistantPublic referenceMock;
 
 	@Mock
-	private Tools toolsMock;
+	private UseTools toolsMock;
 
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
@@ -64,7 +65,7 @@ class AssistantMapperTest {
 		final var assistantId = "assistantId";
 		final var sessionId = UUID.randomUUID();
 
-		when(askResponseMock.sessionId()).thenReturn(sessionId);
+		when(askResponseMock.getSessionId()).thenReturn(sessionId);
 
 		// Act
 		final var result = AssistantMapper.toSessionResponse(assistantId, askResponseMock);
@@ -74,7 +75,7 @@ class AssistantMapperTest {
 		assertThat(result.getAssistantId()).isEqualTo(assistantId);
 		assertThat(result.getSessionId()).isEqualTo(sessionId.toString());
 
-		verify(askResponseMock).sessionId();
+		verify(askResponseMock).getSessionId();
 	}
 
 	@Test
@@ -93,15 +94,15 @@ class AssistantMapperTest {
 		final var sessionId = UUID.randomUUID();
 		final var question = "is this a question?";
 
-		when(askResponseMock.answer()).thenReturn(answer);
-		when(askResponseMock.completionModel()).thenReturn(completionModelMock);
-		when(askResponseMock.files()).thenReturn(List.of(fileMock));
-		when(askResponseMock.question()).thenReturn(question);
-		when(askResponseMock.references()).thenReturn(List.of(referenceMock));
-		when(referenceMock.metadata()).thenReturn(metadataMock);
-		when(askResponseMock.sessionId()).thenReturn(sessionId);
-		when(askResponseMock.tools()).thenReturn(toolsMock);
-		when(toolsMock.assistants()).thenReturn(List.of(assistantMock));
+		when(askResponseMock.getAnswer()).thenReturn(answer);
+		when(askResponseMock.getModel()).thenReturn(completionModelMock);
+		when(askResponseMock.getFiles()).thenReturn(List.of(fileMock));
+		when(askResponseMock.getQuestion()).thenReturn(question);
+		when(askResponseMock.getReferences()).thenReturn(List.of(referenceMock));
+		when(referenceMock.getMetadata()).thenReturn(metadataMock);
+		when(askResponseMock.getSessionId()).thenReturn(sessionId);
+		when(askResponseMock.getTools()).thenReturn(toolsMock);
+		when(toolsMock.getAssistants()).thenReturn(List.of(assistantMock));
 
 		// Act
 		final var result = AssistantMapper.toQuestionResponse(askResponseMock);
@@ -155,13 +156,13 @@ class AssistantMapperTest {
 
 		input.add(null); // To verify filtering of null values
 
-		when(fileMock.createdAt()).thenReturn(createdAt);
-		when(fileMock.id()).thenReturn(id);
-		when(fileMock.mimeType()).thenReturn(mimeType);
-		when(fileMock.name()).thenReturn(name);
-		when(fileMock.size()).thenReturn(size);
-		when(fileMock.transcription()).thenReturn(transcription);
-		when(fileMock.updatedAt()).thenReturn(updatedAt);
+		when(fileMock.getCreatedAt()).thenReturn(createdAt);
+		when(fileMock.getId()).thenReturn(id);
+		when(fileMock.getMimetype()).thenReturn(mimeType);
+		when(fileMock.getName()).thenReturn(name);
+		when(fileMock.getSize()).thenReturn(size);
+		when(fileMock.getTranscription()).thenReturn(transcription);
+		when(fileMock.getUpdatedAt()).thenReturn(updatedAt);
 
 		// Act
 		final var result = AssistantMapper.toFiles(input);
@@ -198,13 +199,13 @@ class AssistantMapperTest {
 		final var transcription = "transcription";
 		final var updatedAt = OffsetDateTime.now();
 
-		when(fileMock.createdAt()).thenReturn(createdAt);
-		when(fileMock.id()).thenReturn(id);
-		when(fileMock.mimeType()).thenReturn(mimeType);
-		when(fileMock.name()).thenReturn(name);
-		when(fileMock.size()).thenReturn(size);
-		when(fileMock.transcription()).thenReturn(transcription);
-		when(fileMock.updatedAt()).thenReturn(updatedAt);
+		when(fileMock.getCreatedAt()).thenReturn(createdAt);
+		when(fileMock.getId()).thenReturn(id);
+		when(fileMock.getMimetype()).thenReturn(mimeType);
+		when(fileMock.getName()).thenReturn(name);
+		when(fileMock.getSize()).thenReturn(size);
+		when(fileMock.getTranscription()).thenReturn(transcription);
+		when(fileMock.getUpdatedAt()).thenReturn(updatedAt);
 
 		// Act
 		final var result = AssistantMapper.toFile(fileMock);
@@ -253,27 +254,27 @@ class AssistantMapperTest {
 		final var updatedAt = OffsetDateTime.now().minusDays(7);
 		final var vision = true;
 
-		when(completionModelMock.baseUrl()).thenReturn(baseUrl);
-		when(completionModelMock.createdAt()).thenReturn(createdAt);
-		when(completionModelMock.deploymentName()).thenReturn(deploymentName);
-		when(completionModelMock.description()).thenReturn(description);
-		when(completionModelMock.family()).thenReturn(family);
-		when(completionModelMock.hfLink()).thenReturn(hfLink);
-		when(completionModelMock.hosting()).thenReturn(hosting);
-		when(completionModelMock.id()).thenReturn(id);
-		when(completionModelMock.isDeprecated()).thenReturn(deprecated);
-		when(completionModelMock.isOrgDefault()).thenReturn(orgDefault);
-		when(completionModelMock.isOrgEnabled()).thenReturn(orgEnabled);
-		when(completionModelMock.name()).thenReturn(name);
-		when(completionModelMock.nickname()).thenReturn(nickname);
-		when(completionModelMock.nrBillionParameters()).thenReturn(nrBillionParameters);
-		when(completionModelMock.openSource()).thenReturn(openSource);
-		when(completionModelMock.org()).thenReturn(org);
-		when(completionModelMock.reasoning()).thenReturn(reasoning);
-		when(completionModelMock.stability()).thenReturn(stability);
-		when(completionModelMock.tokenLimit()).thenReturn(tokenLimit);
-		when(completionModelMock.updatedAt()).thenReturn(updatedAt);
-		when(completionModelMock.vision()).thenReturn(vision);
+		when(completionModelMock.getBaseUrl()).thenReturn(baseUrl);
+		when(completionModelMock.getCreatedAt()).thenReturn(createdAt);
+		when(completionModelMock.getDeploymentName()).thenReturn(deploymentName);
+		when(completionModelMock.getDescription()).thenReturn(description);
+		when(completionModelMock.getFamily()).thenReturn(family);
+		when(completionModelMock.getHfLink()).thenReturn(hfLink);
+		when(completionModelMock.getHosting()).thenReturn(hosting);
+		when(completionModelMock.getId()).thenReturn(id);
+		when(completionModelMock.getIsDeprecated()).thenReturn(deprecated);
+		when(completionModelMock.getIsOrgDefault()).thenReturn(orgDefault);
+		when(completionModelMock.getIsOrgEnabled()).thenReturn(orgEnabled);
+		when(completionModelMock.getName()).thenReturn(name);
+		when(completionModelMock.getNickname()).thenReturn(nickname);
+		when(completionModelMock.getNrBillionParameters()).thenReturn(nrBillionParameters);
+		when(completionModelMock.getOpenSource()).thenReturn(openSource);
+		when(completionModelMock.getOrg()).thenReturn(org);
+		when(completionModelMock.getReasoning()).thenReturn(reasoning);
+		when(completionModelMock.getStability()).thenReturn(stability);
+		when(completionModelMock.getTokenLimit()).thenReturn(tokenLimit);
+		when(completionModelMock.getUpdatedAt()).thenReturn(updatedAt);
+		when(completionModelMock.getVision()).thenReturn(vision);
 
 		// Act
 		final var result = AssistantMapper.toModel(completionModelMock);
@@ -313,20 +314,20 @@ class AssistantMapperTest {
 		final var createdAt = OffsetDateTime.now().minusDays(7);
 		final var groupId = UUID.randomUUID();
 		final var id = UUID.randomUUID();
-		final var score = 789;
+		final var score = new BigDecimal("789");
 		final var updatedAt = OffsetDateTime.now();
 		final var websiteId = UUID.randomUUID();
 		final var input = new ArrayList<>(List.of(referenceMock));
 
 		input.add(null); // To verify filtering of null values
 
-		when(referenceMock.createdAt()).thenReturn(createdAt);
-		when(referenceMock.groupId()).thenReturn(groupId);
-		when(referenceMock.id()).thenReturn(id);
-		when(referenceMock.metadata()).thenReturn(metadataMock);
-		when(referenceMock.score()).thenReturn(score);
-		when(referenceMock.updatedAt()).thenReturn(updatedAt);
-		when(referenceMock.websiteId()).thenReturn(websiteId);
+		when(referenceMock.getCreatedAt()).thenReturn(createdAt);
+		when(referenceMock.getGroupId()).thenReturn(groupId);
+		when(referenceMock.getId()).thenReturn(id);
+		when(referenceMock.getMetadata()).thenReturn(metadataMock);
+		when(referenceMock.getScore()).thenReturn(score);
+		when(referenceMock.getUpdatedAt()).thenReturn(updatedAt);
+		when(referenceMock.getWebsiteId()).thenReturn(websiteId);
 
 		// Act
 		final var result = AssistantMapper.toReferences(input);
@@ -338,7 +339,7 @@ class AssistantMapperTest {
 			assertThat(r.getGroupId()).isEqualTo(groupId.toString());
 			assertThat(r.getId()).isEqualTo(id.toString());
 			assertThat(r.getMetadata()).isNotNull().hasAllNullFieldsOrPropertiesExcept("size").hasFieldOrPropertyWithValue("size", 0);
-			assertThat(r.getScore()).isEqualTo(score);
+			assertThat(r.getScore()).isEqualTo(score.intValue());
 			assertThat(r.getUpdatedAt()).isEqualTo(updatedAt);
 			assertThat(r.getWebsiteId()).isEqualTo(websiteId.toString());
 		});
@@ -353,17 +354,17 @@ class AssistantMapperTest {
 		final var createdAt = OffsetDateTime.now().minusDays(7);
 		final var groupId = UUID.randomUUID();
 		final var id = UUID.randomUUID();
-		final var score = 789;
+		final var score = new BigDecimal("789");
 		final var updatedAt = OffsetDateTime.now();
 		final var websiteId = UUID.randomUUID();
 
-		when(referenceMock.createdAt()).thenReturn(createdAt);
-		when(referenceMock.groupId()).thenReturn(groupId);
-		when(referenceMock.id()).thenReturn(id);
-		when(referenceMock.metadata()).thenReturn(metadataMock);
-		when(referenceMock.score()).thenReturn(score);
-		when(referenceMock.updatedAt()).thenReturn(updatedAt);
-		when(referenceMock.websiteId()).thenReturn(websiteId);
+		when(referenceMock.getCreatedAt()).thenReturn(createdAt);
+		when(referenceMock.getGroupId()).thenReturn(groupId);
+		when(referenceMock.getId()).thenReturn(id);
+		when(referenceMock.getMetadata()).thenReturn(metadataMock);
+		when(referenceMock.getScore()).thenReturn(score);
+		when(referenceMock.getUpdatedAt()).thenReturn(updatedAt);
+		when(referenceMock.getWebsiteId()).thenReturn(websiteId);
 
 		// Act
 		final var result = AssistantMapper.toReference(referenceMock);
@@ -374,7 +375,7 @@ class AssistantMapperTest {
 		assertThat(result.getGroupId()).isEqualTo(groupId.toString());
 		assertThat(result.getId()).isEqualTo(id.toString());
 		assertThat(result.getMetadata()).isNotNull().hasAllNullFieldsOrPropertiesExcept("size").hasFieldOrPropertyWithValue("size", 0);
-		assertThat(result.getScore()).isEqualTo(score);
+		assertThat(result.getScore()).isEqualTo(score.intValue());
 		assertThat(result.getUpdatedAt()).isEqualTo(updatedAt);
 		assertThat(result.getWebsiteId()).isEqualTo(websiteId.toString());
 
@@ -388,16 +389,16 @@ class AssistantMapperTest {
 		final var createdAt = OffsetDateTime.now().minusDays(7);
 		final var groupId = UUID.randomUUID();
 		final var id = UUID.randomUUID();
-		final var score = 789;
+		final var score = new BigDecimal("789");
 		final var updatedAt = OffsetDateTime.now();
 		final var websiteId = UUID.randomUUID();
 
-		when(referenceMock.createdAt()).thenReturn(createdAt);
-		when(referenceMock.groupId()).thenReturn(groupId);
-		when(referenceMock.id()).thenReturn(id);
-		when(referenceMock.score()).thenReturn(score);
-		when(referenceMock.updatedAt()).thenReturn(updatedAt);
-		when(referenceMock.websiteId()).thenReturn(websiteId);
+		when(referenceMock.getCreatedAt()).thenReturn(createdAt);
+		when(referenceMock.getGroupId()).thenReturn(groupId);
+		when(referenceMock.getId()).thenReturn(id);
+		when(referenceMock.getScore()).thenReturn(score);
+		when(referenceMock.getUpdatedAt()).thenReturn(updatedAt);
+		when(referenceMock.getWebsiteId()).thenReturn(websiteId);
 
 		// Act
 		final var result = AssistantMapper.toReference(referenceMock);
@@ -407,7 +408,7 @@ class AssistantMapperTest {
 		assertThat(result.getCreatedAt()).isEqualTo(createdAt);
 		assertThat(result.getGroupId()).isEqualTo(groupId.toString());
 		assertThat(result.getId()).isEqualTo(id.toString());
-		assertThat(result.getScore()).isEqualTo(score);
+		assertThat(result.getScore()).isEqualTo(score.intValue());
 		assertThat(result.getUpdatedAt()).isEqualTo(updatedAt);
 		assertThat(result.getWebsiteId()).isEqualTo(websiteId.toString());
 
@@ -428,10 +429,10 @@ class AssistantMapperTest {
 		final var title = "title";
 		final var url = "url";
 
-		when(metadataMock.embeddingModelId()).thenReturn(embeddingModelId);
-		when(metadataMock.size()).thenReturn(size);
-		when(metadataMock.title()).thenReturn(title);
-		when(metadataMock.url()).thenReturn(url);
+		when(metadataMock.getEmbeddingModelId()).thenReturn(embeddingModelId);
+		when(metadataMock.getSize()).thenReturn(size);
+		when(metadataMock.getTitle()).thenReturn(title);
+		when(metadataMock.getUrl()).thenReturn(url);
 
 		// Act
 		final var result = AssistantMapper.toMetadata(metadataMock);
@@ -456,9 +457,9 @@ class AssistantMapperTest {
 		final var handle = "handle";
 		final var id = UUID.randomUUID();
 
-		when(toolsMock.assistants()).thenReturn(List.of(assistantMock));
-		when(assistantMock.handle()).thenReturn(handle);
-		when(assistantMock.id()).thenReturn(id);
+		when(toolsMock.getAssistants()).thenReturn(List.of(assistantMock));
+		when(assistantMock.getHandle()).thenReturn(handle);
+		when(assistantMock.getId()).thenReturn(id);
 
 		// Act
 		final var result = AssistantMapper.toTools(toolsMock);
@@ -489,8 +490,8 @@ class AssistantMapperTest {
 
 		input.add(null); // To verify filtering of null values
 
-		when(assistantMock.handle()).thenReturn(handle);
-		when(assistantMock.id()).thenReturn(id);
+		when(assistantMock.getHandle()).thenReturn(handle);
+		when(assistantMock.getId()).thenReturn(id);
 
 		// Act
 		final var result = AssistantMapper.toAssistants(input);
@@ -516,8 +517,8 @@ class AssistantMapperTest {
 		final var handle = "handle";
 		final var id = UUID.randomUUID();
 
-		when(assistantMock.handle()).thenReturn(handle);
-		when(assistantMock.id()).thenReturn(id);
+		when(assistantMock.getHandle()).thenReturn(handle);
+		when(assistantMock.getId()).thenReturn(id);
 
 		// Act
 		final var result = AssistantMapper.toAssistant(assistantMock);
@@ -545,72 +546,72 @@ class AssistantMapperTest {
 	}
 
 	private void verifyCompletionModelMockInteractions() {
-		verify(completionModelMock).baseUrl();
-		verify(completionModelMock).createdAt();
-		verify(completionModelMock).deploymentName();
-		verify(completionModelMock).description();
-		verify(completionModelMock).family();
-		verify(completionModelMock).hfLink();
-		verify(completionModelMock).hosting();
-		verify(completionModelMock).id();
-		verify(completionModelMock).isDeprecated();
-		verify(completionModelMock).isOrgDefault();
-		verify(completionModelMock).isOrgEnabled();
-		verify(completionModelMock).name();
-		verify(completionModelMock).nickname();
-		verify(completionModelMock).nrBillionParameters();
-		verify(completionModelMock).openSource();
-		verify(completionModelMock).org();
-		verify(completionModelMock).reasoning();
-		verify(completionModelMock).stability();
-		verify(completionModelMock).tokenLimit();
-		verify(completionModelMock).updatedAt();
-		verify(completionModelMock).vision();
+		verify(completionModelMock).getBaseUrl();
+		verify(completionModelMock).getCreatedAt();
+		verify(completionModelMock).getDeploymentName();
+		verify(completionModelMock).getDescription();
+		verify(completionModelMock).getFamily();
+		verify(completionModelMock).getHfLink();
+		verify(completionModelMock).getHosting();
+		verify(completionModelMock).getId();
+		verify(completionModelMock).getIsDeprecated();
+		verify(completionModelMock).getIsOrgDefault();
+		verify(completionModelMock).getIsOrgEnabled();
+		verify(completionModelMock).getName();
+		verify(completionModelMock).getNickname();
+		verify(completionModelMock).getNrBillionParameters();
+		verify(completionModelMock).getOpenSource();
+		verify(completionModelMock).getOrg();
+		verify(completionModelMock).getReasoning();
+		verify(completionModelMock).getStability();
+		verify(completionModelMock).getTokenLimit();
+		verify(completionModelMock).getUpdatedAt();
+		verify(completionModelMock).getVision();
 	}
 
 	private void verifyAskResponseMockInteractions() {
-		verify(askResponseMock).answer();
-		verify(askResponseMock).completionModel();
-		verify(askResponseMock).files();
-		verify(askResponseMock).question();
-		verify(askResponseMock).references();
-		verify(askResponseMock).sessionId();
-		verify(askResponseMock).tools();
+		verify(askResponseMock).getAnswer();
+		verify(askResponseMock).getModel();
+		verify(askResponseMock).getFiles();
+		verify(askResponseMock).getQuestion();
+		verify(askResponseMock).getReferences();
+		verify(askResponseMock).getSessionId();
+		verify(askResponseMock).getTools();
 	}
 
 	private void verifyFileMockInteractions() {
-		verify(fileMock).createdAt();
-		verify(fileMock).id();
-		verify(fileMock).mimeType();
-		verify(fileMock).name();
-		verify(fileMock).size();
-		verify(fileMock).transcription();
-		verify(fileMock).updatedAt();
+		verify(fileMock).getCreatedAt();
+		verify(fileMock).getId();
+		verify(fileMock).getMimetype();
+		verify(fileMock).getName();
+		verify(fileMock).getSize();
+		verify(fileMock).getTranscription();
+		verify(fileMock).getUpdatedAt();
 	}
 
 	private void verifyMetadataMockInteractions() {
-		verify(metadataMock).embeddingModelId();
-		verify(metadataMock).size();
-		verify(metadataMock).title();
-		verify(metadataMock).url();
+		verify(metadataMock).getEmbeddingModelId();
+		verify(metadataMock).getSize();
+		verify(metadataMock).getTitle();
+		verify(metadataMock).getUrl();
 	}
 
 	private void verifyReferenceMockInteractions() {
-		verify(referenceMock).createdAt();
-		verify(referenceMock).groupId();
-		verify(referenceMock).id();
-		verify(referenceMock).metadata();
-		verify(referenceMock).score();
-		verify(referenceMock).updatedAt();
-		verify(referenceMock).websiteId();
+		verify(referenceMock).getCreatedAt();
+		verify(referenceMock).getGroupId();
+		verify(referenceMock).getId();
+		verify(referenceMock).getMetadata();
+		verify(referenceMock).getScore();
+		verify(referenceMock).getUpdatedAt();
+		verify(referenceMock).getWebsiteId();
 	}
 
 	private void verifyToolsMockInteractions() {
-		verify(toolsMock).assistants();
+		verify(toolsMock).getAssistants();
 	}
 
 	private void verifyAssistantInteractions() {
-		verify(assistantMock).handle();
-		verify(assistantMock).id();
+		verify(assistantMock).getHandle();
+		verify(assistantMock).getId();
 	}
 }

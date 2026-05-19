@@ -1,5 +1,9 @@
 package se.sundsvall.selfserviceai.integration.lime.mapper;
 
+import generated.se.sundsvall.eneo.CompletionModel;
+import generated.se.sundsvall.eneo.Message;
+import generated.se.sundsvall.eneo.SessionPublic;
+import generated.se.sundsvall.eneo.UseTools;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikChatSessionDto;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikCompletionModelDto;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikMessageDto;
@@ -8,10 +12,6 @@ import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsMo
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import se.sundsvall.selfserviceai.integration.eneo.model.CompletionModel;
-import se.sundsvall.selfserviceai.integration.eneo.model.Message;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
-import se.sundsvall.selfserviceai.integration.eneo.model.Tools;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
@@ -30,14 +30,14 @@ public class LimeMapper {
 
 	private static ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikChatSessionDto toChatSessionDto(SessionPublic session) {
 		return new ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikChatSessionDto()
-			.createdAt(session.createdAt())
-			.feedback(session.feedback())
-			.id(ofNullable(session.id())
+			.createdAt(session.getCreatedAt())
+			.feedback(session.getFeedback())
+			.id(ofNullable(session.getId())
 				.map(UUID::toString)
 				.orElse(null))
-			.messages(toMessageDtos(session.messages()))
-			.name(session.name())
-			.updatedAt(session.updatedAt());
+			.messages(toMessageDtos(session.getMessages()))
+			.name(session.getName())
+			.updatedAt(session.getUpdatedAt());
 	}
 
 	private static List<ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikMessageDto> toMessageDtos(List<Message> messages) {
@@ -50,51 +50,51 @@ public class LimeMapper {
 	private static ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikMessageDto toMessageDto(Message message) {
 		return ofNullable(message)
 			.map(m -> new ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikMessageDto()
-				.answer(m.answer())
-				.completionModel(toCompletionModelDto(m.completionModel()))
-				.createdAt(m.createdAt())
-				.files(m.files())
-				.id(ofNullable(m.id())
+				.answer(m.getAnswer())
+				.completionModel(toCompletionModelDto(m.getCompletionModel()))
+				.createdAt(m.getCreatedAt())
+				.files(m.getFiles())
+				.id(ofNullable(m.getId())
 					.map(UUID::toString)
 					.orElse(null))
-				.references(m.references())
-				.tools(toToolsDto(m.tools()))
-				.question(m.question())
-				.updatedAt(m.updatedAt()))
+				.references(m.getReferences())
+				.tools(toToolsDto(m.getTools()))
+				.question(m.getQuestion())
+				.updatedAt(m.getUpdatedAt()))
 			.orElse(null);
 	}
 
 	private static ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikCompletionModelDto toCompletionModelDto(CompletionModel completionModel) {
 		return ofNullable(completionModel)
 			.map(c -> new ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikCompletionModelDto()
-				.createdAt(c.createdAt())
-				.deploymentName(c.deploymentName())
-				.description(c.description())
-				.family(c.family())
-				.hfLink(c.hfLink())
-				.hosting(c.hosting())
-				.id(ofNullable(c.id())
+				.createdAt(c.getCreatedAt())
+				.deploymentName(c.getDeploymentName())
+				.description(c.getDescription())
+				.family(c.getFamily())
+				.hfLink(c.getHfLink())
+				.hosting(c.getHosting())
+				.id(ofNullable(c.getId())
 					.map(UUID::toString)
 					.orElse(null))
-				.isDeprecated(c.isDeprecated())
-				.isOrgEnabled(c.isOrgEnabled())
-				.isOrgDefault(c.isOrgDefault())
-				.name(c.name())
-				.nickname(c.nickname())
-				.nrBillionParameters(c.nrBillionParameters())
-				.stability(c.stability())
-				.openSource(c.openSource())
-				.org(c.org())
-				.tokenLimit(c.tokenLimit())
-				.vision(c.vision())
-				.updatedAt(c.updatedAt()))
+				.isDeprecated(c.getIsDeprecated())
+				.isOrgEnabled(c.getIsOrgEnabled())
+				.isOrgDefault(c.getIsOrgDefault())
+				.name(c.getName())
+				.nickname(c.getNickname())
+				.nrBillionParameters(c.getNrBillionParameters())
+				.stability(c.getStability())
+				.openSource(c.getOpenSource())
+				.org(c.getOrg())
+				.tokenLimit(c.getTokenLimit())
+				.vision(c.getVision())
+				.updatedAt(c.getUpdatedAt()))
 			.orElse(null);
 	}
 
-	private static ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikToolsDto toToolsDto(Tools tools) {
+	private static ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikToolsDto toToolsDto(UseTools tools) {
 		return ofNullable(tools)
 			.map(t -> new ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikToolsDto()
-				.assistants(t.assistants()))
+				.assistants(t.getAssistants()))
 			.orElse(null);
 	}
 

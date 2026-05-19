@@ -106,51 +106,55 @@ public class AssistantService {
 
 	public SessionResponse createSession(final String municipalityId, final String partyId) {
 		final var session = eneoIntegration.askAssistant(eneoProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
-		sessionRepository.save(toSessionEntity(municipalityId, session.sessionId(), partyId));
+		sessionRepository.save(toSessionEntity(municipalityId, session.getSessionId(), partyId));
 
 		return toSessionResponse(eneoProperties.assistantId(), session);
 	}
 
 	@Async
 	@Transactional
-	public void populateWithInformation(final UUID sessionId, final SessionRequest sessionRequest, final UUID requestId) {
-		final var sessionEntity = sessionRepository.findById(sessionId.toString())
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
-
+	public void populateWithInformation(final UUID sessionId, final SessionRequest sessionRequest, final String requestId) {
 		try {
-			RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
-			final var municipalityId = sessionEntity.getMunicipalityId();
-			final var partyId = sessionRequest.getPartyId();
+			RequestId.init(ofNullable(requestId).filter(id -> !id.isBlank()).orElse(UUID.randomUUID().toString()));
 
-			final var installedBases = installedbaseIntegration.getInstalledbases(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgIds());
+			final var sessionEntity = sessionRepository.findById(sessionId.toString())
+				.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
-			if (isNotEmpty(installedBases)) {
-				// Build file content
-				final var eneoModel = buildEneoModel(municipalityId, partyId, installedBases);
+			try {
+				final var municipalityId = sessionEntity.getMunicipalityId();
+				final var partyId = sessionRequest.getPartyId();
 
-				// Save information in Eneo and update database with id of stored file
-				final var fileId = eneoIntegration.uploadFile(eneoModel);
-				final var fileEntity = fileRepository.save(toFileEntity(fileId));
+				final var installedBases = installedbaseIntegration.getInstalledbases(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgIds());
 
-				// Add file to session, update with success information
-				sessionEntity.getFiles().add(fileEntity);
-				sessionEntity.setCustomerNbr(eneoModel.getCustomerNumber());
-				sessionEntity.setStatus("Successfully initialized");
-			} else {
-				final var sanitizedPartyId = sanitizeAndCompress(partyId);
-				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizedPartyId, sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
-				sessionEntity.setStatus("No installed base information found for customer '%s' and counterparts %s".formatted(sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds()));
+				if (isNotEmpty(installedBases)) {
+					// Build file content
+					final var eneoModel = buildEneoModel(municipalityId, partyId, installedBases);
+
+					// Save information in Eneo and update database with id of stored file
+					final var fileId = eneoIntegration.uploadFile(eneoModel);
+					final var fileEntity = fileRepository.save(toFileEntity(fileId));
+
+					// Add file to session, update with success information
+					sessionEntity.getFiles().add(fileEntity);
+					sessionEntity.setCustomerNbr(eneoModel.getCustomerNumber());
+					sessionEntity.setStatus("Successfully initialized");
+				} else {
+					final var sanitizedPartyId = sanitizeAndCompress(partyId);
+					LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizedPartyId, sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
+					sessionEntity.setStatus("No installed base information found for customer '%s' and counterparts %s".formatted(sessionRequest.getPartyId(), sessionRequest.getCustomerEngagementOrgIds()));
+				}
+
+				sessionEntity.setInitialized(OffsetDateTime.now());
+
+			} catch (final Exception e) {
+				LOG.error("Exception thrown when populating session with customer information", e);
+				// Update with failed information
+				sessionEntity.setInitialized(OffsetDateTime.now());
+				sessionEntity.setStatus("Initialization failed. Error message is '%s'. Filter logs on log id '%s' for more information.".formatted(e.getMessage(), RequestId.get()));
+			} finally {
+				sessionRepository.save(sessionEntity);
 			}
-
-			sessionEntity.setInitialized(OffsetDateTime.now());
-
-		} catch (final Exception e) {
-			LOG.error("Exception thrown when populating session with customer information", e);
-			// Update with failed information
-			sessionEntity.setInitialized(OffsetDateTime.now());
-			sessionEntity.setStatus("Initialization failed. Error message is '%s'. Filter logs on log id '%s' for more information.".formatted(e.getMessage(), RequestId.get()));
 		} finally {
-			sessionRepository.save(sessionEntity);
 			RequestId.reset();
 		}
 	}
@@ -184,7 +188,7 @@ public class AssistantService {
 				.withDetail("Session is being initialized")
 				.build();
 		}
-		if (ofNullable(session.getStatus()).map(status -> status.startsWith("Initialization failed")).orElse(false)) {
+		if (isInitializationFailed(session)) {
 			return SessionStatusResponse.builder()
 				.withStatus(FAILED.name())
 				.withDetail(session.getStatus())
@@ -195,6 +199,10 @@ public class AssistantService {
 			.build();
 	}
 
+	private static boolean isInitializationFailed(final SessionEntity session) {
+		return ofNullable(session.getStatus()).map(status -> status.startsWith("Initialization failed")).orElse(false);
+	}
+
 	public QuestionResponse askQuestion(final String municipalityId, final UUID sessionId, final String question) {
 		final var session = sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
@@ -202,19 +210,24 @@ public class AssistantService {
 		if (isNull(session.getInitialized())) {
 			return toQuestionResponse("Assistant is not ready yet");
 		}
+		if (isInitializationFailed(session)) {
+			return toQuestionResponse("Assistant initialization failed, please create a new session");
+		}
 
 		final var eneoResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
-		session.setLastAccessed(OffsetDateTime.now());
-		sessionRepository.save(session);
+		if (eneoResponse.isPresent()) {
+			session.setLastAccessed(OffsetDateTime.now());
+			sessionRepository.save(session);
+		}
 
 		return eneoResponse.map(AssistantMapper::toQuestionResponse).orElse(null);
 	}
 
 	@Async
 	@Transactional
-	public void deleteSessionById(final String municipalityId, final UUID sessionId, final UUID requestId) {
+	public void deleteSessionById(final String municipalityId, final UUID sessionId, final String requestId) {
 		try {
-			RequestId.init(ofNullable(requestId).orElse(UUID.randomUUID()).toString());
+			RequestId.init(ofNullable(requestId).filter(id -> !id.isBlank()).orElse(UUID.randomUUID().toString()));
 
 			sessionRepository.findBySessionIdAndMunicipalityId(sessionId.toString(), municipalityId)
 				.ifPresentOrElse(entity -> Stream.of(entity)
@@ -256,8 +269,8 @@ public class AssistantService {
 		try {
 			// Only save chat history if session has been successfully initialized (i.e. the session has been possible to use)
 			if (nonNull(sessionEntity.getInitialized())) {
-				final var session = eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId());
-				limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session);
+				eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId())
+					.ifPresent(session -> limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session));
 			}
 			return sessionEntity;
 		} catch (final Exception e) {

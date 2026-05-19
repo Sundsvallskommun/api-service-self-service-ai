@@ -1,16 +1,19 @@
 package se.sundsvall.selfserviceai.integration.eneo;
 
+import generated.se.sundsvall.eneo.AskResponse;
+import generated.se.sundsvall.eneo.SessionPublic;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import se.sundsvall.dept44.exception.ClientProblem;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
 public class EneoIntegration {
@@ -67,11 +70,19 @@ public class EneoIntegration {
 	 *
 	 * @param  assistantId The ID of the assistant to get history for
 	 * @param  sessionId   The ID of the session to get history for
-	 * @return             Complete session history
+	 * @return             Complete session history, or an empty Optional if Eneo no longer has the session (404)
 	 */
-	public SessionPublic getSession(final String assistantId, final String sessionId) {
-		LOG.debug("Retrieving history from assistant session");
-		return client.getSession(assistantId, sessionId);
+	public Optional<SessionPublic> getSession(final String assistantId, final String sessionId) {
+		try {
+			LOG.debug("Retrieving history from assistant session");
+			return Optional.of(client.getSession(assistantId, sessionId));
+		} catch (final ClientProblem e) {
+			if (e.getStatus() == NOT_FOUND) {
+				LOG.info("Session '{}' is already gone in Eneo; skipping chat history fetch", sessionId);
+				return Optional.empty();
+			}
+			throw e;
+		}
 	}
 
 	/**
@@ -79,7 +90,8 @@ public class EneoIntegration {
 	 *
 	 * @param  assistantId The ID of the assistant that owns the session to delete
 	 * @param  sessionId   The ID of the session to delete
-	 * @return             Signal if the session was successfully deleted or not
+	 * @return             Signal if the session was successfully deleted or not (a 404 is treated as success since the
+	 *                     session is already gone)
 	 */
 	public boolean deleteSession(final String assistantId, final String sessionId) {
 		try {
@@ -87,6 +99,13 @@ public class EneoIntegration {
 			client.deleteSession(assistantId, sessionId);
 			LOG.debug("Session deleted");
 			return true;
+		} catch (final ClientProblem e) {
+			if (e.getStatus() == NOT_FOUND) {
+				LOG.info("Session '{}' is already gone in Eneo; nothing to delete", sessionId);
+				return true;
+			}
+			LOG.error("Exception when deleting assistant session, manual purge might be needed", e);
+			return false;
 		} catch (final Exception e) {
 			LOG.error("Exception when deleting assistant session, manual purge might be needed", e);
 			return false;
@@ -103,14 +122,15 @@ public class EneoIntegration {
 		final var content = jsonBuilder.toJsonString(eneoModel);
 
 		LOG.debug("Uploading file with content '{}'", content);
-		return client.uploadFile(mapper.toInformationFile(content)).id();
+		return client.uploadFile(mapper.toInformationFile(content)).getId();
 	}
 
 	/**
 	 * Deletes a file from Eneo
 	 *
 	 * @param  id The ID of the file to delete
-	 * @return    Signal if the file was successfully deleted or not
+	 * @return    Signal if the file was successfully deleted or not (a 404 is treated as success since the file is
+	 *            already gone)
 	 */
 	public boolean deleteFile(final String id) {
 		try {
@@ -118,6 +138,13 @@ public class EneoIntegration {
 			client.deleteFile(id);
 			LOG.debug("File deleted");
 			return true;
+		} catch (final ClientProblem e) {
+			if (e.getStatus() == NOT_FOUND) {
+				LOG.info("File '{}' is already gone in Eneo; nothing to delete", id);
+				return true;
+			}
+			LOG.error("Exception when deleting file, manual purge might be needed", e);
+			return false;
 		} catch (final Exception e) {
 			LOG.error("Exception when deleting file, manual purge might be needed", e);
 			return false;

@@ -141,6 +141,45 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>eneo</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/contracts/eneo/eneo.yml</inputSpec>
+							<output>${generated-sources-path}</output>
+							<generatorName>spring</generatorName>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<!-- The Eneo contract uses anyOf: [Enum, string] for several fields (family, hosting,
+									stability, org, etc.); the generator emits empty wrapper classes for those that can't
+									deserialize the plain-string values Eneo actually sends. Remap them to String. -->
+							<schemaMappings>Family=java.lang.String,
+								Hosting=java.lang.String,
+								Stability=java.lang.String,
+								Org=java.lang.String</schemaMappings>
+							<typeMappings>Family=String,
+								Hosting=String,
+								Stability=String,
+								Org=String</typeMappings>
+							<!-- Limit generation to schemas we actually use (+ transitive deps). The full Eneo contract
+									has hundreds of schemas and some emit invalid Java (Python-style dict defaults). -->
+							<modelsToGenerate>AskAssistant,AskResponse,CompletionModel,CompletionModelPublic,FilePublic,InfoBlobAskAssistantPublic,InfoBlobMetadata,InfoBlobPublicNoText,Message,ModelId,SecurityClassificationPublic,SessionFeedback,SessionPublic,ToolAssistant,UseTools,WebSearchResultPublic</modelsToGenerate>
+							<configOptions>
+								<dateLibrary>java8</dateLibrary>
+								<generatePom>false</generatePom>
+								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>models</sourceFolder>
+								<modelPackage>generated.se.sundsvall.eneo</modelPackage>
+								<openApiNullable>false</openApiNullable>
+								<useBeanValidation>false</useBeanValidation>
+								<useSwaggerAnnotations>false</useSwaggerAnnotations>
+								<useSpringBoot4>true</useSpringBoot4>
+								<useJackson3>true</useJackson3>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
 						<id>installedbase</id>
 						<goals>
 							<goal>generate</goal>

@@ -1,5 +1,6 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
+import generated.se.sundsvall.eneo.AskAssistant;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,8 +16,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskAssistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
@@ -54,26 +52,16 @@ public class EneoMapper {
 	 * @return                AskAssistant object with provided data
 	 */
 	public AskAssistant toAskAssistant(final String input, List<String> fileReferences) {
-		return AskAssistant.builder()
-			.withQuestion(input)
-			.withFiles(toFilesPublic(fileReferences))
-			.build();
+		return new AskAssistant()
+			.question(input)
+			.files(toFileIds(fileReferences));
 	}
 
-	static List<FilePublic> toFilesPublic(final List<String> fileReferences) {
+	static List<UUID> toFileIds(final List<String> fileReferences) {
 		return ofNullable(fileReferences).orElse(emptyList()).stream()
-			.map(EneoMapper::toFilePublic)
 			.filter(Objects::nonNull)
-			.toList();
-	}
-
-	static FilePublic toFilePublic(final String fileId) {
-		return ofNullable(fileId)
 			.map(UUID::fromString)
-			.map(id -> FilePublic.builder()
-				.withId(id)
-				.build())
-			.orElse(null);
+			.toList();
 	}
 
 	/**
@@ -107,7 +95,7 @@ public class EneoMapper {
 
 		// Attach matching installed bases to each facility
 		if (nonNull(eneoModel)) {
-			final var installedBases = Optional.of(installedBaseCustomers).orElse(emptyMap()).values().stream()
+			final var installedBases = installedBaseCustomers.values().stream()
 				.map(InstalledBaseCustomer::getItems)
 				.flatMap(List::stream)
 				.toList();

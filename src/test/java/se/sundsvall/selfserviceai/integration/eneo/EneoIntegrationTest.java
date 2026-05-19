@@ -1,5 +1,9 @@
 package se.sundsvall.selfserviceai.integration.eneo;
 
+import generated.se.sundsvall.eneo.AskAssistant;
+import generated.se.sundsvall.eneo.AskResponse;
+import generated.se.sundsvall.eneo.FilePublic;
+import generated.se.sundsvall.eneo.SessionPublic;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -11,10 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+import se.sundsvall.dept44.exception.ClientProblem;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskAssistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.AskResponse;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
 import se.sundsvall.selfserviceai.integration.eneo.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
@@ -27,6 +29,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class EneoIntegrationTest {
@@ -60,18 +64,17 @@ class EneoIntegrationTest {
 		final var input = "input";
 		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
 		final var answer = "answer";
-		final var response = AskResponse.builder()
-			.withSessionId(UUID.fromString(sessionId))
-			.withQuestion(input)
-			.withAnswer(answer)
-			.build();
+		final var response = new AskResponse()
+			.sessionId(UUID.fromString(sessionId))
+			.question(input)
+			.answer(answer);
 
-		when(eneoMapperMock.toAskAssistant(input)).thenReturn(AskAssistant.builder().withQuestion(input).build());
+		when(eneoMapperMock.toAskAssistant(input)).thenReturn(new AskAssistant().question(input));
 		when(eneoClientMock.askAssistant(eq(assistantId), askAssistantCaptor.capture())).thenReturn(response);
 
 		final var result = integration.askAssistant(assistantId, input);
 		final var askAssistant = askAssistantCaptor.getValue();
-		assertThat(askAssistant.question()).isEqualTo(input);
+		assertThat(askAssistant.getQuestion()).isEqualTo(input);
 		assertThat(result).isEqualTo(response);
 
 		verify(eneoMapperMock).toAskAssistant(input);
@@ -87,12 +90,12 @@ class EneoIntegrationTest {
 		final var input = "input";
 		final var exception = new RuntimeException("Something went wrong");
 
-		when(eneoMapperMock.toAskAssistant(input)).thenReturn(AskAssistant.builder().withQuestion(input).build());
+		when(eneoMapperMock.toAskAssistant(input)).thenReturn(new AskAssistant().question(input));
 		when(eneoClientMock.askAssistant(eq(assistantId), askAssistantCaptor.capture())).thenThrow(exception);
 
 		final var e = assertThrows(RuntimeException.class, () -> integration.askAssistant(assistantId, input));
 		final var askAssistant = askAssistantCaptor.getValue();
-		assertThat(askAssistant.question()).isEqualTo(input);
+		assertThat(askAssistant.getQuestion()).isEqualTo(input);
 		assertThat(e).isSameAs(exception);
 
 		verify(eneoMapperMock).toAskAssistant(input);
@@ -108,28 +111,22 @@ class EneoIntegrationTest {
 		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
 		final var fileId = "9c55c2be-9739-4af4-89dd-201a507ce261";
 		final var input = "input";
-		final var response = AskResponse.builder()
-			.withSessionId(UUID.fromString(sessionId))
-			.withQuestion(input)
-			.withAnswer("answer")
-			.build();
+		final var response = new AskResponse()
+			.sessionId(UUID.fromString(sessionId))
+			.question(input)
+			.answer("answer");
 
 		when(eneoClientMock.askFollowUp(eq(assistantId), eq(sessionId), askAssistantCaptor.capture())).thenReturn(response);
-		when(eneoMapperMock.toAskAssistant(input, List.of(fileId))).thenReturn(AskAssistant.builder()
-			.withQuestion(input)
-			.withFiles(List.of(FilePublic.builder()
-				.withId(UUID.fromString(fileId))
-				.build()))
-			.build());
+		when(eneoMapperMock.toAskAssistant(input, List.of(fileId))).thenReturn(new AskAssistant()
+			.question(input)
+			.files(List.of(UUID.fromString(fileId))));
 
 		final var result = integration.askFollowUp(assistantId, sessionId, input, List.of(fileId));
 		final var askAssistant = askAssistantCaptor.getValue();
 
 		assertThat(result).isPresent().hasValue(response);
-		assertThat(askAssistant.question()).isEqualTo(input);
-		assertThat(askAssistant.files()).hasSize(1).satisfiesExactly(f -> {
-			assertThat(f.id()).isEqualTo(UUID.fromString(fileId));
-		});
+		assertThat(askAssistant.getQuestion()).isEqualTo(input);
+		assertThat(askAssistant.getFiles()).containsExactly(UUID.fromString(fileId));
 
 		verify(eneoMapperMock).toAskAssistant(input, List.of(fileId));
 		verify(eneoClientMock).askFollowUp(assistantId, sessionId, askAssistant);
@@ -151,10 +148,8 @@ class EneoIntegrationTest {
 		final var result = integration.askFollowUp(assistantId, sessionId, input, List.of(fileId));
 		final var askAssistant = askAssistantCaptor.getValue();
 		assertThat(result).isEmpty();
-		assertThat(askAssistant.question()).isEqualTo(input);
-		assertThat(askAssistant.files()).hasSize(1).satisfiesExactly(fp -> {
-			assertThat(fp.id()).isEqualTo(UUID.fromString(fileId));
-		});
+		assertThat(askAssistant.getQuestion()).isEqualTo(input);
+		assertThat(askAssistant.getFiles()).containsExactly(UUID.fromString(fileId));
 
 		verify(eneoMapperMock).toAskAssistant(input, List.of(fileId));
 		verify(eneoClientMock).askFollowUp(assistantId, sessionId, askAssistant);
@@ -167,12 +162,11 @@ class EneoIntegrationTest {
 	void uploadFile_1() {
 		final var eneoModel = EneoModel.builder().build();
 		final var id = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
-		final var filePublic = FilePublic.builder()
-			.withId(UUID.fromString(id))
-			.withName("name")
-			.withMimeType("mimeType")
-			.withSize(123)
-			.build();
+		final var filePublic = new FilePublic()
+			.id(UUID.fromString(id))
+			.name("name")
+			.mimetype("mimeType")
+			.size(123);
 
 		when(eneoMapperMock.toInformationFile(any())).thenReturn(InformationFile.create());
 		when(eneoClientMock.uploadFile(any(MultipartFile.class))).thenReturn(filePublic);
@@ -210,6 +204,58 @@ class EneoIntegrationTest {
 	 * Test scenario where everything works as expected
 	 */
 	@Test
+	void getSession_1() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+		final var session = new SessionPublic().id(UUID.fromString(sessionId));
+
+		when(eneoClientMock.getSession(assistantId, sessionId)).thenReturn(session);
+
+		final var result = integration.getSession(assistantId, sessionId);
+
+		assertThat(result).isPresent().hasValue(session);
+
+		verify(eneoClientMock).getSession(assistantId, sessionId);
+	}
+
+	/**
+	 * 404 from Eneo means the session is already gone; treat as empty rather than rethrowing.
+	 */
+	@Test
+	void getSession_returnsEmptyOnNotFound() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+
+		when(eneoClientMock.getSession(assistantId, sessionId)).thenThrow(new ClientProblem(NOT_FOUND, "gone"));
+
+		final var result = integration.getSession(assistantId, sessionId);
+
+		assertThat(result).isEmpty();
+
+		verify(eneoClientMock).getSession(assistantId, sessionId);
+	}
+
+	/**
+	 * Non-404 client problems still propagate.
+	 */
+	@Test
+	void getSession_rethrowsOtherClientProblems() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+		final var exception = new ClientProblem(BAD_GATEWAY, "down");
+
+		doThrow(exception).when(eneoClientMock).getSession(assistantId, sessionId);
+
+		final var thrown = assertThrows(ClientProblem.class, () -> integration.getSession(assistantId, sessionId));
+		assertThat(thrown).isSameAs(exception);
+
+		verify(eneoClientMock).getSession(assistantId, sessionId);
+	}
+
+	/**
+	 * Test scenario where everything works as expected
+	 */
+	@Test
 	void deleteFile_1() {
 		final var fileId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
 
@@ -233,6 +279,22 @@ class EneoIntegrationTest {
 		final var result = integration.deleteFile(fileId);
 
 		assertThat(result).isFalse();
+
+		verify(eneoClientMock).deleteFile(fileId);
+	}
+
+	/**
+	 * 404 from Eneo means the file is already gone; treat as a successful deletion so callers can clean up locally.
+	 */
+	@Test
+	void deleteFile_returnsTrueOnNotFound() {
+		final var fileId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+
+		doThrow(new ClientProblem(NOT_FOUND, "gone")).when(eneoClientMock).deleteFile(fileId);
+
+		final var result = integration.deleteFile(fileId);
+
+		assertThat(result).isTrue();
 
 		verify(eneoClientMock).deleteFile(fileId);
 	}
@@ -266,6 +328,23 @@ class EneoIntegrationTest {
 		final var result = integration.deleteSession(assistantId, sessionId);
 
 		assertThat(result).isFalse();
+
+		verify(eneoClientMock).deleteSession(assistantId, sessionId);
+	}
+
+	/**
+	 * 404 from Eneo means the session is already gone; treat as a successful deletion so the local row gets cleaned up.
+	 */
+	@Test
+	void deleteSession_returnsTrueOnNotFound() {
+		final var assistantId = "6d04a0bc-54a1-4877-a81b-3dd2c2063509";
+		final var sessionId = "2d357dcf-6180-48de-a9e8-3ad74b757c84";
+
+		doThrow(new ClientProblem(NOT_FOUND, "gone")).when(eneoClientMock).deleteSession(assistantId, sessionId);
+
+		final var result = integration.deleteSession(assistantId, sessionId);
+
+		assertThat(result).isTrue();
 
 		verify(eneoClientMock).deleteSession(assistantId, sessionId);
 	}

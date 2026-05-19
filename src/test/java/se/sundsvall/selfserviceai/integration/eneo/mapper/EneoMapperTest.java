@@ -63,8 +63,8 @@ class EneoMapperTest {
 		final var result = eneoMapper.toAskAssistant(input);
 
 		// Assert
-		assertThat(result.files()).isEmpty();
-		assertThat(result.question()).isEqualTo(input);
+		assertThat(result.getFiles()).isEmpty();
+		assertThat(result.getQuestion()).isEqualTo(input);
 	}
 
 	@Test
@@ -80,12 +80,8 @@ class EneoMapperTest {
 		final var result = eneoMapper.toAskAssistant(input, files);
 
 		// Assert
-		assertThat(result.question()).isEqualTo(input);
-		assertThat(result.files()).hasSize(2)
-			.allSatisfy(filePublic -> assertThat(filePublic).hasAllNullFieldsOrPropertiesExcept("id"))
-			.satisfiesExactlyInAnyOrder(
-				filePublic -> assertThat(filePublic.id()).isEqualTo(UUID.fromString(fileId1)),
-				filePublic -> assertThat(filePublic.id()).isEqualTo(UUID.fromString(fileId2)));
+		assertThat(result.getQuestion()).isEqualTo(input);
+		assertThat(result.getFiles()).containsExactlyInAnyOrder(UUID.fromString(fileId1), UUID.fromString(fileId2));
 	}
 
 	@Test

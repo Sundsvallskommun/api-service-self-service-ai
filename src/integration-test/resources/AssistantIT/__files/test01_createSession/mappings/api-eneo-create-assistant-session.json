@@ -11,7 +11,8 @@
 				"equalToJson": {
 					"question": "Påbörjar session för party id 'c62fd364-6214-4fb1-82f7-e4b6be53afbe'",
 					"files": []
-				}
+				},
+				"ignoreExtraElements": true
 			}
 		],
 		"urlPath": "/eneo/assistants/3e951939-18ea-402d-9d01-23d977624ad2/sessions/"

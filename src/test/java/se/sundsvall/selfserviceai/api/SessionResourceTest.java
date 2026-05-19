@@ -21,7 +21,7 @@ import se.sundsvall.selfserviceai.api.model.SessionStatusResponse;
 import se.sundsvall.selfserviceai.service.AssistantService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -87,7 +87,7 @@ class SessionResourceTest {
 				sessionId.toString());
 
 		verify(mockService).createSession(MUNICIPALITY_ID, partyId);
-		verify(mockService).populateWithInformation(eq(sessionId), eq(request), any(UUID.class));
+		verify(mockService).populateWithInformation(eq(sessionId), eq(request), anyString());
 	}
 
 	@ParameterizedTest
@@ -179,6 +179,6 @@ class SessionResourceTest {
 			.expectBody().isEmpty();
 
 		// Assert and verify
-		verify(mockService).deleteSessionById(eq(MUNICIPALITY_ID), eq(sessionId), any(UUID.class));
+		verify(mockService).deleteSessionById(eq(MUNICIPALITY_ID), eq(sessionId), anyString());
 	}
 }

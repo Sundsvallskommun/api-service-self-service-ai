@@ -1,5 +1,6 @@
 package se.sundsvall.selfserviceai.integration.lime;
 
+import generated.se.sundsvall.eneo.SessionPublic;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import generated.se.sundsvall.invoices.MetaData;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest;
@@ -14,7 +15,6 @@ import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
 import se.sundsvall.selfserviceai.integration.db.model.HistoryEntity;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +60,7 @@ class LimeIntegrationTest {
 	void saveHistory() {
 
 		// Arrange and act
-		integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, SessionPublic.builder().build());
+		integration.saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, new SessionPublic());
 
 		// Assert and verify
 		verify(limeClientMock).saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class));
@@ -70,7 +70,7 @@ class LimeIntegrationTest {
 	void saveHistoryLimeThrowsException() {
 
 		// Arrange
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 
 		when(limeClientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
 			.thenThrow(Problem.valueOf(BAD_GATEWAY, "Big and stout"));
@@ -88,7 +88,7 @@ class LimeIntegrationTest {
 	void saveHistoryLocalRepositoryThrowsException() {
 
 		// Arrange
-		final var session = SessionPublic.builder().build();
+		final var session = new SessionPublic();
 
 		when(limeClientMock.saveChatHistory(any(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest.class)))
 			.thenThrow(Problem.valueOf(FORBIDDEN, "You shall not pass"));

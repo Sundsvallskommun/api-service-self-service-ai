@@ -1,5 +1,9 @@
 package se.sundsvall.selfserviceai.integration.lime.mapper;
 
+import generated.se.sundsvall.eneo.FilePublic;
+import generated.se.sundsvall.eneo.InfoBlobPublicNoText;
+import generated.se.sundsvall.eneo.SessionPublic;
+import generated.se.sundsvall.eneo.ToolAssistant;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikChatSessionDto;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikCompletionModelDto;
 import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikMessageDto;
@@ -8,10 +12,6 @@ import generated.se.sundsvall.lime.ServanetItOpsApiGatewayAdapterHttpContractsMo
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
-import se.sundsvall.selfserviceai.integration.eneo.model.Assistant;
-import se.sundsvall.selfserviceai.integration.eneo.model.FilePublic;
-import se.sundsvall.selfserviceai.integration.eneo.model.Reference;
-import se.sundsvall.selfserviceai.integration.eneo.model.SessionPublic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
@@ -127,23 +127,23 @@ class LimeMapperTest {
 
 	private void assertAssistant(Object a) {
 		assertThat(a)
-			.isInstanceOf(Assistant.class)
+			.isInstanceOf(ToolAssistant.class)
 			.usingRecursiveAssertion()
 			.isEqualTo(TestFactory.createAssistant());
 	}
 
 	private void assertReference(Object r) {
 		assertThat(r)
-			.isInstanceOf(Reference.class)
+			.isInstanceOf(InfoBlobPublicNoText.class)
 			.usingRecursiveAssertion()
-			.isEqualTo(TestFactory.createReference());
+			.isEqualTo(TestFactory.createMessageReference());
 	}
 
 	@Test
 	void fromEmptySession() {
 
 		// Act and assert
-		assertThat(LimeMapper.toChatHistoryRequest(null, null, SessionPublic.builder().build())).hasAllNullFieldsOrPropertiesExcept("chatSession")
+		assertThat(LimeMapper.toChatHistoryRequest(null, null, new SessionPublic())).hasAllNullFieldsOrPropertiesExcept("chatSession")
 			.extracting(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikSkapaChathistorikRequest::getChatSession).hasAllNullFieldsOrPropertiesExcept("messages")
 			.extracting(ServanetItOpsApiGatewayAdapterHttpContractsModelsRequestsChathistorikChatSessionDto::getMessages).satisfies(l -> assertThat(l).isEmpty());
 	}
