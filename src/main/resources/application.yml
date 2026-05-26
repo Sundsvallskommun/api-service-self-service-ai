@@ -59,6 +59,9 @@ integration:
   invoices:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60
+    organization-numbers:
+      - "5564786647"
+      - "5565027223"
   eneo:
     connect-timeout-in-seconds: 5
     read-timeout-in-seconds: 60

@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesProperties;
 
 import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
 import static java.util.Collections.emptyList;
@@ -21,9 +22,11 @@ public class InvoicesIntegration {
 	private static final String ORGANIZATION_GROUP = "stadsbacken";
 
 	private final InvoicesClient invoicesClient;
+	private final List<String> organizationNumbers;
 
-	InvoicesIntegration(final InvoicesClient invoicesClient) {
+	InvoicesIntegration(final InvoicesClient invoicesClient, final InvoicesProperties properties) {
 		this.invoicesClient = invoicesClient;
+		this.organizationNumbers = properties.organizationNumbers();
 	}
 
 	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final Invoice invoice) {
@@ -49,7 +52,7 @@ public class InvoicesIntegration {
 
 	private List<Invoice> getInvoices(final String municipalityId, final String partyId, final LocalDate fromDate, final LocalDate toDate, final int page, final List<Invoice> invoices) {
 
-		final var response = invoicesClient.getInvoices(municipalityId, COMMERCIAL, page, 100, partyId, ORGANIZATION_GROUP, toString(fromDate), toString(toDate));
+		final var response = invoicesClient.getInvoices(municipalityId, COMMERCIAL, page, 100, partyId, organizationNumbers, ORGANIZATION_GROUP, toString(fromDate), toString(toDate));
 
 		if (response == null) {
 			return invoices;
