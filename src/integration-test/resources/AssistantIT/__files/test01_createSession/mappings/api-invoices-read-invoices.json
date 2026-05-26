@@ -17,6 +17,16 @@
 			"partyId": {
 				"equalTo": "c62fd364-6214-4fb1-82f7-e4b6be53afbe"
 			},
+			"organizationNumber": {
+				"hasExactly": [
+					{
+						"equalTo": "5564786647"
+					},
+					{
+						"equalTo": "5565027223"
+					}
+				]
+			},
 			"organizationGroup": {
 				"equalTo": "stadsbacken"
 			},

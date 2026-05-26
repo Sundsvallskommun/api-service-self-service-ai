@@ -9,17 +9,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesProperties;
 
 import static generated.se.sundsvall.invoices.InvoiceOrigin.COMMERCIAL;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -30,6 +32,7 @@ class InvoicesIntegrationTest {
 	private static final String MUNICIPALITY_ID = "municipalityId";
 	private static final String PARTY_ID = "partyId";
 	private static final String ORGANIZATION_GROUP = "stadsbacken";
+	private static final List<String> ORGANIZATION_NUMBERS = List.of("5564786647", "5565027223");
 	private static final String TO_DATE = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 	private static final String FROM_DATE = LocalDate.now().withDayOfMonth(1).minusMonths(6).format(DateTimeFormatter.ISO_LOCAL_DATE);
 
@@ -42,8 +45,16 @@ class InvoicesIntegrationTest {
 	@Mock
 	private MetaData metaDataMock;
 
-	@InjectMocks
+	@Mock
+	private InvoicesProperties propertiesMock;
+
 	private InvoicesIntegration integration;
+
+	@BeforeEach
+	void setUp() {
+		lenient().when(propertiesMock.organizationNumbers()).thenReturn(ORGANIZATION_NUMBERS);
+		integration = new InvoicesIntegration(clientMock, propertiesMock);
+	}
 
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
@@ -58,7 +69,7 @@ class InvoicesIntegrationTest {
 		final var invoice1 = new Invoice().invoiceNumber("1");
 		final var invoice2 = new Invoice().invoiceNumber("2");
 
-		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(responseMock);
+		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_NUMBERS), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(responseMock);
 		when(responseMock.getInvoices()).thenReturn(List.of(invoice1), List.of(invoice2));
 		when(responseMock.getMeta()).thenReturn(metaDataMock);
 		when(metaDataMock.getPage()).thenReturn(1, 2);
@@ -68,8 +79,8 @@ class InvoicesIntegrationTest {
 		final var result = integration.getInvoices(MUNICIPALITY_ID, PARTY_ID);
 
 		// Assert and verify
-		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
-		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 2, 100, PARTY_ID, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
+		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_NUMBERS, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
+		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 2, 100, PARTY_ID, ORGANIZATION_NUMBERS, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
 		assertThat(result).containsExactlyInAnyOrder(invoice1, invoice2);
 	}
 
@@ -77,7 +88,7 @@ class InvoicesIntegrationTest {
 	void getInvoicesReturnsEmptyResponse() {
 
 		// Arrange
-		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(responseMock);
+		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_NUMBERS), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(responseMock);
 		when(responseMock.getInvoices()).thenReturn(emptyList());
 		when(responseMock.getMeta()).thenReturn(metaDataMock);
 		when(metaDataMock.getPage()).thenReturn(0);
@@ -87,7 +98,7 @@ class InvoicesIntegrationTest {
 		final var result = integration.getInvoices(MUNICIPALITY_ID, PARTY_ID);
 
 		// Assert and verify
-		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
+		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_NUMBERS, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
 		assertThat(result).isEmpty();
 	}
 
@@ -95,13 +106,13 @@ class InvoicesIntegrationTest {
 	void getInvoicesReturnsNullResponse() {
 
 		// Arrange
-		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(null);
+		when(clientMock.getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), anyInt(), eq(100), eq(PARTY_ID), eq(ORGANIZATION_NUMBERS), eq(ORGANIZATION_GROUP), eq(FROM_DATE), eq(TO_DATE))).thenReturn(null);
 
 		// Act
 		final var result = integration.getInvoices(MUNICIPALITY_ID, PARTY_ID);
 
 		// Assert and verify
-		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
+		verify(clientMock).getInvoices(MUNICIPALITY_ID, COMMERCIAL, 1, 100, PARTY_ID, ORGANIZATION_NUMBERS, ORGANIZATION_GROUP, FROM_DATE, TO_DATE);
 		assertThat(result).isEmpty();
 	}
 

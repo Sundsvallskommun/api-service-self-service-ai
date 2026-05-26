@@ -90,6 +90,9 @@ integration:
     connect-timeout-in-seconds: 7
     read-timeout-in-seconds: 8
     url: invoices-integration-url
+    organization-numbers:
+      - "junit-org-1"
+      - "junit-org-2"
   lime:
     connect-timeout-in-seconds: 9
     read-timeout-in-seconds: 10

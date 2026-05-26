@@ -4,6 +4,7 @@ import generated.se.sundsvall.invoices.InvoiceDetailsResponse;
 import generated.se.sundsvall.invoices.InvoiceOrigin;
 import generated.se.sundsvall.invoices.InvoicesResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public interface InvoicesClient {
 		@RequestParam("page") final int page,
 		@RequestParam("limit") final int limit,
 		@RequestParam("partyId") final String partyId,
+		@RequestParam("organizationNumber") final List<String> organizationNumbers,
 		@RequestParam("organizationGroup") final String organizationGroup,
 		@RequestParam("invoiceDateFrom") final String invoiceDateFrom,
 		@RequestParam("invoiceDateTo") final String invoiceDateTo);
