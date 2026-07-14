@@ -6,7 +6,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/invoices/2281/COMMERCIAL",
+		"urlPath": "/invoices/2281/COMMERCIAL/customers/invoices",
 		"queryParameters": {
 			"page": {
 				"equalTo": "1"
@@ -14,10 +14,10 @@
 			"limit": {
 				"equalTo": "100"
 			},
-			"partyId": {
+			"partyIds": {
 				"equalTo": "c62fd364-6214-4fb1-82f7-e4b6be53afbe"
 			},
-			"organizationNumber": {
+			"organizationNumbers": {
 				"hasExactly": [
 					{
 						"equalTo": "5564786647"
@@ -27,13 +27,10 @@
 					}
 				]
 			},
-			"organizationGroup": {
-				"equalTo": "stadsbacken"
-			},
-			"invoiceDateFrom": {
+			"periodFrom": {
 				"matches": "^\\d{4}-\\d{2}-\\d{2}"
 			},
-			"invoiceDateTo": {
+			"periodTo": {
 				"matches": "^\\d{4}-\\d{2}-\\d{2}"
 			}
 		}

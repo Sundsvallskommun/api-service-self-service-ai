@@ -50,7 +50,9 @@
 					"currency": "currency1",
 					"description": "invoiceDescription1",
 					"dueDate": "2020-02-28",
-					"facilityId": "facilityId1",
+					"facilityIds": [
+						"facilityId1"
+					],
 					"invoiceAddress": {
 						"careOf": "careOf1",
 						"city": "city1",
@@ -92,7 +94,9 @@
 					"currency": "currency1",
 					"description": "invoiceDescription1",
 					"dueDate": "2020-02-28",
-					"facilityId": "facilityId1",
+					"facilityIds": [
+						"facilityId1"
+					],
 					"invoiceAddress": {
 						"careOf": "careOf1",
 						"city": "city1",

@@ -25,7 +25,7 @@ class ConversionUtilTest {
 		0, 1, 2, 3, 4, 5
 	})
 	void toBigDecimal(int scale) {
-		final var result = ConversionUtil.toBigDecimal(123.45678f, scale);
+		final var result = ConversionUtil.toBigDecimal(new BigDecimal("123.45678"), scale);
 
 		switch (scale) {
 			case 0 -> assertThat(result).isEqualTo(new BigDecimal("123"));

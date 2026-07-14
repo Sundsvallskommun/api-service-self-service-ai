@@ -2,6 +2,7 @@ package se.sundsvall.selfserviceai.integration.eneo.model.filecontent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +41,7 @@ class InvoiceTest {
 		final var currency = "currency";
 		final var description = "description";
 		final var dueDate = LocalDate.now();
-		final var facilityId = "facilityId";
+		final var facilityIds = List.of("facilityId");
 		final var invoiceAddress = Address.builder().build();
 		final var invoiceName = "invoiceName";
 		final var invoiceNumber = "invoiceNumber";
@@ -62,7 +63,7 @@ class InvoiceTest {
 			.withCurrency(currency)
 			.withDescription(description)
 			.withDueDate(dueDate)
-			.withFacilityId(facilityId)
+			.withFacilityIds(facilityIds)
 			.withInvoiceAddress(invoiceAddress)
 			.withInvoiceName(invoiceName)
 			.withInvoiceNumber(invoiceNumber)
@@ -85,7 +86,7 @@ class InvoiceTest {
 		assertThat(bean.getCurrency()).isEqualTo(currency);
 		assertThat(bean.getDescription()).isEqualTo(description);
 		assertThat(bean.getDueDate()).isEqualTo(dueDate);
-		assertThat(bean.getFacilityId()).isEqualTo(facilityId);
+		assertThat(bean.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(bean.getInvoiceAddress()).isEqualTo(invoiceAddress);
 		assertThat(bean.getInvoiceName()).isEqualTo(invoiceName);
 		assertThat(bean.getInvoiceNumber()).isEqualTo(invoiceNumber);

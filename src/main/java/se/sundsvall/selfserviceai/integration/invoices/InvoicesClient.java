@@ -1,8 +1,6 @@
 package se.sundsvall.selfserviceai.integration.invoices;
 
-import generated.se.sundsvall.invoices.InvoiceDetailsResponse;
-import generated.se.sundsvall.invoices.InvoiceOrigin;
-import generated.se.sundsvall.invoices.InvoicesResponse;
+import generated.se.sundsvall.invoices.CustomerInvoicesResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,33 +17,18 @@ import static se.sundsvall.selfserviceai.integration.invoices.configuration.Invo
 public interface InvoicesClient {
 
 	/**
-	 * Get invoices matching provided filters
+	 * Get commercial invoices for one or more customers matching provided filters. Each returned invoice carries its
+	 * invoice detail rows embedded.
 	 *
-	 * @return InstalledBaseResponse matching provided filter
+	 * @return CustomerInvoicesResponse matching provided filter
 	 */
-	@GetMapping(path = "/{municipalityId}/{invoiceOrigin}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-	InvoicesResponse getInvoices(
+	@GetMapping(path = "/{municipalityId}/COMMERCIAL/customers/invoices", produces = APPLICATION_JSON_VALUE)
+	CustomerInvoicesResponse getInvoicesForCustomer(
 		@PathVariable final String municipalityId,
-		@PathVariable final InvoiceOrigin invoiceOrigin,
+		@RequestParam("partyIds") final List<String> partyIds,
+		@RequestParam("organizationNumbers") final List<String> organizationNumbers,
+		@RequestParam("periodFrom") final String periodFrom,
+		@RequestParam("periodTo") final String periodTo,
 		@RequestParam("page") final int page,
-		@RequestParam("limit") final int limit,
-		@RequestParam("partyId") final String partyId,
-		@RequestParam("organizationNumber") final List<String> organizationNumbers,
-		@RequestParam("organizationGroup") final String organizationGroup,
-		@RequestParam("invoiceDateFrom") final String invoiceDateFrom,
-		@RequestParam("invoiceDateTo") final String invoiceDateTo);
-
-	/**
-	 * Get invoice details for a specific invoice
-	 *
-	 * @param  municipalityId     the municipality id
-	 * @param  organizationNumber the organization number
-	 * @param  invoiceNumber      the invoice number
-	 * @return                    InvoiceDetailsResponse containing details for the specific invoice
-	 */
-	@GetMapping(path = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-	InvoiceDetailsResponse getInvoiceDetails(
-		@PathVariable final String municipalityId,
-		@PathVariable final String organizationNumber,
-		@PathVariable final String invoiceNumber);
+		@RequestParam("limit") final int limit);
 }

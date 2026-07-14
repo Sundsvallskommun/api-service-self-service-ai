@@ -13,9 +13,8 @@ public class ConversionUtil {
 			.orElse(false);
 	}
 
-	public static BigDecimal toBigDecimal(final Float value, final int scale) {
+	public static BigDecimal toBigDecimal(final BigDecimal value, final int scale) {
 		return ofNullable(value)
-			.map(BigDecimal::valueOf)
 			.map(bigDecimal -> bigDecimal.setScale(scale, RoundingMode.HALF_DOWN))
 			.orElse(null);
 	}

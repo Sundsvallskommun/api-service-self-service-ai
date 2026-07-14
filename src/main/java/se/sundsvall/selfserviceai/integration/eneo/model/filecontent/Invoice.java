@@ -28,7 +28,7 @@ public class Invoice {
 
 	private LocalDate dueDate;
 
-	private String facilityId;
+	private List<String> facilityIds;
 
 	private Address invoiceAddress;
 

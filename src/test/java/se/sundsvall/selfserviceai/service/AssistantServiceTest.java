@@ -5,9 +5,7 @@ import generated.se.sundsvall.eneo.AskResponse;
 import generated.se.sundsvall.eneo.SessionPublic;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
-import generated.se.sundsvall.invoices.Invoice;
-import generated.se.sundsvall.invoices.InvoiceStatus;
-import generated.se.sundsvall.invoices.InvoiceType;
+import generated.se.sundsvall.invoices.CustomerInvoice;
 import generated.se.sundsvall.measurementdata.Category;
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementPoints;
@@ -142,11 +140,11 @@ class AssistantServiceTest {
 					.agreementId(String.valueOf(RandomUtils.secure().randomInt()))
 					.category(generated.se.sundsvall.agreement.Category.ELECTRICITY)
 					.facilityId(FACILITY_ID)),
-				List.of(new Invoice()
+				List.of(new CustomerInvoice()
 					.invoiceNumber(String.valueOf(RandomUtils.secure().randomInt()))
-					.invoiceType(InvoiceType.INVOICE)
-					.invoiceStatus(InvoiceStatus.SENT)
-					.facilityId(FACILITY_ID)),
+					.invoiceType(CustomerInvoice.InvoiceTypeEnum.INVOICE)
+					.invoiceStatus(CustomerInvoice.InvoiceStatusEnum.SENT)
+					.facilityIds(List.of(FACILITY_ID))),
 				List.of(new Data()
 					.facilityId(FACILITY_ID)
 					.addMeasurementSeriesItem(new MeasurementSerie()
@@ -222,7 +220,7 @@ class AssistantServiceTest {
 
 	@ParameterizedTest
 	@MethodSource("informationArgumentProvider")
-	void populateWithInformation(final List<Agreement> agreements, final List<Invoice> invoices, final List<Data> measurementDatas) {
+	void populateWithInformation(final List<Agreement> agreements, final List<CustomerInvoice> invoices, final List<Data> measurementDatas) {
 		// Arrange
 		final var fileId = UUID.randomUUID();
 		final var installedBaseResponse = Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer()
@@ -259,7 +257,6 @@ class AssistantServiceTest {
 		verify(eneoIntegrationMock).uploadFile(installedBaseCaptor.capture());
 		verify(fileRepositoryMock).save(fileEntityCaptor.capture());
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
-		verify(invoicesIntegrationMock, times(invoices.size())).getInvoiceDetails(eq(MUNICIPALITY_ID), any());
 
 		assertThat(installedBaseCaptor.getValue().getPartyId()).isEqualTo(PARTY_ID);
 		assertThat(fileEntityCaptor.getValue().getFileId()).isEqualTo(fileId.toString());
@@ -272,7 +269,7 @@ class AssistantServiceTest {
 		});
 	}
 
-	private void assertListContent(final List<Agreement> agreements, final List<Invoice> invoices, final List<Data> measurementDatas) {
+	private void assertListContent(final List<Agreement> agreements, final List<CustomerInvoice> invoices, final List<Data> measurementDatas) {
 		assertThat(Optional.ofNullable(agreements).orElse(emptyList()).stream()
 			.map(Agreement::getAgreementId)
 			.toList())
@@ -282,7 +279,7 @@ class AssistantServiceTest {
 				.toList());
 
 		assertThat(invoices.stream()
-			.map(Invoice::getInvoiceNumber)
+			.map(CustomerInvoice::getInvoiceNumber)
 			.toList())
 			.isEqualTo(installedBaseCaptor.getValue().getFacilities().stream()
 				.map(Facility::getInvoices).flatMap(List::stream)
