@@ -22,8 +22,6 @@ public class Invoice {
 
 	private BigDecimal amountVatExcluded;
 
-	private String currency;
-
 	private String description;
 
 	private LocalDate dueDate;
@@ -46,15 +44,11 @@ public class Invoice {
 
 	private boolean pdfAvailable;
 
-	private boolean reversedVat;
-
 	private BigDecimal rounding;
 
 	private String status;
 
 	private BigDecimal totalAmount;
-
-	private BigDecimal vat;
 
 	private BigDecimal vatEligibleAmount;
 

@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import se.sundsvall.selfserviceai.integration.invoices.configuration.InvoicesProperties;
 
+import static java.time.ZoneId.systemDefault;
 import static java.util.Optional.ofNullable;
 
 @Component
@@ -22,8 +23,8 @@ public class InvoicesIntegration {
 	}
 
 	public List<CustomerInvoice> getInvoices(final String municipalityId, final String partyId) {
-		final var periodFrom = LocalDate.now().withDayOfMonth(1).minusMonths(6); // First day of previous 6:th month
-		final var periodTo = LocalDate.now(); // Todays date
+		final var periodFrom = LocalDate.now(systemDefault()).withDayOfMonth(1).minusMonths(6); // First day of previous 6:th month
+		final var periodTo = LocalDate.now(systemDefault()); // Todays date
 
 		return getInvoices(municipalityId, partyId, periodFrom, periodTo, 1, new ArrayList<>());
 	}

@@ -79,7 +79,6 @@ class InvoiceDecoratorTest {
 
 		assertThat(result.getAmountVatExcluded()).isEqualTo(toBigDecimal(invoice.getAmountVatExcluded(), DECIMAL_POINTS));
 		assertThat(result.getAmountVatIncluded()).isEqualTo(toBigDecimal(invoice.getAmountVatIncluded(), DECIMAL_POINTS));
-		assertThat(result.getCurrency()).isNull();
 		assertThat(result.getDescription()).isEqualTo(invoice.getInvoiceDescription());
 		assertThat(result.getDueDate()).isEqualTo(invoice.getDueDate());
 		assertThat(result.getFacilityIds()).isEqualTo(invoice.getFacilityIds());
@@ -91,11 +90,9 @@ class InvoiceDecoratorTest {
 		assertThat(result.getOcrNumber()).isEqualTo(invoice.getOcrNumber());
 		assertThat(result.getOrganizationNumber()).isEqualTo(invoice.getOrganizationNumber());
 		assertThat(result.isPdfAvailable()).isEqualTo(toBoolean(invoice.getPdfAvailable()));
-		assertThat(result.isReversedVat()).isFalse();
 		assertThat(result.getRounding()).isEqualTo(toBigDecimal(invoice.getRounding(), DECIMAL_POINTS));
 		assertThat(result.getStatus()).isEqualTo(invoice.getInvoiceStatus().name());
 		assertThat(result.getTotalAmount()).isEqualTo(toBigDecimal(invoice.getTotalAmount(), DECIMAL_POINTS));
-		assertThat(result.getVat()).isNull();
 		assertThat(result.getVatEligibleAmount()).isEqualTo(toBigDecimal(invoice.getVatEligibleAmount(), DECIMAL_POINTS));
 		assertThat(result.getInvoiceRows()).hasSize(3);
 	}

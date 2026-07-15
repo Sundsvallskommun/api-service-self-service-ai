@@ -79,7 +79,6 @@ public class TestFactory {
 	public static final BigDecimal IB1_AGREEMENT1_MEASUREMENT2_VALUE = new BigDecimal("234.567890");
 	public static final String IB1_INVOICE1_AMOUNT_VAT_EXCLUDED = "1000.00";
 	public static final String IB1_INVOICE1_AMOUNT_VAT_INCLUDED = "1250.00";
-	public static final String IB1_INVOICE1_CURRENCY = "currency1";
 	public static final String IB1_INVOICE1_CARE_OF = "invoiceCareOf1";
 	public static final String IB1_INVOICE1_CITY = "invoiceCity1";
 	public static final String IB1_INVOICE1_POSTAL_CODE = "invoicePostalCode1";
@@ -88,7 +87,6 @@ public class TestFactory {
 	public static final LocalDate IB1_INVOICE1_DUE_DATE = LocalDate.of(2020, 2, 28);
 	public static final String IB1_INVOICE2_AMOUNT_VAT_EXCLUDED = "2500.00";
 	public static final String IB1_INVOICE2_AMOUNT_VAT_INCLUDED = "3000.00";
-	public static final String IB1_INVOICE2_CURRENCY = "currency2";
 	public static final LocalDate IB1_INVOICE2_DUE_DATE = LocalDate.of(2024, 2, 13);
 	public static final LocalDate IB1_INVOICE2_DATE = LocalDate.of(2024, 2, 28);
 	public static final String IB1_INVOICE1_DESCRIPTION = "invoiceDescription1";
@@ -99,10 +97,8 @@ public class TestFactory {
 	public static final String IB1_INVOICE1_OCR_NUMBER = "invoiceOcrNumber1";
 	public static final String IB1_INVOICE1_ORGANIZATION_NUMBER = "organizationNumber1";
 	public static final Boolean IB1_INVOICE1_PDF_AVAILABLE = true;
-	public static final Boolean IB1_INVOICE1_REVERSED_VAT = false;
 	public static final String IB1_INVOICE1_ROUNDING = "-0.35";
 	public static final String IB1_INVOICE1_TOTAL_AMOUNT = "1250.35";
-	public static final String IB1_INVOICE1_VAT = "0.25";
 	public static final String IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT = "456.78";
 	public static final String IB1_INVOICE2_DESCRIPTION = "invoiceDescription2";
 	public static final String IB1_INVOICE2_NAME = "invoiceName2";
@@ -111,10 +107,8 @@ public class TestFactory {
 	public static final CustomerInvoice.InvoiceTypeEnum IB1_INVOICE2_TYPE = CustomerInvoice.InvoiceTypeEnum.CONSOLIDATED_INVOICE;
 	public static final String IB1_INVOICE2_OCR_NUMBER = "invoiceOcrNumber2";
 	public static final String IB1_INVOICE2_ORGANIZATION_NUMBER = "organizationNumber2";
-	public static final Boolean IB1_INVOICE2_REVERSED_VAT = true;
 	public static final String IB1_INVOICE2_ROUNDING = "0.49";
 	public static final String IB1_INVOICE2_TOTAL_AMOUNT = "2999.51";
-	public static final String IB1_INVOICE2_VAT = "0.25";
 	public static final String IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT = "123.65";
 	public static final String IB2_FACILITY_ID = "facilityId2";
 	public static final int IB2_PLACEMENT_ID = 222;
@@ -419,7 +413,6 @@ public class TestFactory {
 		var invoice = se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice.builder()
 			.withAmountVatExcluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED)))
 			.withAmountVatIncluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_INCLUDED)))
-			.withCurrency(IB1_INVOICE1_CURRENCY)
 			.withDescription(IB1_INVOICE1_DESCRIPTION)
 			.withFacilityIds(List.of(IB1_FACILITY_ID))
 			.withInvoiceAddress(se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address.builder()
@@ -436,11 +429,9 @@ public class TestFactory {
 			.withOcrNumber(IB1_INVOICE1_OCR_NUMBER)
 			.withOrganizationNumber(IB1_INVOICE1_ORGANIZATION_NUMBER)
 			.withPdfAvailable(IB1_INVOICE1_PDF_AVAILABLE)
-			.withReversedVat(IB1_INVOICE1_REVERSED_VAT)
 			.withRounding(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_ROUNDING)))
 			.withStatus(IB1_INVOICE1_STATUS.toString())
 			.withTotalAmount(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_TOTAL_AMOUNT)))
-			.withVat(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_VAT)))
 			.withVatEligibleAmount(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT)))
 			.withInvoiceRows(List.of(createInvoiceRow()))
 			.build();
