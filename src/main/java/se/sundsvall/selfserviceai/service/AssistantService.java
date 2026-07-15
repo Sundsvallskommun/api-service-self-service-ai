@@ -49,7 +49,6 @@ import static se.sundsvall.selfserviceai.api.model.SessionStatus.PENDING;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.READY;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
-import static se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator.toDecoratedInvoice;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 import static se.sundsvall.selfserviceai.service.util.StringUtils.sanitizeAndCompress;
@@ -168,7 +167,7 @@ public class AssistantService {
 
 		final var invoices = safeCall("invoices", () -> invoicesIntegration.getInvoices(municipalityId, partyId));
 		final var decoratedInvoices = invoices.stream()
-			.map(invoice -> toDecoratedInvoice(invoice, invoicesIntegration.getInvoiceDetails(municipalityId, invoice)))
+			.map(InvoiceDecorator::toDecoratedInvoice)
 			.toList();
 
 		AgreementDecorator.addAgreements(facilities, safeCall("agreements", () -> agreementIntegration.getAgreements(municipalityId, partyId)));

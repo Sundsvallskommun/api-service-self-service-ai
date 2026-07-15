@@ -300,10 +300,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-04-09",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -317,11 +318,9 @@
 											"ocrNumber": "276344298",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -343,10 +342,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-04-07",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -360,11 +360,9 @@
 											"ocrNumber": "860339191",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -386,10 +384,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-13",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -403,11 +402,9 @@
 											"ocrNumber": "273469395",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -429,10 +426,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-03-10",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -446,11 +444,9 @@
 											"ocrNumber": "858874498",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -472,10 +468,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-02-10",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -489,11 +486,9 @@
 											"ocrNumber": "267893196",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -515,10 +510,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-02-06",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -532,11 +528,9 @@
 											"ocrNumber": "856444690",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -558,10 +552,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-01-09",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -575,11 +570,9 @@
 											"ocrNumber": "265026690",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -601,10 +594,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-01-08",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -618,11 +612,9 @@
 											"ocrNumber": "855825998",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -644,10 +636,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-11",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -661,11 +654,9 @@
 											"ocrNumber": "262133796",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -687,10 +678,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-12-09",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -704,11 +696,9 @@
 											"ocrNumber": "854354990",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -730,10 +720,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-11-08",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -747,11 +738,9 @@
 											"ocrNumber": "259273092",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -773,10 +762,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-11-07",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -790,11 +780,9 @@
 											"ocrNumber": "852769397",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -816,10 +804,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-10-10",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -833,11 +822,9 @@
 											"ocrNumber": "256384991",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -859,10 +846,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-10-09",
-											"facilityId": "735999109220108018",
+											"facilityIds": [
+												"735999109220108018"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -876,11 +864,9 @@
 											"ocrNumber": "851272393",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1234,10 +1220,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-31",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1251,11 +1238,9 @@
 											"ocrNumber": "276402690",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1277,10 +1262,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-04-07",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1294,11 +1280,9 @@
 											"ocrNumber": "860339894",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1320,10 +1304,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-03",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1337,11 +1322,9 @@
 											"ocrNumber": "273527994",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1363,10 +1346,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-03-10",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1380,11 +1364,9 @@
 											"ocrNumber": "858875198",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1406,10 +1388,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-01-30",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1423,11 +1406,9 @@
 											"ocrNumber": "267951895",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1449,10 +1430,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-02-06",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1466,11 +1448,9 @@
 											"ocrNumber": "856445390",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1492,10 +1472,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-30",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1509,11 +1490,9 @@
 											"ocrNumber": "265085399",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1535,10 +1514,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-01-08",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1552,11 +1532,9 @@
 											"ocrNumber": "855826699",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1578,10 +1556,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-02",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1595,11 +1574,9 @@
 											"ocrNumber": "262192495",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1621,10 +1598,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-12-09",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1638,11 +1616,9 @@
 											"ocrNumber": "854355690",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1664,10 +1640,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-10-29",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1681,11 +1658,9 @@
 											"ocrNumber": "259332096",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1707,10 +1682,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-11-07",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1724,11 +1700,9 @@
 											"ocrNumber": "852770098",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1750,10 +1724,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-09-30",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1767,11 +1742,9 @@
 											"ocrNumber": "256443995",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -1793,10 +1766,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-10-09",
-											"facilityId": "735999109222306054",
+											"facilityIds": [
+												"735999109222306054"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -1810,11 +1784,9 @@
 											"ocrNumber": "851273094",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2434,10 +2406,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-04-09",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2451,11 +2424,9 @@
 											"ocrNumber": "276344199",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2477,10 +2448,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-04-07",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2494,11 +2466,9 @@
 											"ocrNumber": "860339092",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2520,10 +2490,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-03-13",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2537,11 +2508,9 @@
 											"ocrNumber": "273469296",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2563,10 +2532,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-03-10",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2580,11 +2550,9 @@
 											"ocrNumber": "858874399",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2606,10 +2574,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-02-10",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2623,11 +2592,9 @@
 											"ocrNumber": "267893097",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2649,10 +2616,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-02-06",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2666,11 +2634,9 @@
 											"ocrNumber": "856444591",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2692,10 +2658,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2025-01-09",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2709,11 +2676,9 @@
 											"ocrNumber": "265026591",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2735,10 +2700,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2025-01-08",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2752,11 +2718,9 @@
 											"ocrNumber": "855825899",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2778,10 +2742,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-12-11",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2795,11 +2760,9 @@
 											"ocrNumber": "262133697",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2821,10 +2784,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-12-09",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2838,11 +2802,9 @@
 											"ocrNumber": "854354891",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2864,10 +2826,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-11-08",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2881,11 +2844,9 @@
 											"ocrNumber": "259272995",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2907,10 +2868,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-11-07",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2924,11 +2886,9 @@
 											"ocrNumber": "852769298",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2950,10 +2910,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "El",
 											"dueDate": "2024-10-10",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -2967,11 +2928,9 @@
 											"ocrNumber": "256384892",
 											"organizationNumber": "5565027223",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -2993,10 +2952,11 @@
 										{
 											"amountVatIncluded": 0.00,
 											"amountVatExcluded": 0.00,
-											"currency": "sek",
 											"description": "Elhandel",
 											"dueDate": "2024-10-09",
-											"facilityId": "735999109260723035",
+											"facilityIds": [
+												"735999109260723035"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3010,11 +2970,9 @@
 											"ocrNumber": "851272294",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.00,
 											"status": "VOID",
 											"totalAmount": 0.00,
-											"vat": 0.00,
 											"vatEligibleAmount": 0.00,
 											"invoiceRows": [
 												{
@@ -3416,10 +3374,11 @@
 										{
 											"amountVatIncluded": 2733.80,
 											"amountVatExcluded": 2187.04,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2025-03-28",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3433,11 +3392,9 @@
 											"ocrNumber": "859276990",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.20,
 											"status": "SENT",
 											"totalAmount": 2734.00,
-											"vat": 546.76,
 											"vatEligibleAmount": 2187.04,
 											"invoiceRows": [
 												{
@@ -3459,10 +3416,11 @@
 										{
 											"amountVatIncluded": 3130.08,
 											"amountVatExcluded": 2504.06,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2025-02-28",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3476,11 +3434,9 @@
 											"ocrNumber": "857816896",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": -0.08,
 											"status": "PAID",
 											"totalAmount": 3130.00,
-											"vat": 626.02,
 											"vatEligibleAmount": 2504.06,
 											"invoiceRows": [
 												{
@@ -3502,10 +3458,11 @@
 										{
 											"amountVatIncluded": 2801.81,
 											"amountVatExcluded": 2241.45,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2025-01-28",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3519,11 +3476,9 @@
 											"ocrNumber": "856262696",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.19,
 											"status": "PAID",
 											"totalAmount": 2802.00,
-											"vat": 560.36,
 											"vatEligibleAmount": 2241.45,
 											"invoiceRows": [
 												{
@@ -3545,10 +3500,11 @@
 										{
 											"amountVatIncluded": 2439.93,
 											"amountVatExcluded": 1951.94,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-12-30",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3562,11 +3518,9 @@
 											"ocrNumber": "854933496",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.07,
 											"status": "PAID",
 											"totalAmount": 2440.00,
-											"vat": 487.99,
 											"vatEligibleAmount": 1951.94,
 											"invoiceRows": [
 												{
@@ -3588,10 +3542,11 @@
 										{
 											"amountVatIncluded": 1781.65,
 											"amountVatExcluded": 1425.32,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-11-28",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3605,11 +3560,9 @@
 											"ocrNumber": "853307692",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.35,
 											"status": "PAID",
 											"totalAmount": 1782.00,
-											"vat": 356.33,
 											"vatEligibleAmount": 1425.32,
 											"invoiceRows": [
 												{
@@ -3631,10 +3584,11 @@
 										{
 											"amountVatIncluded": 1152.85,
 											"amountVatExcluded": 922.28,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-10-29",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3648,11 +3602,9 @@
 											"ocrNumber": "851873299",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.15,
 											"status": "PAID",
 											"totalAmount": 1153.00,
-											"vat": 230.57,
 											"vatEligibleAmount": 922.28,
 											"invoiceRows": [
 												{
@@ -3674,10 +3626,11 @@
 										{
 											"amountVatIncluded": 435.78,
 											"amountVatExcluded": 348.62,
-											"currency": "sek",
 											"description": "Fjärrvärme",
 											"dueDate": "2024-09-30",
-											"facilityId": "9222306053",
+											"facilityIds": [
+												"9222306053"
+											],
 											"invoiceAddress": {
 												"careOf": "Parker Peter",
 												"street": "Gröna trollets gränd 5",
@@ -3691,11 +3644,9 @@
 											"ocrNumber": "850248394",
 											"organizationNumber": "5564786647",
 											"pdfAvailable": false,
-											"reversedVat": false,
 											"rounding": 0.22,
 											"status": "PAID",
 											"totalAmount": 436.00,
-											"vat": 87.16,
 											"vatEligibleAmount": 348.62,
 											"invoiceRows": [
 												{

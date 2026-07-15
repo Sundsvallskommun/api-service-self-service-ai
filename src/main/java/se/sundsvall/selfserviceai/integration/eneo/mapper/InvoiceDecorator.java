@@ -1,8 +1,7 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
+import generated.se.sundsvall.invoices.CustomerInvoice;
 import generated.se.sundsvall.invoices.InvoiceDetail;
-import generated.se.sundsvall.invoices.InvoiceStatus;
-import generated.se.sundsvall.invoices.InvoiceType;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
@@ -30,37 +29,34 @@ public class InvoiceDecorator {
 			.forEach(invoice -> attachToFacility(facilities, invoice));
 	}
 
-	private static void attachToFacility(List<Facility> facilities, Invoice invoice) {
+	private static void attachToFacility(final List<Facility> facilities, final Invoice invoice) {
+		final var facilityIds = ofNullable(invoice.getFacilityIds()).orElse(emptyList());
 		ofNullable(facilities).orElse(emptyList())
 			.stream()
-			.filter(facility -> Objects.equals(facility.getFacilityId(), invoice.getFacilityId()))
-			.findFirst()
-			.ifPresent(facility -> facility.getInvoices().add(invoice));
+			.filter(facility -> facilityIds.contains(facility.getFacilityId()))
+			.forEach(facility -> facility.getInvoices().add(invoice));
 	}
 
-	public static Invoice toDecoratedInvoice(final generated.se.sundsvall.invoices.Invoice invoice, final List<InvoiceDetail> invoiceDetails) {
+	public static Invoice toDecoratedInvoice(final CustomerInvoice invoice) {
 		return Invoice.builder()
 			.withAmountVatExcluded(toBigDecimal(invoice.getAmountVatExcluded(), DECIMAL_POINTS))
 			.withAmountVatIncluded(toBigDecimal(invoice.getAmountVatIncluded(), DECIMAL_POINTS))
-			.withCurrency(invoice.getCurrency())
 			.withDescription(invoice.getInvoiceDescription())
 			.withDueDate(invoice.getDueDate())
-			.withFacilityId(invoice.getFacilityId())
-			.withInvoiceAddress(toAddress(invoice.getInvoiceAddress()))
+			.withFacilityIds(invoice.getFacilityIds())
+			.withInvoiceAddress(toAddress(invoice))
 			.withInvoiceName(invoice.getInvoiceName())
 			.withInvoiceNumber(invoice.getInvoiceNumber())
-			.withInvoiceType(ofNullable(invoice.getInvoiceType()).map(InvoiceType::name).orElse(null))
+			.withInvoiceType(ofNullable(invoice.getInvoiceType()).map(Enum::name).orElse(null))
 			.withInvoicingDate(invoice.getInvoiceDate())
 			.withOcrNumber(invoice.getOcrNumber())
 			.withOrganizationNumber(invoice.getOrganizationNumber())
 			.withPdfAvailable(toBoolean(invoice.getPdfAvailable()))
-			.withReversedVat(toBoolean(invoice.getReversedVat()))
 			.withRounding(toBigDecimal(invoice.getRounding(), DECIMAL_POINTS))
-			.withStatus(ofNullable(invoice.getInvoiceStatus()).map(InvoiceStatus::name).orElse(null))
+			.withStatus(ofNullable(invoice.getInvoiceStatus()).map(Enum::name).orElse(null))
 			.withTotalAmount(toBigDecimal(invoice.getTotalAmount(), DECIMAL_POINTS))
-			.withVat(toBigDecimal(invoice.getVat(), DECIMAL_POINTS))
 			.withVatEligibleAmount(toBigDecimal(invoice.getVatEligibleAmount(), DECIMAL_POINTS))
-			.withInvoiceRows(invoiceDetails.stream()
+			.withInvoiceRows(ofNullable(invoice.getDetails()).orElse(emptyList()).stream()
 				.map(InvoiceDecorator::toInvoiceRow)
 				.toList())
 			.build();
@@ -83,13 +79,13 @@ public class InvoiceDecorator {
 			.build();
 	}
 
-	static Address toAddress(final generated.se.sundsvall.invoices.Address address) {
-		return ofNullable(address)
-			.map(address1 -> Address.builder()
-				.withCareOf(address1.getCareOf())
-				.withCity(address1.getCity())
-				.withPostalCode(address1.getPostcode())
-				.withStreet(address1.getStreet())
+	static Address toAddress(final CustomerInvoice invoice) {
+		return ofNullable(invoice)
+			.map(source -> Address.builder()
+				.withCareOf(source.getCareOf())
+				.withCity(source.getCity())
+				.withPostalCode(source.getPostCode())
+				.withStreet(source.getStreet())
 				.build())
 			.orElse(null);
 	}

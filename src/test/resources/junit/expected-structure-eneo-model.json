@@ -47,10 +47,11 @@
 				{
 					"amountVatExcluded": 1000.0,
 					"amountVatIncluded": 1250.0,
-					"currency": "currency1",
 					"description": "invoiceDescription1",
 					"dueDate": "2020-02-28",
-					"facilityId": "facilityId1",
+					"facilityIds": [
+						"facilityId1"
+					],
 					"invoiceAddress": {
 						"careOf": "careOf1",
 						"city": "city1",
@@ -79,20 +80,19 @@
 					"ocrNumber": "invoiceOcrNumber1",
 					"organizationNumber": "organizationNumber1",
 					"pdfAvailable": true,
-					"reversedVat": false,
 					"rounding": -0.35,
 					"status": "SENT",
 					"totalAmount": 1250.35,
-					"vat": 0.25,
 					"vatEligibleAmount": 456.78
 				},
 				{
 					"amountVatExcluded": 1000.0,
 					"amountVatIncluded": 1250.0,
-					"currency": "currency1",
 					"description": "invoiceDescription1",
 					"dueDate": "2020-02-28",
-					"facilityId": "facilityId1",
+					"facilityIds": [
+						"facilityId1"
+					],
 					"invoiceAddress": {
 						"careOf": "careOf1",
 						"city": "city1",
@@ -121,11 +121,9 @@
 					"ocrNumber": "invoiceOcrNumber1",
 					"organizationNumber": "organizationNumber1",
 					"pdfAvailable": true,
-					"reversedVat": false,
 					"rounding": -0.35,
 					"status": "SENT",
 					"totalAmount": 1250.35,
-					"vat": 0.25,
 					"vatEligibleAmount": 456.78
 				}
 			],

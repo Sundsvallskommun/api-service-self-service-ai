@@ -2,6 +2,7 @@ package se.sundsvall.selfserviceai.integration.eneo.model.filecontent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,10 +38,9 @@ class InvoiceTest {
 	void testBuilderMethodsForInvoice() {
 		final var amountVatExcluded = BigDecimal.valueOf(123);
 		final var amountVatIncluded = BigDecimal.valueOf(234);
-		final var currency = "currency";
 		final var description = "description";
 		final var dueDate = LocalDate.now();
-		final var facilityId = "facilityId";
+		final var facilityIds = List.of("facilityId");
 		final var invoiceAddress = Address.builder().build();
 		final var invoiceName = "invoiceName";
 		final var invoiceNumber = "invoiceNumber";
@@ -49,20 +49,17 @@ class InvoiceTest {
 		final var ocrNumber = "ocrNumber";
 		final var organizationNumber = "organizationNumber";
 		final var pdfAvailable = true;
-		final var reversedVat = true;
 		final var rounding = BigDecimal.valueOf(567);
 		final var status = "status";
 		final var totalAmount = BigDecimal.valueOf(678);
-		final var vat = BigDecimal.valueOf(890);
 		final var vatEligibleAmount = BigDecimal.valueOf(901);
 
 		final var bean = Invoice.builder()
 			.withAmountVatExcluded(amountVatExcluded)
 			.withAmountVatIncluded(amountVatIncluded)
-			.withCurrency(currency)
 			.withDescription(description)
 			.withDueDate(dueDate)
-			.withFacilityId(facilityId)
+			.withFacilityIds(facilityIds)
 			.withInvoiceAddress(invoiceAddress)
 			.withInvoiceName(invoiceName)
 			.withInvoiceNumber(invoiceNumber)
@@ -71,21 +68,18 @@ class InvoiceTest {
 			.withOcrNumber(ocrNumber)
 			.withOrganizationNumber(organizationNumber)
 			.withPdfAvailable(pdfAvailable)
-			.withReversedVat(reversedVat)
 			.withRounding(rounding)
 			.withStatus(status)
 			.withTotalAmount(totalAmount)
-			.withVat(vat)
 			.withVatEligibleAmount(vatEligibleAmount)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getAmountVatExcluded()).isEqualTo(amountVatExcluded);
 		assertThat(bean.getAmountVatIncluded()).isEqualByComparingTo(amountVatIncluded);
-		assertThat(bean.getCurrency()).isEqualTo(currency);
 		assertThat(bean.getDescription()).isEqualTo(description);
 		assertThat(bean.getDueDate()).isEqualTo(dueDate);
-		assertThat(bean.getFacilityId()).isEqualTo(facilityId);
+		assertThat(bean.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(bean.getInvoiceAddress()).isEqualTo(invoiceAddress);
 		assertThat(bean.getInvoiceName()).isEqualTo(invoiceName);
 		assertThat(bean.getInvoiceNumber()).isEqualTo(invoiceNumber);
@@ -96,19 +90,16 @@ class InvoiceTest {
 		assertThat(bean.getRounding()).isEqualTo(rounding);
 		assertThat(bean.getStatus()).isEqualTo(status);
 		assertThat(bean.getTotalAmount()).isEqualByComparingTo(totalAmount);
-		assertThat(bean.getVat()).isEqualTo(vat);
 		assertThat(bean.getVatEligibleAmount()).isEqualTo(vatEligibleAmount);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(Invoice.builder().build())
-			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "reversedVat", "invoiceRows")
-			.hasFieldOrPropertyWithValue("pdfAvailable", false)
-			.hasFieldOrPropertyWithValue("reversedVat", false);
+			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "invoiceRows")
+			.hasFieldOrPropertyWithValue("pdfAvailable", false);
 		assertThat(new Invoice())
-			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "reversedVat", "invoiceRows")
-			.hasFieldOrPropertyWithValue("pdfAvailable", false)
-			.hasFieldOrPropertyWithValue("reversedVat", false);
+			.hasAllNullFieldsOrPropertiesExcept("pdfAvailable", "invoiceRows")
+			.hasFieldOrPropertyWithValue("pdfAvailable", false);
 	}
 }

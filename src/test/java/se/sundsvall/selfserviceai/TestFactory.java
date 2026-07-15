@@ -16,9 +16,8 @@ import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseItemAddress;
 import generated.se.sundsvall.installedbase.InstalledBaseItemMetaData;
+import generated.se.sundsvall.invoices.CustomerInvoice;
 import generated.se.sundsvall.invoices.InvoiceDetail;
-import generated.se.sundsvall.invoices.InvoiceStatus;
-import generated.se.sundsvall.invoices.InvoiceType;
 import generated.se.sundsvall.measurementdata.Data;
 import generated.se.sundsvall.measurementdata.MeasurementPoints;
 import generated.se.sundsvall.measurementdata.MeasurementSerie;
@@ -80,7 +79,6 @@ public class TestFactory {
 	public static final BigDecimal IB1_AGREEMENT1_MEASUREMENT2_VALUE = new BigDecimal("234.567890");
 	public static final String IB1_INVOICE1_AMOUNT_VAT_EXCLUDED = "1000.00";
 	public static final String IB1_INVOICE1_AMOUNT_VAT_INCLUDED = "1250.00";
-	public static final String IB1_INVOICE1_CURRENCY = "currency1";
 	public static final String IB1_INVOICE1_CARE_OF = "invoiceCareOf1";
 	public static final String IB1_INVOICE1_CITY = "invoiceCity1";
 	public static final String IB1_INVOICE1_POSTAL_CODE = "invoicePostalCode1";
@@ -89,33 +87,28 @@ public class TestFactory {
 	public static final LocalDate IB1_INVOICE1_DUE_DATE = LocalDate.of(2020, 2, 28);
 	public static final String IB1_INVOICE2_AMOUNT_VAT_EXCLUDED = "2500.00";
 	public static final String IB1_INVOICE2_AMOUNT_VAT_INCLUDED = "3000.00";
-	public static final String IB1_INVOICE2_CURRENCY = "currency2";
 	public static final LocalDate IB1_INVOICE2_DUE_DATE = LocalDate.of(2024, 2, 13);
 	public static final LocalDate IB1_INVOICE2_DATE = LocalDate.of(2024, 2, 28);
 	public static final String IB1_INVOICE1_DESCRIPTION = "invoiceDescription1";
 	public static final String IB1_INVOICE1_NAME = "invoiceName1";
 	public static final String IB1_INVOICE1_NUMBER = "invoiceNumber1";
-	public static final InvoiceStatus IB1_INVOICE1_STATUS = InvoiceStatus.SENT;
-	public static final InvoiceType IB1_INVOICE1_TYPE = InvoiceType.INVOICE;
+	public static final CustomerInvoice.InvoiceStatusEnum IB1_INVOICE1_STATUS = CustomerInvoice.InvoiceStatusEnum.SENT;
+	public static final CustomerInvoice.InvoiceTypeEnum IB1_INVOICE1_TYPE = CustomerInvoice.InvoiceTypeEnum.INVOICE;
 	public static final String IB1_INVOICE1_OCR_NUMBER = "invoiceOcrNumber1";
 	public static final String IB1_INVOICE1_ORGANIZATION_NUMBER = "organizationNumber1";
 	public static final Boolean IB1_INVOICE1_PDF_AVAILABLE = true;
-	public static final Boolean IB1_INVOICE1_REVERSED_VAT = false;
 	public static final String IB1_INVOICE1_ROUNDING = "-0.35";
 	public static final String IB1_INVOICE1_TOTAL_AMOUNT = "1250.35";
-	public static final String IB1_INVOICE1_VAT = "0.25";
 	public static final String IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT = "456.78";
 	public static final String IB1_INVOICE2_DESCRIPTION = "invoiceDescription2";
 	public static final String IB1_INVOICE2_NAME = "invoiceName2";
 	public static final String IB1_INVOICE2_NUMBER = "invoiceNumber2";
-	public static final InvoiceStatus IB1_INVOICE2_STATUS = InvoiceStatus.REMINDER;
-	public static final InvoiceType IB1_INVOICE2_TYPE = InvoiceType.CONSOLIDATED_INVOICE;
+	public static final CustomerInvoice.InvoiceStatusEnum IB1_INVOICE2_STATUS = CustomerInvoice.InvoiceStatusEnum.REMINDER;
+	public static final CustomerInvoice.InvoiceTypeEnum IB1_INVOICE2_TYPE = CustomerInvoice.InvoiceTypeEnum.CONSOLIDATED_INVOICE;
 	public static final String IB1_INVOICE2_OCR_NUMBER = "invoiceOcrNumber2";
 	public static final String IB1_INVOICE2_ORGANIZATION_NUMBER = "organizationNumber2";
-	public static final Boolean IB1_INVOICE2_REVERSED_VAT = true;
 	public static final String IB1_INVOICE2_ROUNDING = "0.49";
 	public static final String IB1_INVOICE2_TOTAL_AMOUNT = "2999.51";
-	public static final String IB1_INVOICE2_VAT = "0.25";
 	public static final String IB1_INVOICE2_VAT_ELIGIBLE_AMOUNT = "123.65";
 	public static final String IB2_FACILITY_ID = "facilityId2";
 	public static final int IB2_PLACEMENT_ID = 222;
@@ -420,9 +413,8 @@ public class TestFactory {
 		var invoice = se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice.builder()
 			.withAmountVatExcluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED)))
 			.withAmountVatIncluded(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_AMOUNT_VAT_INCLUDED)))
-			.withCurrency(IB1_INVOICE1_CURRENCY)
 			.withDescription(IB1_INVOICE1_DESCRIPTION)
-			.withFacilityId(IB1_FACILITY_ID)
+			.withFacilityIds(List.of(IB1_FACILITY_ID))
 			.withInvoiceAddress(se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Address.builder()
 				.withCareOf(IB1_CARE_OF)
 				.withCity(IB1_CITY)
@@ -437,11 +429,9 @@ public class TestFactory {
 			.withOcrNumber(IB1_INVOICE1_OCR_NUMBER)
 			.withOrganizationNumber(IB1_INVOICE1_ORGANIZATION_NUMBER)
 			.withPdfAvailable(IB1_INVOICE1_PDF_AVAILABLE)
-			.withReversedVat(IB1_INVOICE1_REVERSED_VAT)
 			.withRounding(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_ROUNDING)))
 			.withStatus(IB1_INVOICE1_STATUS.toString())
 			.withTotalAmount(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_TOTAL_AMOUNT)))
-			.withVat(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_VAT)))
 			.withVatEligibleAmount(BigDecimal.valueOf(Double.parseDouble(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT)))
 			.withInvoiceRows(List.of(createInvoiceRow()))
 			.build();
@@ -455,25 +445,17 @@ public class TestFactory {
 
 	public static InvoiceDetail createInvoiceDetail() {
 		return new InvoiceDetail()
-			.amount(12f)
-			.amountVatExcluded(12f)
+			.amount(BigDecimal.valueOf(12))
+			.amountVatExcluded(BigDecimal.valueOf(12))
 			.fromDate(LocalDate.now())
 			.toDate(LocalDate.now())
-			.vat(10f)
-			.vatRate(10f)
-			.quantity(0.08493151f)
+			.vat(BigDecimal.valueOf(10))
+			.vatRate(BigDecimal.valueOf(10))
+			.quantity(BigDecimal.valueOf(0.08493151))
 			.description("description")
 			.productCode("productCode")
 			.productName("productName")
 			.unit("unit");
-	}
-
-	public static generated.se.sundsvall.invoices.Address createAddress() {
-		return new generated.se.sundsvall.invoices.Address()
-			.careOf("careOf")
-			.city("city")
-			.postcode("postcode")
-			.street("street");
 	}
 
 	public static InvoiceRow createInvoiceRow() {
@@ -502,19 +484,17 @@ public class TestFactory {
 		return invoiceRow;
 	}
 
-	public static generated.se.sundsvall.invoices.Invoice createGeneratedInvoice() {
-		return new generated.se.sundsvall.invoices.Invoice()
-			.facilityId(IB1_FACILITY_ID)
-			.amountVatExcluded(Float.valueOf(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED))
-			.amountVatIncluded(Float.valueOf(IB1_INVOICE1_AMOUNT_VAT_INCLUDED))
-			.currency(IB1_INVOICE1_CURRENCY)
+	public static CustomerInvoice createCustomerInvoice() {
+		return new CustomerInvoice()
+			.facilityIds(List.of(IB1_FACILITY_ID))
+			.amountVatExcluded(new BigDecimal(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED))
+			.amountVatIncluded(new BigDecimal(IB1_INVOICE1_AMOUNT_VAT_INCLUDED))
 			.dueDate(IB1_INVOICE1_DUE_DATE)
 			.invoiceDate(IB1_INVOICE1_DATE)
-			.invoiceAddress(new generated.se.sundsvall.invoices.Address()
-				.careOf(IB1_INVOICE1_CARE_OF)
-				.city(IB1_INVOICE1_CITY)
-				.postcode(IB1_INVOICE1_POSTAL_CODE)
-				.street(IB1_INVOICE1_STREET))
+			.careOf(IB1_INVOICE1_CARE_OF)
+			.city(IB1_INVOICE1_CITY)
+			.postCode(IB1_INVOICE1_POSTAL_CODE)
+			.street(IB1_INVOICE1_STREET)
 			.invoiceDescription(IB1_INVOICE1_DESCRIPTION)
 			.invoiceName(IB1_INVOICE1_NAME)
 			.invoiceNumber(IB1_INVOICE1_NUMBER)
@@ -523,10 +503,9 @@ public class TestFactory {
 			.ocrNumber(IB1_INVOICE1_OCR_NUMBER)
 			.organizationNumber(IB1_INVOICE1_ORGANIZATION_NUMBER)
 			.pdfAvailable(IB1_INVOICE1_PDF_AVAILABLE)
-			.reversedVat(IB1_INVOICE1_REVERSED_VAT)
-			.rounding(Float.valueOf(IB1_INVOICE1_ROUNDING))
-			.totalAmount(Float.valueOf(IB1_INVOICE1_TOTAL_AMOUNT))
-			.vat(Float.valueOf(IB1_INVOICE1_VAT))
-			.vatEligibleAmount(Float.valueOf(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT));
+			.rounding(new BigDecimal(IB1_INVOICE1_ROUNDING))
+			.totalAmount(new BigDecimal(IB1_INVOICE1_TOTAL_AMOUNT))
+			.vatEligibleAmount(new BigDecimal(IB1_INVOICE1_VAT_ELIGIBLE_AMOUNT))
+			.details(List.of(createInvoiceDetail(), createInvoiceDetail(), createInvoiceDetail()));
 	}
 }
