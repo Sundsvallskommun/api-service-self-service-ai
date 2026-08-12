@@ -107,6 +107,16 @@ class SessionRepositoryTest {
 		assertThat(sessionRepository.findBySessionIdAndMunicipalityId(UUID.randomUUID().toString(), MUNICIPALITY)).isEmpty();
 	}
 
+	@Test
+	void findForUpdateBySessionId() {
+		final var sessionId = "4dc21d5e-8a70-45fb-b225-367fcd383a2e";
+
+		assertThat(sessionRepository.findForUpdateBySessionId(sessionId)).hasValueSatisfying(session -> assertThat(session.getFiles()).hasSize(2)
+			.extracting(FileEntity::getFileId)
+			.containsExactlyInAnyOrder("5ef193cd-96a7-4861-a33d-e01528618f2e", "2f60ca4c-828b-4f4e-818f-432d53d61f83"));
+		assertThat(sessionRepository.findForUpdateBySessionId(UUID.randomUUID().toString())).isEmpty();
+	}
+
 	@ParameterizedTest
 	@MethodSource("danglingSessionProvider")
 	@Sql(scripts = {
