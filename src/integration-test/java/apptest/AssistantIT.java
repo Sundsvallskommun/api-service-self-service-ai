@@ -65,6 +65,8 @@ class AssistantIT extends AbstractAppTest {
 
 	@Test
 	void test01_createSession() {
+		final var sessionId = "5f91f4d5-40bf-4488-8de1-7417e175d4f7";
+
 		setupCall()
 			.withServicePath(PATH)
 			.withContentType(APPLICATION_JSON)
@@ -74,6 +76,19 @@ class AssistantIT extends AbstractAppTest {
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
+
+		// Wait for the asynchronous initialization to finish, as it otherwise interferes with subsequent tests
+		Awaitility.await()
+			.atMost(Duration.ofSeconds(30))
+			.ignoreExceptions()
+			.until(() -> transactionTemplate.execute(status -> {
+				final var session = sessionRepository.getReferenceById(sessionId);
+
+				assertThat(session.getInitialized()).isNotNull();
+				assertThat(session.getFiles()).hasSize(1);
+
+				return true;
+			}));
 	}
 
 	@Test
