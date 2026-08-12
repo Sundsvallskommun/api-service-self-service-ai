@@ -40,7 +40,6 @@ import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.selfserviceai.api.model.SessionRequest;
 import se.sundsvall.selfserviceai.api.model.SessionResponse;
 import se.sundsvall.selfserviceai.integration.agreement.AgreementIntegration;
-import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
@@ -62,10 +61,12 @@ import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -115,7 +116,7 @@ class AssistantServiceTest {
 	private SessionRepository sessionRepositoryMock;
 
 	@Mock
-	private FileRepository fileRepositoryMock;
+	private SessionPersistenceService sessionPersistenceServiceMock;
 
 	@InjectMocks
 	private AssistantService assistantService;
@@ -124,7 +125,7 @@ class AssistantServiceTest {
 	private ArgumentCaptor<SessionEntity> sessionEntityCaptor;
 
 	@Captor
-	private ArgumentCaptor<FileEntity> fileEntityCaptor;
+	private ArgumentCaptor<String> statusCaptor;
 
 	@Captor
 	private ArgumentCaptor<EneoModel> installedBaseCaptor;
@@ -166,7 +167,7 @@ class AssistantServiceTest {
 			limeIntegrationMock,
 			measurementDataIntegrationMock,
 			sessionRepositoryMock,
-			fileRepositoryMock);
+			sessionPersistenceServiceMock);
 	}
 
 	@Test
@@ -242,7 +243,7 @@ class AssistantServiceTest {
 		when(invoicesIntegrationMock.getInvoices(MUNICIPALITY_ID, PARTY_ID)).thenReturn(invoices);
 		when(measurementDataIntegrationMock.getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList())).thenReturn(measurementDatas);
 		when(eneoIntegrationMock.uploadFile(any(EneoModel.class))).thenReturn(fileId);
-		when(fileRepositoryMock.save(any(FileEntity.class))).then(args -> args.getArgument(0));
+		when(sessionPersistenceServiceMock.attachFile(eq(SESSION_ID.toString()), eq(fileId), isNull(), eq("Successfully initialized"))).thenReturn(true);
 
 		// Act
 		assistantService.populateWithInformation(SESSION_ID, sessionRequest, (String) null);
@@ -255,18 +256,50 @@ class AssistantServiceTest {
 		verify(measurementDataIntegrationMock).getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList());
 		verify(eneoMapperSpy).toEneoModel(installedBaseResponse);
 		verify(eneoIntegrationMock).uploadFile(installedBaseCaptor.capture());
-		verify(fileRepositoryMock).save(fileEntityCaptor.capture());
-		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
+		verify(sessionPersistenceServiceMock).attachFile(SESSION_ID.toString(), fileId, null, "Successfully initialized");
+		verify(eneoIntegrationMock, never()).deleteFile(any());
 
 		assertThat(installedBaseCaptor.getValue().getPartyId()).isEqualTo(PARTY_ID);
-		assertThat(fileEntityCaptor.getValue().getFileId()).isEqualTo(fileId.toString());
-		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
-			assertThat(entity.getFiles()).hasSize(1).extracting(FileEntity::getFileId).containsExactly(fileId.toString());
-			assertThat(entity.getInitialized()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
-			assertThat(entity.getStatus()).isEqualTo("Successfully initialized");
+		assertListContent(agreements, invoices, measurementDatas);
+	}
 
-			assertListContent(agreements, invoices, measurementDatas);
-		});
+	@Test
+	void populateWithInformationWhenSessionIsRemovedDuringInitialization() {
+		// Arrange
+		final var fileId = UUID.randomUUID();
+		final var installedBaseResponse = Map.of(CUSTOMER_ENGAGEMENT_ORG_ID, new InstalledBaseCustomer()
+			.items(List.of(new InstalledBaseItem()
+				.facilityId(FACILITY_ID)))
+			.partyId(PARTY_ID));
+		final var sessionRequest = SessionRequest.builder()
+			.withPartyId(PARTY_ID)
+			.withCustomerEngagementOrgIds(CUSTOMER_ENGAGEMENT_ORG_IDS)
+			.build();
+		final var sessionEntity = SessionEntity.builder()
+			.withMunicipalityId(MUNICIPALITY_ID)
+			.withSessionId(SESSION_ID.toString())
+			.build();
+
+		when(sessionRepositoryMock.findById(SESSION_ID.toString())).thenReturn(Optional.of(sessionEntity));
+		when(installedbaseIntegrationMock.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS)).thenReturn(installedBaseResponse);
+		when(eneoIntegrationMock.uploadFile(any(EneoModel.class))).thenReturn(fileId);
+		when(sessionPersistenceServiceMock.attachFile(eq(SESSION_ID.toString()), eq(fileId), isNull(), eq("Successfully initialized"))).thenReturn(false);
+
+		// Act
+		assistantService.populateWithInformation(SESSION_ID, sessionRequest, (String) null);
+
+		// Assert and verify
+		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
+		verify(agreementIntegrationMock).getAgreements(MUNICIPALITY_ID, PARTY_ID);
+		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
+		verify(invoicesIntegrationMock).getInvoices(MUNICIPALITY_ID, PARTY_ID);
+		verify(measurementDataIntegrationMock).getMeasurementData(eq(MUNICIPALITY_ID), eq(PARTY_ID), anyList());
+		verify(eneoMapperSpy).toEneoModel(installedBaseResponse);
+		verify(eneoIntegrationMock).uploadFile(any(EneoModel.class));
+		verify(sessionPersistenceServiceMock).attachFile(SESSION_ID.toString(), fileId, null, "Successfully initialized");
+
+		// The uploaded file must be removed from Eneo, as no session will ever point at it
+		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 	}
 
 	private void assertListContent(final List<Agreement> agreements, final List<CustomerInvoice> invoices, final List<Data> measurementDatas) {
@@ -316,13 +349,8 @@ class AssistantServiceTest {
 		// Assert and verify
 		verify(sessionRepositoryMock).findById(SESSION_ID.toString());
 		verify(installedbaseIntegrationMock).getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
-		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
-
-		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
-			assertThat(entity.getFiles()).isEmpty();
-			assertThat(entity.getInitialized()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
-			assertThat(entity.getStatus()).isEqualTo("No installed base information found for customer '%s' and counterparts %s".formatted(PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS));
-		});
+		verify(sessionPersistenceServiceMock).completeInitialization(SESSION_ID.toString(),
+			"No installed base information found for customer '%s' and counterparts %s".formatted(PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS));
 	}
 
 	@ParameterizedTest
@@ -359,19 +387,17 @@ class AssistantServiceTest {
 		verify(measurementDataIntegrationMock).getMeasurementData(MUNICIPALITY_ID, PARTY_ID, emptyList());
 		verify(eneoMapperSpy).toEneoModel(installedBases);
 		verify(eneoIntegrationMock).uploadFile(eneoModel);
-		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
+		verify(sessionPersistenceServiceMock).completeInitialization(eq(SESSION_ID.toString()), statusCaptor.capture());
+		verify(eneoIntegrationMock, never()).deleteFile(any());
 
-		assertThat(sessionEntityCaptor.getValue()).satisfies(entity -> {
-			assertThat(entity.getFiles()).isEmpty();
-			assertThat(entity.getInitialized()).isNotNull();
-			if (isNull(uuid)) {
-				assertThat(entity.getStatus()).startsWith("Initialization failed. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '");
-				assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(93, 129)), "Log message does not contain a valid log id");
-				assertThat(entity.getStatus()).endsWith("' for more information.");
-			} else {
-				assertThat(entity.getStatus()).isEqualTo("Initialization failed. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
-			}
-		});
+		final var status = statusCaptor.getValue();
+		if (isNull(uuid)) {
+			assertThat(status).startsWith("Initialization failed. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '");
+			assertDoesNotThrow(() -> UUID.fromString(status.substring(93, 129)), "Log message does not contain a valid log id");
+			assertThat(status).endsWith("' for more information.");
+		} else {
+			assertThat(status).isEqualTo("Initialization failed. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
+		}
 	}
 
 	@Test
@@ -592,17 +618,17 @@ class AssistantServiceTest {
 		new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID().toString());
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock).assistantId();
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
-		verify(sessionRepositoryMock).delete(sessionEntity);
+		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), true);
 	}
 
 	@Test
@@ -622,7 +648,7 @@ class AssistantServiceTest {
 		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 		when(eneoIntegrationMock.deleteFile(fileId.toString())).thenReturn(true);
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
@@ -631,13 +657,12 @@ class AssistantServiceTest {
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID().toString());
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
-		verify(fileRepositoryMock).delete(fileEntity);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
-		verify(sessionRepositoryMock).delete(sessionEntity);
+		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), List.of(fileEntity.getFileId()), true);
 	}
 
 	@Test
@@ -652,7 +677,7 @@ class AssistantServiceTest {
 		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
@@ -660,11 +685,11 @@ class AssistantServiceTest {
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, UUID.randomUUID().toString());
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
-		verify(sessionRepositoryMock).delete(sessionEntity);
+		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), true);
 	}
 
 	@ParameterizedTest
@@ -684,7 +709,7 @@ class AssistantServiceTest {
 		final var exception = Problem.valueOf(BAD_GATEWAY, "Big and stout");
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
+		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(entity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 		doThrow(exception).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 
@@ -692,18 +717,23 @@ class AssistantServiceTest {
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, uuid);
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
+		verify(sessionPersistenceServiceMock).updateStatus(eq(SESSION_ID.toString()), statusCaptor.capture());
 
+		// Nothing may be removed when the chat history could not be saved
+		verify(eneoIntegrationMock, never()).deleteSession(any(), any());
+		verify(sessionPersistenceServiceMock, never()).finalizeDeletion(any(), any(), anyBoolean());
+
+		final var status = statusCaptor.getValue();
 		if (isNull(uuid)) {
-			assertThat(entity.getStatus()).startsWith("Failed to save chat history. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '");
-			assertDoesNotThrow(() -> UUID.fromString(entity.getStatus().substring(99, 135)), "Log message does not contain a valid log id");
-			assertThat(entity.getStatus()).endsWith("' for more information.");
+			assertThat(status).startsWith("Failed to save chat history. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '");
+			assertDoesNotThrow(() -> UUID.fromString(status.substring(99, 135)), "Log message does not contain a valid log id");
+			assertThat(status).endsWith("' for more information.");
 		} else {
-			assertThat(entity.getStatus()).isEqualTo("Failed to save chat history. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
+			assertThat(status).isEqualTo("Failed to save chat history. Error message is 'Bad Gateway: Big and stout'. Filter logs on log id '%s' for more information.".formatted(uuid));
 		}
-
 	}
 
 	@Test
@@ -724,21 +754,21 @@ class AssistantServiceTest {
 		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
-		verify(fileRepositoryMock, never()).delete(fileEntity);
-		verify(sessionRepositoryMock, never()).delete(sessionEntity);
 
-		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(requestId));
+		// The session must not be removed in Eneo as long as one of its files is left there
+		verify(eneoIntegrationMock, never()).deleteSession(any(), any());
+		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), false);
 	}
 
 	@Test
@@ -754,21 +784,19 @@ class AssistantServiceTest {
 		final var session = new SessionPublic();
 
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
-		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
+		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(eneoIntegrationMock).getSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
-		verify(sessionRepositoryMock, never()).delete(sessionEntity);
-
-		assertThat(sessionEntity.getStatus()).isEqualTo("Failed to delete session, filter logs on log id '%s' for more information".formatted(requestId));
+		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), false);
 	}
 
 	@Test
@@ -784,7 +812,7 @@ class AssistantServiceTest {
 		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId));
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID);
+		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
 
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getMessage()).isEqualTo("Not Found: Session with id '%s' could not be found".formatted(SESSION_ID));
@@ -801,7 +829,7 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(Optional.of(session));
 		when(eneoIntegrationMock.deleteFile(any())).thenReturn(true);
 		when(eneoIntegrationMock.deleteSession(any(), any())).thenReturn(true);
-		when(sessionRepositoryMock.findAllByLastAccessedBeforeOrLastAccessedIsNull(any())).thenReturn(List.of(
+		when(sessionPersistenceServiceMock.loadInactiveSessions(any())).thenReturn(List.of(
 			// Session that is never accessed and has reached threshold level
 			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), OffsetDateTime.now()),
 			// Session that is never accessed but has not reached threshold level (should not be purged)
@@ -811,7 +839,7 @@ class AssistantServiceTest {
 		assistantService.cleanUpInactiveSessions(inactiveThreshold);
 
 		// Assert and verify
-		verify(sessionRepositoryMock).findAllByLastAccessedBeforeOrLastAccessedIsNull(argThat(timestamp -> {
+		verify(sessionPersistenceServiceMock).loadInactiveSessions(argThat(timestamp -> {
 			assertThat(timestamp).isCloseTo(OffsetDateTime.now().minusMinutes(inactiveThreshold), within(2, SECONDS));
 			return true;
 		}));
@@ -819,11 +847,41 @@ class AssistantServiceTest {
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, sessionId.toString());
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
-		verify(fileRepositoryMock).delete(fileEntityCaptor.capture());
-		verify(sessionRepositoryMock).delete(sessionEntityCaptor.capture());
+		verify(sessionPersistenceServiceMock).finalizeDeletion(sessionId.toString(), List.of(fileId.toString()), true);
+	}
 
-		assertThat(fileEntityCaptor.getValue().getFileId()).isEqualTo(fileId.toString());
-		assertThat(sessionEntityCaptor.getValue().getSessionId()).isEqualTo(sessionId.toString());
+	@Test
+	void cleanUpInactiveSessionsContinuesWhenOneSessionFails() {
+		// Arrange
+		final var inactiveThreshold = 10;
+		final var failingSessionId = UUID.randomUUID();
+		final var succeedingSessionId = UUID.randomUUID();
+		final var failingFileId = UUID.randomUUID();
+		final var succeedingFileId = UUID.randomUUID();
+		final var created = OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1);
+
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoIntegrationMock.getSession(eq(ASSISTANT_ID), anyString())).thenReturn(Optional.of(new SessionPublic()));
+		when(eneoIntegrationMock.deleteFile(failingFileId.toString())).thenThrow(Problem.valueOf(BAD_GATEWAY, "Big and stout"));
+		when(eneoIntegrationMock.deleteFile(succeedingFileId.toString())).thenReturn(true);
+		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, succeedingSessionId.toString())).thenReturn(true);
+		when(sessionPersistenceServiceMock.loadInactiveSessions(any())).thenReturn(List.of(
+			createSession(failingSessionId, failingFileId, created, OffsetDateTime.now()),
+			createSession(succeedingSessionId, succeedingFileId, created, OffsetDateTime.now())));
+
+		// Act
+		assistantService.cleanUpInactiveSessions(inactiveThreshold);
+
+		// Assert and verify
+		verify(sessionPersistenceServiceMock).loadInactiveSessions(any());
+		verify(limeIntegrationMock, times(2)).saveChatHistory(eq(PARTY_ID), eq(CUSTOMER_NUMBER), any(SessionPublic.class));
+		verify(eneoIntegrationMock).deleteFile(failingFileId.toString());
+
+		// The failing session must not prevent the removal of the following one
+		verify(eneoIntegrationMock).deleteFile(succeedingFileId.toString());
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, succeedingSessionId.toString());
+		verify(sessionPersistenceServiceMock).finalizeDeletion(succeedingSessionId.toString(), List.of(succeedingFileId.toString()), true);
+		verify(sessionPersistenceServiceMock, never()).finalizeDeletion(eq(failingSessionId.toString()), any(), anyBoolean());
 	}
 
 	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime initialized) {
