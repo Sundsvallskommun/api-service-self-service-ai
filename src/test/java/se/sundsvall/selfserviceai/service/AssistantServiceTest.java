@@ -74,6 +74,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
@@ -869,8 +870,8 @@ class AssistantServiceTest {
 			createSession(failingSessionId, failingFileId, created, OffsetDateTime.now()),
 			createSession(succeedingSessionId, succeedingFileId, created, OffsetDateTime.now())));
 
-		// Act
-		assistantService.cleanUpInactiveSessions(inactiveThreshold);
+		// Act - the sessions that are left behind must be reported, as that is what turns the scheduler health red
+		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.cleanUpInactiveSessions(inactiveThreshold));
 
 		// Assert and verify
 		verify(sessionPersistenceServiceMock).loadInactiveSessions(any());
@@ -882,6 +883,38 @@ class AssistantServiceTest {
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, succeedingSessionId.toString());
 		verify(sessionPersistenceServiceMock).finalizeDeletion(succeedingSessionId.toString(), List.of(succeedingFileId.toString()), true);
 		verify(sessionPersistenceServiceMock, never()).finalizeDeletion(eq(failingSessionId.toString()), any(), anyBoolean());
+
+		assertThat(exception.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
+		assertThat(exception.getMessage()).contains("1 of 2 inactive sessions could not be removed", failingSessionId.toString());
+	}
+
+	@Test
+	void cleanUpInactiveSessionsReportsSessionsWhereChatHistoryCouldNotBeSaved() {
+		// Arrange
+		final var inactiveThreshold = 10;
+		final var sessionId = UUID.randomUUID();
+		final var fileId = UUID.randomUUID();
+		final var session = new SessionPublic();
+
+		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
+		when(eneoIntegrationMock.getSession(ASSISTANT_ID, sessionId.toString())).thenReturn(Optional.of(session));
+		doThrow(Problem.valueOf(BAD_GATEWAY, "Big and stout")).when(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
+		when(sessionPersistenceServiceMock.loadInactiveSessions(any())).thenReturn(List.of(
+			createSession(sessionId, fileId, OffsetDateTime.now().minusMinutes(inactiveThreshold).minusSeconds(1), OffsetDateTime.now())));
+
+		// Act
+		final var exception = assertThrows(ThrowableProblem.class, () -> assistantService.cleanUpInactiveSessions(inactiveThreshold));
+
+		// Assert and verify
+		verify(sessionPersistenceServiceMock).loadInactiveSessions(any());
+		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
+		verify(sessionPersistenceServiceMock).updateStatus(eq(sessionId.toString()), anyString());
+
+		// Nothing may be removed when the chat history could not be saved, but the session must still be reported
+		verify(eneoIntegrationMock, never()).deleteFile(any());
+		verify(sessionPersistenceServiceMock, never()).finalizeDeletion(any(), any(), anyBoolean());
+
+		assertThat(exception.getMessage()).contains("1 of 1 inactive sessions could not be removed", sessionId.toString());
 	}
 
 	private SessionEntity createSession(final UUID sessionId, final UUID fileId, final OffsetDateTime created, final OffsetDateTime initialized) {

@@ -39,6 +39,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.collections4.MapUtils.isNotEmpty;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.FAILED;
@@ -251,27 +252,54 @@ public class AssistantService {
 		}
 	}
 
+	/**
+	 * Removes all sessions that have been inactive since the defined threshold.
+	 *
+	 * Every session is removed on its own, so that a failure for one session does not prevent the removal of the others.
+	 * Sessions that are left behind are reported by throwing at the end, as the scheduler health indicator is only updated
+	 * when the scheduled method throws.
+	 *
+	 * @param inactivityThreshold number of minutes a session may be inactive before it is removed
+	 */
 	public void cleanUpInactiveSessions(final Integer inactivityThreshold) {
 		final var timestamp = OffsetDateTime.now().minusMinutes(inactivityThreshold);
 
-		sessionPersistenceService.loadInactiveSessions(timestamp).stream()
+		final var sessions = sessionPersistenceService.loadInactiveSessions(timestamp).stream()
 			.filter(session -> isSubjectForRemoval(timestamp, session))
-			.forEach(this::removeSession);
+			.toList();
+
+		final var failedSessionIds = sessions.stream()
+			.filter(session -> !removeSession(session))
+			.map(SessionEntity::getSessionId)
+			.toList();
+
+		if (!failedSessionIds.isEmpty()) {
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "%d of %d inactive sessions could not be removed: %s. Filter logs on log id '%s' for more information."
+				.formatted(failedSessionIds.size(), sessions.size(), failedSessionIds, RequestId.get()));
+		}
 	}
 
 	/**
-	 * Removes a session, its chat history and its files. A failure is logged and swallowed, as the removal is performed
-	 * asynchronously and a failure for one session must not prevent the removal of the others.
+	 * Removes a session, its chat history and its files.
 	 *
-	 * @param sessionEntity session to remove
+	 * A failure is logged and swallowed, as a failure for one session must not prevent the removal of the others. The
+	 * outcome is returned instead, so that the caller can decide what an unremoved session means.
+	 *
+	 * @param  sessionEntity session to remove
+	 * @return               false if the session is left behind, whether because the chat history could not be saved or
+	 *                       because the removal failed
 	 */
-	private void removeSession(final SessionEntity sessionEntity) {
+	private boolean removeSession(final SessionEntity sessionEntity) {
 		try {
-			if (saveChatHistory(sessionEntity)) {
-				deleteSession(sessionEntity);
+			if (!saveChatHistory(sessionEntity)) {
+				return false;
 			}
+
+			deleteSession(sessionEntity);
+			return true;
 		} catch (final Exception e) {
 			LOG.error("Exception thrown when removing session '{}'", sessionEntity.getSessionId(), e);
+			return false;
 		}
 	}
 
