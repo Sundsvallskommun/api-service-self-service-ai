@@ -34,6 +34,7 @@ import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
 import se.sundsvall.selfserviceai.service.mapper.AssistantMapper;
 
+import static java.time.ZoneId.systemDefault;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -231,7 +232,7 @@ public class AssistantService {
 
 		final var eneoResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
 		if (eneoResponse.isPresent()) {
-			session.setLastAccessed(OffsetDateTime.now());
+			session.setLastAccessed(OffsetDateTime.now(systemDefault()));
 			sessionRepository.save(session);
 		}
 
@@ -262,7 +263,7 @@ public class AssistantService {
 	 * @param inactivityThreshold number of minutes a session may be inactive before it is removed
 	 */
 	public void cleanUpInactiveSessions(final Integer inactivityThreshold) {
-		final var timestamp = OffsetDateTime.now().minusMinutes(inactivityThreshold);
+		final var timestamp = OffsetDateTime.now(systemDefault()).minusMinutes(inactivityThreshold);
 
 		final var sessions = sessionPersistenceService.loadInactiveSessions(timestamp).stream()
 			.filter(session -> isSubjectForRemoval(timestamp, session))

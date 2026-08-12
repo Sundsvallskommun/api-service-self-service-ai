@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.TimeZoneStorage;
 
+import static java.time.ZoneId.systemDefault;
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 @Entity
@@ -66,6 +67,6 @@ public class SessionEntity {
 
 	@PrePersist
 	void prePersist() {
-		this.created = OffsetDateTime.now();
+		this.created = OffsetDateTime.now(systemDefault());
 	}
 }

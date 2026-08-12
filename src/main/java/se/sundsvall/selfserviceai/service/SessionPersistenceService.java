@@ -15,6 +15,7 @@ import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 
+import static java.time.ZoneId.systemDefault;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
 
 /**
@@ -101,7 +102,7 @@ public class SessionPersistenceService {
 	 * @param status  status describing the outcome of the population
 	 */
 	private void markInitialized(final SessionEntity session, final String status) {
-		session.setInitialized(OffsetDateTime.now());
+		session.setInitialized(OffsetDateTime.now(systemDefault()));
 		session.setStatus(status);
 	}
 

@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.Length;
 import org.hibernate.annotations.TimeZoneStorage;
 
+import static java.time.ZoneId.systemDefault;
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 @Entity
@@ -44,6 +45,6 @@ public class HistoryEntity {
 
 	@PrePersist
 	void prePersist() {
-		this.created = OffsetDateTime.now();
+		this.created = OffsetDateTime.now(systemDefault());
 	}
 }
