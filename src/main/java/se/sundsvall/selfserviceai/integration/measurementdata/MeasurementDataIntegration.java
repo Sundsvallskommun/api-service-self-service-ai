@@ -55,8 +55,8 @@ public class MeasurementDataIntegration {
 			return measurementDataClient.getMeasurementData(
 				municipalityId,
 				MONTH,
-				now().minusMonths(12).atStartOfDay(systemDefault()).toOffsetDateTime().format(ISO_DATE_TIME), // Fetch data from 12 month back
-				now().plusDays(1).atStartOfDay(systemDefault()).toOffsetDateTime().format(ISO_DATE_TIME), // Fetch data to midnight of today
+				now(systemDefault()).minusMonths(12).atStartOfDay(systemDefault()).toOffsetDateTime().format(ISO_DATE_TIME), // Fetch data from 12 month back
+				now(systemDefault()).plusDays(1).atStartOfDay(systemDefault()).toOffsetDateTime().format(ISO_DATE_TIME), // Fetch data to midnight of today
 				partyId,
 				category,
 				facilityId);
