@@ -8,7 +8,7 @@ import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.invoices.CustomerInvoice;
 import generated.se.sundsvall.measurementdata.Category;
 import generated.se.sundsvall.measurementdata.Data;
-import generated.se.sundsvall.measurementdata.MeasurementPoints;
+import generated.se.sundsvall.measurementdata.MeasurementPoint;
 import generated.se.sundsvall.measurementdata.MeasurementSerie;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -148,9 +148,10 @@ class AssistantServiceTest {
 					.invoiceStatus(CustomerInvoice.InvoiceStatusEnum.SENT)
 					.facilityIds(List.of(FACILITY_ID))),
 				List.of(new Data()
-					.facilityId(FACILITY_ID)
+					.facilityId(List.of(FACILITY_ID))
 					.addMeasurementSeriesItem(new MeasurementSerie()
-						.addMeasurementPointsItem(new MeasurementPoints()))
+						.facilityId(FACILITY_ID)
+						.addMeasurementPointsItem(new MeasurementPoint()))
 					.category(Category.ELECTRICITY)))
 
 		);

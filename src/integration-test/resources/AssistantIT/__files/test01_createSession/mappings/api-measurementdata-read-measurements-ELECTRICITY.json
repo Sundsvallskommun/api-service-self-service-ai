@@ -8,8 +8,36 @@
 		"method": "GET",
 		"urlPath": "/measurementdata/2281/measurement-data",
 		"queryParameters": {
-			"facilityId": {
-				"equalTo": "9222306053"
+			"facilityIds": {
+				"includes": [
+					{
+						"equalTo": "735999109220108018"
+					},
+					{
+						"equalTo": "735999109220108025"
+					},
+					{
+						"equalTo": "735999109222306054"
+					},
+					{
+						"equalTo": "735999109245102077"
+					},
+					{
+						"equalTo": "735999109260307051"
+					},
+					{
+						"equalTo": "735999109260722045"
+					},
+					{
+						"equalTo": "735999109260723028"
+					},
+					{
+						"equalTo": "735999109260723035"
+					},
+					{
+						"equalTo": "9222306053"
+					}
+				]
 			},
 			"category": {
 				"equalTo": "ELECTRICITY"
@@ -33,7 +61,7 @@
 			"Content-Type": "application/json"
 		},
 		"status": 200,
-		"bodyFileName": "test01_createSession/responses/api-measurementdata-read-measurements-9222306053-ELECTRICITY-response.json"
+		"bodyFileName": "test01_createSession/responses/api-measurementdata-read-measurements-ELECTRICITY-response.json"
 	},
-	"name": "api-measurementdata-read-measurements-9222306053-ELECTRICITY"
+	"name": "api-measurementdata-read-measurements-ELECTRICITY"
 }

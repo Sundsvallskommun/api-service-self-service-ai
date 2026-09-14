@@ -1,11 +1,22 @@
 {
 	"category": "DISTRICT_HEATING",
-	"facilityId": "9222306053",
+	"facilityId": [
+		"735999109220108018",
+		"735999109220108025",
+		"735999109222306054",
+		"735999109245102077",
+		"735999109260307051",
+		"735999109260722045",
+		"735999109260723028",
+		"735999109260723035",
+		"9222306053"
+	],
 	"aggregateOn": "MONTH",
 	"fromDate": "2024-03-24T00:00:00+01:00",
 	"toDate": "2025-03-25T00:00:00+01:00",
 	"measurementSeries": [
 		{
+			"facilityId": "9222306053",
 			"unit": "m3",
 			"measurementType": "flow",
 			"measurementPoints": [
@@ -148,6 +159,7 @@
 			]
 		},
 		{
+			"facilityId": "9222306053",
 			"unit": "C",
 			"measurementType": "return_temperature",
 			"measurementPoints": [
@@ -262,6 +274,7 @@
 			]
 		},
 		{
+			"facilityId": "9222306053",
 			"unit": "kWh",
 			"measurementType": "energy",
 			"measurementPoints": [
@@ -404,6 +417,7 @@
 			]
 		},
 		{
+			"facilityId": "9222306053",
 			"unit": "C",
 			"measurementType": "flow_temperature",
 			"measurementPoints": [

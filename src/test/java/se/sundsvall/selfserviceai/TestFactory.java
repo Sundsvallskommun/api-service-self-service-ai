@@ -19,7 +19,7 @@ import generated.se.sundsvall.installedbase.InstalledBaseItemMetaData;
 import generated.se.sundsvall.invoices.CustomerInvoice;
 import generated.se.sundsvall.invoices.InvoiceDetail;
 import generated.se.sundsvall.measurementdata.Data;
-import generated.se.sundsvall.measurementdata.MeasurementPoints;
+import generated.se.sundsvall.measurementdata.MeasurementPoint;
 import generated.se.sundsvall.measurementdata.MeasurementSerie;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -353,34 +353,42 @@ public class TestFactory {
 	public static List<Data> createMeasurements(boolean containsMatches) {
 		return containsMatches ? List.of(
 			new Data()
-				.facilityId(IB1_FACILITY_ID)
+				.facilityId(List.of(IB1_FACILITY_ID, IB2_FACILITY_ID))
 				.category(IB1_AGREEMENT1_MEASUREMENT1_CATEGORY)
 				.addMeasurementSeriesItem(new MeasurementSerie()
+					.facilityId(IB1_FACILITY_ID)
 					.measurementType(IB1_AGREEMENT1_MEASUREMENT1_TYPE)
 					.unit(IB1_AGREEMENT1_MEASUREMENT1_UNIT)
-					.addMeasurementPointsItem(new MeasurementPoints()
+					.addMeasurementPointsItem(new MeasurementPoint()
 						.timestamp(IB1_AGREEMENT1_MEASUREMENT1_TIMESTAMP)
-						.value(IB1_AGREEMENT1_MEASUREMENT1_VALUE))),
-			new Data()
-				.facilityId(IB1_FACILITY_ID)
-				.category(IB1_AGREEMENT1_MEASUREMENT2_CATEGORY)
+						.value(IB1_AGREEMENT1_MEASUREMENT1_VALUE)))
 				.addMeasurementSeriesItem(new MeasurementSerie()
+					.facilityId(IB1_FACILITY_ID)
 					.measurementType(IB1_AGREEMENT1_MEASUREMENT2_TYPE)
 					.unit(IB1_AGREEMENT1_MEASUREMENT2_UNIT)
-					.addMeasurementPointsItem(new MeasurementPoints()
+					.addMeasurementPointsItem(new MeasurementPoint()
 						.timestamp(IB1_AGREEMENT1_MEASUREMENT2_TIMESTAMP)
 						.value(IB1_AGREEMENT1_MEASUREMENT2_VALUE))),
 			new Data()
-				.facilityId(IB2_FACILITY_ID)
+				.facilityId(List.of(IB1_FACILITY_ID, IB2_FACILITY_ID))
 				.category(IB2_AGREEMENT1_MEASUREMENT1_CATEGORY)
 				.addMeasurementSeriesItem(new MeasurementSerie()
+					.facilityId(IB2_FACILITY_ID)
 					.measurementType(IB2_AGREEMENT1_MEASUREMENT1_TYPE)
 					.unit(IB2_AGREEMENT1_MEASUREMENT1_UNIT)
-					.addMeasurementPointsItem(new MeasurementPoints()
+					.addMeasurementPointsItem(new MeasurementPoint()
 						.timestamp(IB2_AGREEMENT1_MEASUREMENT1_TIMESTAMP)
 						.value(IB2_AGREEMENT1_MEASUREMENT1_VALUE))))
 			: List.of(new Data()
-				.facilityId(NO_MATCH));
+				.facilityId(List.of(NO_MATCH))
+				.category(IB1_AGREEMENT1_MEASUREMENT1_CATEGORY)
+				.addMeasurementSeriesItem(new MeasurementSerie()
+					.facilityId(NO_MATCH)
+					.measurementType(IB1_AGREEMENT1_MEASUREMENT1_TYPE)
+					.unit(IB1_AGREEMENT1_MEASUREMENT1_UNIT)
+					.addMeasurementPointsItem(new MeasurementPoint()
+						.timestamp(IB1_AGREEMENT1_MEASUREMENT1_TIMESTAMP)
+						.value(IB1_AGREEMENT1_MEASUREMENT1_VALUE))));
 	}
 
 	public static Facility createFacility() {

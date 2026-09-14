@@ -1,11 +1,17 @@
 package se.sundsvall.selfserviceai.integration.eneo.mapper;
 
+import generated.se.sundsvall.measurementdata.Data;
+import generated.se.sundsvall.measurementdata.MeasurementPoint;
+import generated.se.sundsvall.measurementdata.MeasurementSerie;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.selfserviceai.TestFactory;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.MeasurementData;
 
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,6 +60,54 @@ class MeasurementDecoratorTest {
 		// Arrange
 		final var installedBase = ENEO_MAPPER.toEneoModel(Map.of("123456", createCustomer()));
 		final var measurements = new ArrayList<>(createMeasurements(false));
+
+		// Act
+		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), measurements);
+
+		// Assert
+		assertThat(installedBase.getFacilities()).flatExtracting(Facility::getMeasurements).isEmpty();
+	}
+
+	@Test
+	void addMeasurementsAttachesAggregatedSerieWhenOnlyOneFacilityWasRequested() {
+		// Arrange — an aggregated serie states no facility of its own, but when a single facility was requested the
+		// aggregate covers exactly that facility.
+		final var installedBase = ENEO_MAPPER.toEneoModel(Map.of("123456", createCustomer()));
+		final var measurements = List.of(new Data()
+			.facilityId(List.of(TestFactory.IB1_FACILITY_ID))
+			.category(generated.se.sundsvall.measurementdata.Category.DISTRICT_HEATING)
+			.addMeasurementSeriesItem(new MeasurementSerie()
+				.measurementType("energy_aggregated")
+				.unit("MWh")
+				.addMeasurementPointsItem(new MeasurementPoint()
+					.timestamp(OffsetDateTime.now(systemDefault()))
+					.value(new BigDecimal("12.5")))));
+
+		// Act
+		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), measurements);
+
+		// Assert
+		assertThat(installedBase.getFacilities())
+			.filteredOn(facility -> TestFactory.IB1_FACILITY_ID.equals(facility.getFacilityId()))
+			.flatExtracting(Facility::getMeasurements)
+			.extracting(MeasurementData::getMeasurementType)
+			.containsExactly("energy_aggregated");
+	}
+
+	@Test
+	void addMeasurementsSkipsAggregatedSerieWhenSeveralFacilitiesWereRequested() {
+		// Arrange — an aggregate spanning several facilities belongs to no single one and must not be attached to any
+		// of them.
+		final var installedBase = ENEO_MAPPER.toEneoModel(Map.of("123456", createCustomer()));
+		final var measurements = List.of(new Data()
+			.facilityId(List.of(TestFactory.IB1_FACILITY_ID, TestFactory.IB2_FACILITY_ID))
+			.category(generated.se.sundsvall.measurementdata.Category.DISTRICT_HEATING)
+			.addMeasurementSeriesItem(new MeasurementSerie()
+				.measurementType("energy_aggregated")
+				.unit("MWh")
+				.addMeasurementPointsItem(new MeasurementPoint()
+					.timestamp(OffsetDateTime.now(systemDefault()))
+					.value(new BigDecimal("12.5")))));
 
 		// Act
 		MeasurementDecorator.addMeasurements(installedBase.getFacilities(), measurements);
