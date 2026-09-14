@@ -1,11 +1,14 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
-  title: measurement-data
+  title: api-measurement-data
   contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "2.0"
+  version: "3.3"
+servers:
+- url: http://localhost:59615
+  description: Generated server url
 tags:
 - name: Measurement
   description: Measurement operations
@@ -24,18 +27,92 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: parameters
+      - name: partyId
+        in: query
+        description: "Party ID, either private or enterprise uuid"
+        required: true
+        schema:
+          type: string
+          description: "Party ID, either private or enterprise uuid"
+          examples:
+          - 81471222-5798-11e9-ae24-57fa13b361e1
+      - name: category
         in: query
         required: true
         schema:
-          $ref: "#/components/schemas/MeasurementDataSearchParameters"
+          type: string
+          description: Category
+          enum:
+          - DISTRICT_COOLING
+          - DISTRICT_HEATING
+          - ELECTRICITY
+          - COMMUNICATION
+          - WASTE_MANAGEMENT
+          examples:
+          - DISTRICT_HEATING
+      - name: facilityIds
+        in: query
+        description: Facility ID (one or more)
+        required: true
+        schema:
+          type: array
+          description: Facility ID (one or more)
+          examples:
+          - 112233
+          - 445566
+          items:
+            type: string
+            description: Facility ID (one or more)
+            examples:
+            - "112233"
+            - "445566"
+      - name: fromDate
+        in: query
+        description: From date
+        required: true
+        schema:
+          type: string
+          format: date-time
+          description: From date
+          examples:
+          - 2021-01-31
+      - name: toDate
+        in: query
+        description: To date
+        required: true
+        schema:
+          type: string
+          format: date-time
+          description: To date
+          examples:
+          - 2022-02-28
+      - name: aggregateOn
+        in: query
+        description: Data point aggregation granularity
+        required: true
+        schema:
+          type: string
+          description: Aggregation granularity
+          enum:
+          - QUARTER
+          - HOUR
+          - DAY
+          - MONTH
+          examples:
+          - HOUR
+      - name: display
+        in: query
+        description: Display mode for aggregated series
+        required: false
+        schema:
+          type: string
+          description: Display mode for aggregated series
+          enum:
+          - AGGREGATE
+          - ONLYAGGREGATED
+          examples:
+          - AGGREGATE
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "200":
           description: Successful Operation
           content:
@@ -43,11 +120,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/Data"
               examples:
+                DISTRICT_COOLING:
+                  description: DISTRICT_COOLING
+                  value:
+                    category: DISTRICT_COOLING
+                    facilityId:
+                    - "1112233"
+                    aggregateOn: HOUR
+                    fromDate: 2022-05-17T08:00:00.000Z
+                    toDate: 2022-05-17T09:00:00.000Z
+                    measurementSeries:
+                    - unit: MWh
+                      measurementType: energy
+                      metaData: []
+                      measurementPoints:
+                      - value: 45.12
+                        timestamp: 2022-05-17T08:55:07.184Z
+                        metaData: []
+                    - unit: m3
+                      measurementType: volume
+                      metaData: []
+                      measurementPoints:
+                      - value: 15.678
+                        timestamp: 2022-05-17T08:55:07.184Z
+                        metaData: []
+                    - unit: C
+                      measurementType: flowTemperature
+                      metaData: []
+                      measurementPoints:
+                      - value: 8.5
+                        timestamp: 2022-05-17T08:55:07.184Z
+                        metaData: []
+                    - unit: C
+                      measurementType: returnTemperature
+                      metaData: []
+                      measurementPoints:
+                      - value: 14.2
+                        timestamp: 2022-05-17T08:55:07.184Z
+                        metaData: []
                 DISTRICT_HEATING:
                   description: DISTRICT_HEATING
                   value:
                     category: DISTRICT_HEATING
-                    facilityId: "1112233"
+                    facilityId:
+                    - "1112233"
                     aggregateOn: HOUR
                     fromDate: 2022-05-17T08:00:00.000Z
                     toDate: 2022-05-17T09:00:00.000Z
@@ -84,7 +200,8 @@ paths:
                   description: BROADBAND
                   value:
                     category: COMMUNICATION
-                    facilityId: "1112233"
+                    facilityId:
+                    - "1112233"
                     aggregateOn: HOUR
                     fromDate: 2022-05-17T08:00:00.000Z
                     toDate: 2022-05-17T09:00:00.000Z
@@ -107,7 +224,8 @@ paths:
                   description: ELECTRICITY
                   value:
                     category: ELECTRICITY
-                    facilityId: "1112233"
+                    facilityId:
+                    - "1112233"
                     aggregateOn: HOUR
                     fromDate: 2022-05-17T08:00:00.000Z
                     toDate: 2022-05-17T09:00:00.000Z
@@ -125,7 +243,8 @@ paths:
                   description: WASTE_MANAGEMENT
                   value:
                     category: WASTE_MANAGEMENT
-                    facilityId: "1112233"
+                    facilityId:
+                    - "1112233"
                     aggregateOn: HOUR
                     fromDate: 2022-05-17T08:00:00.000Z
                     toDate: 2022-05-17T09:00:00.000Z
@@ -145,12 +264,6 @@ paths:
                           value: "1302069"
                         - key: reference
                           value: ABC123
-        "502":
-          description: Bad Gateway
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "400":
           description: Bad Request
           content:
@@ -159,6 +272,18 @@ paths:
                 oneOf:
                 - $ref: "#/components/schemas/Problem"
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -177,343 +302,184 @@ paths:
       x-wso2-mutual-ssl: Optional
 components:
   schemas:
-    MeasurementDataSearchParameters:
-      required:
-      - aggregateOn
-      - category
-      - facilityId
-      - fromDate
-      - partyId
-      - toDate
+    MetaData:
       type: object
+      description: Measurement meta data
       properties:
-        partyId:
+        key:
           type: string
-          description: "Party ID, either private or enterprise uuid"
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-        category:
+          description: key
+          examples:
+          - id
+          readOnly: true
+        value:
           type: string
-          description: Category
-          example: DISTRICT_HEATING
-          enum:
-          - DISTRICT_HEATING
-          - ELECTRICITY
-          - COMMUNICATION
-          - WASTE_MANAGEMENT
+          description: value
+          examples:
+          - "123"
+          readOnly: true
+    MeasurementPoint:
+      type: object
+      description: A single measurement data point
+      properties:
+        value:
+          type: number
+          description: Value of the point
+          examples:
+          - 22.321
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the datapoint
+          readOnly: true
+        metaData:
+          type: array
+          items:
+            $ref: "#/components/schemas/MetaData"
+            readOnly: true
+    MeasurementSerie:
+      type: object
+      description: Measurement from a single source
+      properties:
         facilityId:
           type: string
-          description: Facility ID
-          example: "112233"
+          description: "Facility ID for non-aggregated series, null for aggregated"
+          examples:
+          - "735999109151605013"
+          readOnly: true
+        unit:
+          type: string
+          description: Unit of all measurement points
+          examples:
+          - m3
+          readOnly: true
+        measurementType:
+          type: string
+          description: "Type of measurement. Aggregated series (suffixed '_aggregated',\
+            \ e.g. 'energy_aggregated' and 'corrected_aggregated') have no facilityId\
+            \ and represent values summed across the requested facilities; 'corrected_aggregated'\
+            \ is the aggregated normal-year corrected usage and is only present for\
+            \ periods where corrected usage is defined"
+          examples:
+          - corrected_aggregated
+          readOnly: true
+        metaData:
+          type: array
+          items:
+            $ref: "#/components/schemas/MetaData"
+            readOnly: true
+        measurementPoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/MeasurementPoint"
+            readOnly: true
+    Aggregation:
+      type: string
+      description: Aggregation granularity
+      enum:
+      - QUARTER
+      - HOUR
+      - DAY
+      - MONTH
+      examples:
+      - HOUR
+    Category:
+      type: string
+      description: Category
+      enum:
+      - DISTRICT_COOLING
+      - DISTRICT_HEATING
+      - ELECTRICITY
+      - COMMUNICATION
+      - WASTE_MANAGEMENT
+      examples:
+      - DISTRICT_HEATING
+    Data:
+      type: object
+      description: Measurement data for a category
+      properties:
+        category:
+          $ref: "#/components/schemas/Category"
+          readOnly: true
+        aggregateOn:
+          $ref: "#/components/schemas/Aggregation"
+          readOnly: true
         fromDate:
           type: string
-          description: From date
           format: date-time
+          description: From date
         toDate:
           type: string
-          description: To date
           format: date-time
-        aggregateOn:
-          type: string
-          description: Aggregation granularity
-          example: HOUR
-          enum:
-          - HOUR
-          - DAY
-          - MONTH
-          - YEAR
-      description: Measurement date request parameters
+          description: To date
+        measurementSeries:
+          type: array
+          items:
+            $ref: "#/components/schemas/MeasurementSerie"
+            readOnly: true
+        facilityId:
+          type: array
+          examples:
+          - 1234567
+          items:
+            type: string
+          readOnly: true
     Problem:
       type: object
       properties:
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
         type:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
+        title:
+          type: string
+        detail:
+          type: string
         status:
-          $ref: "#/components/schemas/StatusType"
-    StatusType:
-      type: object
-      properties:
-        statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
-    Aggregation:
-      type: string
-      description: Aggregation granularity
-      readOnly: true
-      example: HOUR
-      enum:
-      - HOUR
-      - DAY
-      - MONTH
-      - YEAR
-    Category:
-      type: string
-      description: Category
-      readOnly: true
-      example: DISTRICT_HEATING
-      enum:
-      - DISTRICT_HEATING
-      - ELECTRICITY
-      - COMMUNICATION
-      - WASTE_MANAGEMENT
-    Data:
-      type: object
-      properties:
-        category:
-          $ref: "#/components/schemas/Category"
-        facilityId:
-          type: string
-          readOnly: true
-          example: "1234567"
-        aggregateOn:
-          $ref: "#/components/schemas/Aggregation"
-        fromDate:
-          type: string
-          description: From date
-          format: date-time
-        toDate:
-          type: string
-          description: To date
-          format: date-time
-        measurementSeries:
-          type: array
-          readOnly: true
-          items:
-            $ref: "#/components/schemas/MeasurementSerie"
-      description: Measurement data for a category
-    MeasurementSerie:
-      type: object
-      properties:
-        unit:
-          type: string
-          description: Unit of all measurement points
-          readOnly: true
-          example: m3
-        measurementType:
-          type: string
-          description: Type of measurement
-          readOnly: true
-          example: volume
-        metaData:
-          type: array
-          readOnly: true
-          items:
-            $ref: "#/components/schemas/metaData"
-        measurementPoints:
-          type: array
-          readOnly: true
-          items:
-            $ref: "#/components/schemas/measurementPoints"
-      description: Measurement from a single source
-      readOnly: true
-    measurementPoints:
-      type: object
-      properties:
-        value:
-          type: number
-          description: Value of the point
-          readOnly: true
-          example: 22.321
-        timestamp:
-          type: string
-          description: Timestamp of the datapoint
-          format: date-time
-          readOnly: true
-        metaData:
-          type: array
-          readOnly: true
-          items:
-            $ref: "#/components/schemas/metaData"
-      description: A single measurement data point
-      readOnly: true
-    metaData:
-      type: object
-      properties:
-        key:
-          type: string
-          description: key
-          readOnly: true
-          example: id
-        value:
-          type: string
-          description: value
-          readOnly: true
-          example: "123"
-      description: Measurement meta data
-      readOnly: true
     ConstraintViolationProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
         type:
           type: string
           format: uri
         status:
-          $ref: "#/components/schemas/StatusType"
+          type: integer
+          format: int32
         violations:
           type: array
           items:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        message:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
+        detail:
           type: string
     ThrowableProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
-        message:
+        type:
           type: string
+          format: uri
         title:
           type: string
+        status:
+          type: integer
+          format: int32
         detail:
           type: string
         instance:
           type: string
           format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
+        causeAsProblem: {}
     Violation:
       type: object
       properties:
