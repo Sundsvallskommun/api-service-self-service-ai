@@ -10,7 +10,9 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
@@ -18,6 +20,7 @@ import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace.NONE;
+import static org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
 /**
@@ -52,6 +55,9 @@ class SessionPersistenceServiceTest {
 
 	@Autowired
 	private SessionRepository sessionRepository;
+
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
 	@Autowired
 	private FileRepository fileRepository;
@@ -122,6 +128,28 @@ class SessionPersistenceServiceTest {
 
 		assertThat(result).hasValue(INITIALIZED_SESSION_ID);
 		assertThat(sessionRepository.findById(INITIALIZED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(INITIALIZED_SESSION_ID));
+	}
+
+	@Test
+	void attachEneoSessionWhenAnotherWriterWonAfterTheSessionWasLoaded() {
+		// The entity is loaded into the persistence context first, as the request does before the first question is asked
+		// (open-in-view), and another request then wins the race in its own transaction. The loser must see the winner's
+		// Eneo session, not the null that is still on the entity in memory.
+		final var winner = UUID.randomUUID().toString();
+		final var loser = UUID.randomUUID().toString();
+
+		final var result = new TransactionTemplate(transactionManager).execute(status -> {
+			assertThat(sessionRepository.findById(FAILED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isNull());
+
+			final var otherRequest = new TransactionTemplate(transactionManager);
+			otherRequest.setPropagationBehavior(PROPAGATION_REQUIRES_NEW);
+			otherRequest.executeWithoutResult(otherStatus -> sessionPersistenceService.attachEneoSession(FAILED_SESSION_ID, winner));
+
+			return sessionPersistenceService.attachEneoSession(FAILED_SESSION_ID, loser);
+		});
+
+		assertThat(result).hasValue(winner);
+		assertThat(sessionRepository.findById(FAILED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(winner));
 	}
 
 	@Test

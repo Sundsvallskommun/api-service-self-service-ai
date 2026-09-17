@@ -16,7 +16,6 @@ import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 
 import static java.time.ZoneId.systemDefault;
-import static java.util.Objects.isNull;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
 
 /**
@@ -130,13 +129,11 @@ public class SessionPersistenceService {
 	 */
 	@Transactional
 	public Optional<String> attachEneoSession(final String sessionId, final String eneoSessionId) {
-		return sessionRepository.findForUpdateBySessionId(sessionId)
-			.map(session -> {
-				if (isNull(session.getEneoSessionId())) {
-					session.setEneoSessionId(eneoSessionId);
-				}
-				return session.getEneoSessionId();
-			});
+		// The race between two first questions is settled by the conditional update in the database, not in memory
+		if (sessionRepository.attachEneoSessionIfMissing(sessionId, eneoSessionId) == 1) {
+			return Optional.of(eneoSessionId);
+		}
+		return sessionRepository.findEneoSessionIdForUpdateBySessionId(sessionId);
 	}
 
 	/**
