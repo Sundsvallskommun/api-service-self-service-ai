@@ -481,6 +481,7 @@ class AssistantServiceTest {
 		final var sessionEntity = SessionEntity.builder()
 			.withInitialized(OffsetDateTime.now())
 			.withStatus("Successfully initialized")
+			.withEneoSessionId(ENEO_SESSION_ID.toString())
 			.build();
 
 		when(sessionRepositoryMock.findBySessionIdAndMunicipalityId(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
@@ -493,6 +494,7 @@ class AssistantServiceTest {
 
 		assertThat(result.getStatus()).isEqualTo("READY");
 		assertThat(result.getDetail()).isNull();
+		assertThat(result.getEneoSessionId()).isEqualTo(ENEO_SESSION_ID.toString());
 	}
 
 	@Test
@@ -595,6 +597,7 @@ class AssistantServiceTest {
 
 		assertThat(result.getAnswer()).isEqualTo(answer);
 		assertThat(result.getSessionId()).isEqualTo(SESSION_ID.toString()); // Our id, not the one in Eneo
+		assertThat(result.getEneoSessionId()).isEqualTo(ENEO_SESSION_ID.toString());
 		assertThat(sessionEntityCaptor.getValue()).isSameAs(sessionEntity);
 		assertThat(sessionEntityCaptor.getValue().getLastAccessed()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
 	}
@@ -662,6 +665,7 @@ class AssistantServiceTest {
 
 		assertThat(result.getAnswer()).isEqualTo(answer);
 		assertThat(result.getSessionId()).isEqualTo(SESSION_ID.toString());
+		assertThat(result.getEneoSessionId()).isEqualTo(ENEO_SESSION_ID.toString());
 		assertThat(sessionEntityCaptor.getValue().getEneoSessionId()).isEqualTo(ENEO_SESSION_ID.toString());
 		assertThat(sessionEntityCaptor.getValue().getLastAccessed()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
 	}

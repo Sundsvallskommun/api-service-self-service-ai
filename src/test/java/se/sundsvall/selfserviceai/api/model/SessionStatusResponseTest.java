@@ -27,15 +27,18 @@ class SessionStatusResponseTest {
 	void testBuilderMethods() {
 		final var status = "READY";
 		final var detail = "Some detail";
+		final var eneoSessionId = "81e73c0b-76dd-455e-bbf3-cc5060aca723";
 
 		final var bean = SessionStatusResponse.builder()
 			.withStatus(status)
 			.withDetail(detail)
+			.withEneoSessionId(eneoSessionId)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getStatus()).isEqualTo(status);
 		assertThat(bean.getDetail()).isEqualTo(detail);
+		assertThat(bean.getEneoSessionId()).isEqualTo(eneoSessionId);
 	}
 
 	@Test

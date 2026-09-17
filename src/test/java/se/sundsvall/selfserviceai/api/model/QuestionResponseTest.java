@@ -32,6 +32,7 @@ class QuestionResponseTest {
 		final var question = "question";
 		final var references = List.of(Reference.builder().build());
 		final var sessionId = "sessionId";
+		final var eneoSessionId = "81e73c0b-76dd-455e-bbf3-cc5060aca723";
 		final var tools = Tools.builder().build();
 
 		final var bean = QuestionResponse.builder()
@@ -40,6 +41,7 @@ class QuestionResponseTest {
 			.withModel(model)
 			.withQuestion(question)
 			.withReferences(references)
+			.withEneoSessionId(eneoSessionId)
 			.withSessionId(sessionId)
 			.withTools(tools)
 			.build();
@@ -51,6 +53,7 @@ class QuestionResponseTest {
 		assertThat(bean.getQuestion()).isEqualTo(question);
 		assertThat(bean.getReferences()).isEqualTo(references);
 		assertThat(bean.getSessionId()).isEqualTo(sessionId);
+		assertThat(bean.getEneoSessionId()).isEqualTo(eneoSessionId);
 		assertThat(bean.getTools()).isEqualTo(tools);
 	}
 

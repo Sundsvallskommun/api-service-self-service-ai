@@ -19,6 +19,9 @@ public class QuestionResponse {
 	@Schema(description = "The id of the session to be used when interacting with the assistant", examples = "9406e9e3-e2bf-4b5a-9237-2925b396f096")
 	private String sessionId;
 
+	@Schema(description = "The id of the session in Eneo, to be used when interacting with Eneo directly", examples = "81e73c0b-76dd-455e-bbf3-cc5060aca723")
+	private String eneoSessionId;
+
 	@Schema(description = "The question to ask", examples = "What is the answer to the ultimate question of life, the universe and everything?")
 	private String question;
 

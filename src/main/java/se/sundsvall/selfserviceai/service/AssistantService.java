@@ -37,7 +37,6 @@ import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegra
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
-import se.sundsvall.selfserviceai.service.mapper.AssistantMapper;
 
 import static java.time.ZoneId.systemDefault;
 import static java.util.Collections.emptyList;
@@ -288,6 +287,7 @@ public class AssistantService {
 		return SessionStatusResponse.builder()
 			.withStatus(READY.name())
 			.withDetail(STATUS_SUCCESS.equals(session.getStatus()) ? null : session.getStatus()) // Tells the frontend when the assistant is ready but has less data than expected
+			.withEneoSessionId(session.getEneoSessionId()) // Lets the frontend talk to Eneo directly once the first question has started the session there
 			.build();
 	}
 
@@ -317,11 +317,7 @@ public class AssistantService {
 		}
 
 		return eneoResponse
-			.map(AssistantMapper::toQuestionResponse)
-			.map(response -> {
-				response.setSessionId(session.getSessionId()); // The caller knows the session by our id, not by the id in Eneo
-				return response;
-			})
+			.map(askResponse -> toQuestionResponse(session.getSessionId(), askResponse))
 			.orElse(null);
 	}
 
