@@ -451,18 +451,25 @@ public class AssistantService {
 	 * Removes a session and its files, first in Eneo and thereafter in the database. The removals in Eneo are performed
 	 * outside of any transaction, as a row in the file table always represents a file that still exists in Eneo. The
 	 * session itself only exists in Eneo if a first question has been asked.
+	 * <p>
+	 * The session in Eneo is removed before its files, as Eneo refuses to remove a file that is still attached to a chat
+	 * (409, Eneo error code 9044). Removing the files first would therefore never succeed, and the session would be
+	 * retried forever. A session that is already gone in Eneo counts as removed, so a retry after a failed file removal
+	 * gets past the session and on to the files.
 	 *
 	 * @param sessionEntity session to remove
 	 */
 	private void deleteSession(final SessionEntity sessionEntity) {
-		final var removedFileIds = sessionEntity.getFiles().stream()
-			.map(FileEntity::getFileId)
-			.filter(eneoIntegration::deleteFile)
-			.toList();
+		final var sessionRemovedInEneo = isNull(sessionEntity.getEneoSessionId()) // A session that never got a first question has nothing to remove in Eneo
+			|| eneoIntegration.deleteSession(eneoProperties.assistantId(), sessionEntity.getEneoSessionId());
 
-		final var allFilesRemoved = removedFileIds.size() == sessionEntity.getFiles().size();
-		final var sessionRemovedInEneo = allFilesRemoved && (isNull(sessionEntity.getEneoSessionId()) // A session that never got a first question has nothing to remove in Eneo
-			|| eneoIntegration.deleteSession(eneoProperties.assistantId(), sessionEntity.getEneoSessionId()));
+		// Files are only attempted once the chat that holds them is gone, otherwise Eneo would refuse every one of them
+		final var removedFileIds = sessionRemovedInEneo
+			? sessionEntity.getFiles().stream()
+				.map(FileEntity::getFileId)
+				.filter(eneoIntegration::deleteFile)
+				.toList()
+			: List.<String>of();
 
 		sessionPersistenceService.finalizeDeletion(sessionEntity.getSessionId(), removedFileIds, sessionRemovedInEneo);
 	}

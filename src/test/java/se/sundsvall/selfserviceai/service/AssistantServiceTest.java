@@ -1000,30 +1000,35 @@ class AssistantServiceTest {
 		when(eneoPropertiesMock.assistantId()).thenReturn(ASSISTANT_ID);
 		when(sessionPersistenceServiceMock.loadSession(SESSION_ID.toString(), MUNICIPALITY_ID)).thenReturn(Optional.of(sessionEntity));
 		when(eneoIntegrationMock.getSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(Optional.of(session));
+		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, SESSION_ID.toString())).thenReturn(true);
 
 		// Act
 		assistantService.deleteSessionById(MUNICIPALITY_ID, SESSION_ID, requestId);
 
 		// Assert and verify
 		verify(sessionPersistenceServiceMock).loadSession(SESSION_ID.toString(), MUNICIPALITY_ID);
-		verify(eneoPropertiesMock).assistantId();
+		verify(eneoPropertiesMock, times(2)).assistantId();
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
+		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(eneoIntegrationMock).deleteFile(fileId.toString());
 
-		// The session must not be removed in Eneo as long as one of its files is left there
-		verify(eneoIntegrationMock, never()).deleteSession(any(), any());
-		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), false);
+		// The session in Eneo is gone, the file that could not be removed is retried by the scheduled clean up
+		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), true);
 	}
 
 	@Test
 	void deleteSessionWhenSessionNotSuccessfullyDeleted() {
 		// Arrange
 		final var requestId = UUID.randomUUID().toString();
+		final var fileEntity = FileEntity.builder()
+			.withFileId(UUID.randomUUID().toString())
+			.build();
 		final var sessionEntity = SessionEntity.builder()
 			.withCustomerNbr(CUSTOMER_NUMBER)
 			.withSessionId(SESSION_ID.toString())
 			.withEneoSessionId(SESSION_ID.toString())
 			.withInitialized(OffsetDateTime.now())
+			.withFiles(new ArrayList<>(List.of(fileEntity)))
 			.withPartyId(PARTY_ID)
 			.build();
 		final var session = new SessionPublic();
@@ -1041,6 +1046,9 @@ class AssistantServiceTest {
 		verify(eneoIntegrationMock).getSession(ASSISTANT_ID, SESSION_ID.toString());
 		verify(limeIntegrationMock).saveChatHistory(PARTY_ID, CUSTOMER_NUMBER, session);
 		verify(eneoIntegrationMock).deleteSession(ASSISTANT_ID, SESSION_ID.toString());
+
+		// Eneo refuses to remove a file that is still attached to a chat, so the files are not even attempted
+		verify(eneoIntegrationMock, never()).deleteFile(any());
 		verify(sessionPersistenceServiceMock).finalizeDeletion(SESSION_ID.toString(), emptyList(), false);
 	}
 
@@ -1109,6 +1117,7 @@ class AssistantServiceTest {
 		when(eneoIntegrationMock.getSession(eq(ASSISTANT_ID), anyString())).thenReturn(Optional.of(new SessionPublic()));
 		when(eneoIntegrationMock.deleteFile(failingFileId.toString())).thenThrow(Problem.valueOf(BAD_GATEWAY, "Big and stout"));
 		when(eneoIntegrationMock.deleteFile(succeedingFileId.toString())).thenReturn(true);
+		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, failingSessionId.toString())).thenReturn(true);
 		when(eneoIntegrationMock.deleteSession(ASSISTANT_ID, succeedingSessionId.toString())).thenReturn(true);
 		when(sessionPersistenceServiceMock.loadInactiveSessions(any())).thenReturn(List.of(
 			createSession(failingSessionId, failingFileId, created, OffsetDateTime.now()),
