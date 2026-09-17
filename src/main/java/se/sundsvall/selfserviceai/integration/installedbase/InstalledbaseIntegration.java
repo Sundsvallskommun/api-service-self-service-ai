@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.dept44.problem.Problem;
 
@@ -16,11 +14,9 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 @Component
 public class InstalledbaseIntegration {
-	private static final Logger LOG = LoggerFactory.getLogger(InstalledbaseIntegration.class);
 	private static final String ERROR_MULTIPLE_MATCHES = "Installed base response can not be interpreted as it contains more than one match (size is %s)";
 
 	private final InstalledbaseClient installedbaseClient;
@@ -47,21 +43,20 @@ public class InstalledbaseIntegration {
 			.collect(toMap(Entry::getKey, Entry::getValue));
 	}
 
+	/**
+	 * A failure here is propagated, as an installed base that could not be fetched must not be mistaken for a customer
+	 * without installed base. The installed base is the backbone of the information given to the assistant, so a session
+	 * without it is useless and must be reported as failed rather than as ready.
+	 */
 	private Entry<String, InstalledBaseCustomer> getInstalledbase(String municipalityId, String partyId, String customerEngagementOrgId) {
-		try {
-			final var response = ofNullable(installedbaseClient.getInstalledbase(municipalityId, customerEngagementOrgId, partyId))
-				.map(InstalledBaseResponse::getInstalledBaseCustomers)
-				.orElse(emptyList());
+		final var response = ofNullable(installedbaseClient.getInstalledbase(municipalityId, customerEngagementOrgId, partyId))
+			.map(InstalledBaseResponse::getInstalledBaseCustomers)
+			.orElse(emptyList());
 
-			if (response.size() > 1) {
-				throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_MULTIPLE_MATCHES.formatted(response.size()));
-			}
-
-			return response.isEmpty() ? null : Map.entry(customerEngagementOrgId, response.getFirst());
-		} catch (final Exception e) {
-			// A failure for one counterpart must not block enrichment from the others — log and skip this counterpart.
-			LOG.warn("Could not fetch installed base for counterpart '{}': {}", sanitizeForLogging(customerEngagementOrgId), sanitizeForLogging(e.getMessage()));
-			return null;
+		if (response.size() > 1) {
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_MULTIPLE_MATCHES.formatted(response.size()));
 		}
+
+		return response.isEmpty() ? null : Map.entry(customerEngagementOrgId, response.getFirst());
 	}
 }

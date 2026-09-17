@@ -65,17 +65,13 @@ class AssistantMapperTest {
 		final var assistantId = "assistantId";
 		final var sessionId = UUID.randomUUID();
 
-		when(askResponseMock.getSessionId()).thenReturn(sessionId);
-
 		// Act
-		final var result = AssistantMapper.toSessionResponse(assistantId, askResponseMock);
+		final var result = AssistantMapper.toSessionResponse(assistantId, sessionId);
 
 		// Assert and verify
 		assertThat(result).hasNoNullFieldsOrProperties();
 		assertThat(result.getAssistantId()).isEqualTo(assistantId);
 		assertThat(result.getSessionId()).isEqualTo(sessionId.toString());
-
-		verify(askResponseMock).getSessionId();
 	}
 
 	@Test

@@ -65,7 +65,7 @@ class AssistantIT extends AbstractAppTest {
 
 	@Test
 	void test01_createSession() {
-		final var sessionId = "5f91f4d5-40bf-4488-8de1-7417e175d4f7";
+		final var partyId = "c62fd364-6214-4fb1-82f7-e4b6be53afbe";
 
 		setupCall()
 			.withServicePath(PATH)
@@ -82,10 +82,15 @@ class AssistantIT extends AbstractAppTest {
 			.atMost(Duration.ofSeconds(30))
 			.ignoreExceptions()
 			.until(() -> transactionTemplate.execute(status -> {
-				final var session = sessionRepository.getReferenceById(sessionId);
+				final var session = sessionRepository.findAll().stream()
+					.filter(candidate -> partyId.equals(candidate.getPartyId()))
+					.findFirst()
+					.orElseThrow();
 
 				assertThat(session.getInitialized()).isNotNull();
+				assertThat(session.getStatus()).isEqualTo("Successfully initialized");
 				assertThat(session.getFiles()).hasSize(1);
+				assertThat(session.getEneoSessionId()).isNull(); // Started in Eneo by the first question, not by the creation
 
 				return true;
 			}));
@@ -134,6 +139,29 @@ class AssistantIT extends AbstractAppTest {
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test08_firstQuestionStartsEneoSession() {
+		final var sessionId = "3b7e0c1a-5d2f-4e8b-9a6c-1f2d3e4a5b6c";
+		final var eneoSessionId = "9f8e7d6c-5b4a-4c3d-8e2f-1a0b9c8d7e6f";
+
+		transactionTemplate.executeWithoutResult(status -> assertThat(sessionRepository.getReferenceById(sessionId).getEneoSessionId()).isNull());
+
+		setupCall()
+			.withServicePath(PATH + "/" + sessionId + "?question=" + encode("What is the answer to the ultimate question of life, the universe and everything?", defaultCharset()))
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+
+		// The session started by the first question is connected to the session, so that following questions continue it
+		transactionTemplate.executeWithoutResult(status -> {
+			final var session = sessionRepository.getReferenceById(sessionId);
+
+			assertThat(session.getEneoSessionId()).isEqualTo(eneoSessionId);
+			assertThat(session.getLastAccessed()).isNotNull();
+		});
 	}
 
 	@Test

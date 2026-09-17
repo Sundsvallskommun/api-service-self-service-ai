@@ -26,15 +26,11 @@ import static java.util.Optional.ofNullable;
 public class AssistantMapper {
 	private AssistantMapper() {}
 
-	public static SessionResponse toSessionResponse(final String assistantId, final AskResponse askResponse) {
-		return ofNullable(askResponse)
-			.map(askResponse1 -> SessionResponse.builder()
-				.withAssistantId(assistantId)
-				.withSessionId(ofNullable(askResponse1.getSessionId()).map(UUID::toString).orElse(null))
-				.build())
-			.orElse(SessionResponse.builder()
-				.withAssistantId(assistantId)
-				.build());
+	public static SessionResponse toSessionResponse(final String assistantId, final UUID sessionId) {
+		return SessionResponse.builder()
+			.withAssistantId(assistantId)
+			.withSessionId(ofNullable(sessionId).map(UUID::toString).orElse(null))
+			.build();
 	}
 
 	public static QuestionResponse toQuestionResponse(final AskResponse askResponse) {

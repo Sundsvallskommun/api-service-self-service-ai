@@ -16,6 +16,7 @@ import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.SessionEntity;
 
 import static java.time.ZoneId.systemDefault;
+import static java.util.Objects.isNull;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toFileEntity;
 
 /**
@@ -116,6 +117,26 @@ public class SessionPersistenceService {
 	public void completeInitialization(final String sessionId, final String status) {
 		sessionRepository.findForUpdateBySessionId(sessionId)
 			.ifPresent(session -> markInitialized(session, status));
+	}
+
+	/**
+	 * Connects the session that the first question started in Eneo with the session it was asked in. The first writer
+	 * wins, so that two concurrent first questions leave the session with exactly one Eneo session.
+	 *
+	 * @param  sessionId     id of the session to connect the Eneo session to
+	 * @param  eneoSessionId id of the session in Eneo
+	 * @return               the Eneo session id that the session holds after the call, or empty if the session no longer
+	 *                       exists. Differs from the sent in id when another writer got there first.
+	 */
+	@Transactional
+	public Optional<String> attachEneoSession(final String sessionId, final String eneoSessionId) {
+		return sessionRepository.findForUpdateBySessionId(sessionId)
+			.map(session -> {
+				if (isNull(session.getEneoSessionId())) {
+					session.setEneoSessionId(eneoSessionId);
+				}
+				return session.getEneoSessionId();
+			});
 	}
 
 	/**

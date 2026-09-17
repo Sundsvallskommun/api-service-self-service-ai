@@ -40,6 +40,9 @@ class SessionPersistenceServiceTest {
 	// Created but not yet initialized, without files
 	private static final String PENDING_SESSION_ID = "a6602aba-0b21-4abf-a869-60c583570129";
 
+	// Failed in initialization, never started in Eneo
+	private static final String FAILED_SESSION_ID = "8212c515-6f7a-4e1c-a6b4-a2e265f018ed";
+
 	// Initialized and accessed, with two files
 	private static final String INITIALIZED_SESSION_ID = "4dc21d5e-8a70-45fb-b225-367fcd383a2e";
 	private static final List<String> INITIALIZED_SESSION_FILE_IDS = List.of("5ef193cd-96a7-4861-a33d-e01528618f2e", "2f60ca4c-828b-4f4e-818f-432d53d61f83");
@@ -100,6 +103,30 @@ class SessionPersistenceServiceTest {
 
 		assertThat(result).isFalse();
 		assertThat(fileRepository.existsById(fileId.toString())).isFalse();
+	}
+
+	@Test
+	void attachEneoSession() {
+		final var eneoSessionId = UUID.randomUUID().toString();
+
+		final var result = sessionPersistenceService.attachEneoSession(FAILED_SESSION_ID, eneoSessionId);
+
+		assertThat(result).hasValue(eneoSessionId);
+		assertThat(sessionRepository.findById(FAILED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(eneoSessionId));
+	}
+
+	@Test
+	void attachEneoSessionWhenAlreadyAttached() {
+		// The first writer wins, so the already connected Eneo session is kept and returned
+		final var result = sessionPersistenceService.attachEneoSession(INITIALIZED_SESSION_ID, UUID.randomUUID().toString());
+
+		assertThat(result).hasValue(INITIALIZED_SESSION_ID);
+		assertThat(sessionRepository.findById(INITIALIZED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(INITIALIZED_SESSION_ID));
+	}
+
+	@Test
+	void attachEneoSessionToRemovedSession() {
+		assertThat(sessionPersistenceService.attachEneoSession(UUID.randomUUID().toString(), UUID.randomUUID().toString())).isEmpty();
 	}
 
 	@Test

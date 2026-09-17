@@ -12,12 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 
 import static generated.se.sundsvall.measurementdata.Aggregation.MONTH;
 import static generated.se.sundsvall.measurementdata.Category.DISTRICT_HEATING;
 import static generated.se.sundsvall.measurementdata.Category.ELECTRICITY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -46,25 +48,27 @@ class MeasurementDataIntegrationTest {
 	}
 
 	@Test
-	void getMeasurementDataSendsAllFacilitiesInOneRequestPerCategory() {
+	void categoriesAreTheImplementedOnes() {
+		assertThat(MeasurementDataIntegration.CATEGORIES).containsExactly(DISTRICT_HEATING, ELECTRICITY);
+	}
+
+	@Test
+	void getMeasurementDataSendsAllFacilitiesInOneRequest() {
 
 		// Arrange
 		final var facilityIds = List.of(FACILITY_ID_1, FACILITY_ID_2);
 		final var facilities = List.of(
 			Facility.builder().withFacilityId(FACILITY_ID_1).build(),
 			Facility.builder().withFacilityId(FACILITY_ID_2).build());
-		final var districtHeatingData = new Data().category(DISTRICT_HEATING).facilityId(facilityIds);
 		final var electricityData = new Data().category(ELECTRICITY).facilityId(facilityIds);
 
-		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds)).thenReturn(districtHeatingData);
 		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds)).thenReturn(electricityData);
 
 		// Act
-		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
+		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities, ELECTRICITY);
 
 		// Assert and verify
-		assertThat(result).containsExactly(districtHeatingData, electricityData);
-		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds);
+		assertThat(result).isSameAs(electricityData);
 		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds);
 	}
 
@@ -78,88 +82,78 @@ class MeasurementDataIntegrationTest {
 			Facility.builder().build());
 
 		// Act
-		integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
+		integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities, DISTRICT_HEATING);
 
 		// Assert and verify
 		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, List.of(FACILITY_ID_1));
-		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, List.of(FACILITY_ID_1));
 	}
 
 	@Test
 	void getMeasurementDataWhenNoFacilitiesToFetchDataFor() {
 
 		// Act
-		final var fromNull = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, null);
-		final var fromEmptyList = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of());
-		final var fromFacilityWithoutId = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of(Facility.builder().build()));
+		final var fromNull = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, null, ELECTRICITY);
+		final var fromEmptyList = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of(), ELECTRICITY);
+		final var fromFacilityWithoutId = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, List.of(Facility.builder().build()), ELECTRICITY);
 
 		// Assert and verify
-		assertThat(fromNull).isEmpty();
-		assertThat(fromEmptyList).isEmpty();
-		assertThat(fromFacilityWithoutId).isEmpty();
+		assertThat(fromNull).isNull();
+		assertThat(fromEmptyList).isNull();
+		assertThat(fromFacilityWithoutId).isNull();
 		verifyNoInteractions(clientMock);
 	}
 
 	@Test
 	void getMeasurementDataWhenServiceThrowsNotImplementedException() {
 
-		// Arrange
+		// Arrange — a category that the backend does not implement is "no data", not a failure
 		final var facilityIds = List.of(FACILITY_ID_1);
 		final var facilities = List.of(Facility.builder().withFacilityId(FACILITY_ID_1).build());
-		final var data = new Data().category(ELECTRICITY).facilityId(facilityIds);
 		final var exception = Problem.valueOf(BAD_GATEWAY, "datawarehousereader error: {detail=aggregation 'MONTH' and category 'DISTRICT_HEATING', status=501 Not Implemented, title=Not Implemented}");
 
 		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds)).thenThrow(exception);
-		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds)).thenReturn(data);
 
 		// Act
-		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
+		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities, DISTRICT_HEATING);
 
 		// Assert and verify
-		assertThat(result).containsExactly(data);
+		assertThat(result).isNull();
 		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds);
-		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds);
 	}
 
 	@Test
-	void getMeasurementDataWhenServiceThrowsUnhandledExceptionIsSwallowed() {
+	void getMeasurementDataWhenServiceThrowsOtherProblem() {
 
-		// Arrange — a failing category must not break the whole session; the remaining categories should still
-		// produce data.
+		// Arrange — any other failure is propagated so that the caller can record the category as missing
 		final var facilityIds = List.of(FACILITY_ID_1);
 		final var facilities = List.of(Facility.builder().withFacilityId(FACILITY_ID_1).build());
-		final var data = new Data().category(ELECTRICITY).facilityId(facilityIds);
 		final var exception = Problem.valueOf(BAD_GATEWAY, "Bad to the bone");
 
 		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds)).thenThrow(exception);
-		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds)).thenReturn(data);
 
 		// Act
-		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
+		final var e = assertThrows(ThrowableProblem.class, () -> integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities, DISTRICT_HEATING));
 
 		// Assert and verify
-		assertThat(result).containsExactly(data);
+		assertThat(e).isSameAs(exception);
 		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds);
-		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds);
 	}
 
 	@Test
 	void getMeasurementDataWhenServiceThrowsGenericException() {
 
-		// Arrange — non-Problem exceptions must also be swallowed per category
+		// Arrange
 		final var facilityIds = List.of(FACILITY_ID_1);
 		final var facilities = List.of(Facility.builder().withFacilityId(FACILITY_ID_1).build());
-		final var data = new Data().category(ELECTRICITY).facilityId(facilityIds);
+		final var exception = new RuntimeException("boom");
 
-		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds)).thenThrow(new RuntimeException("boom"));
-		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds)).thenReturn(data);
+		when(clientMock.getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds)).thenThrow(exception);
 
 		// Act
-		final var result = integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities);
+		final var e = assertThrows(RuntimeException.class, () -> integration.getMeasurementData(MUNICIPALITY_ID, PARTY_ID, facilities, ELECTRICITY));
 
 		// Assert and verify
-		assertThat(result).containsExactly(data);
-		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, DISTRICT_HEATING, facilityIds);
+		assertThat(e).isSameAs(exception);
 		verify(clientMock).getMeasurementData(MUNICIPALITY_ID, MONTH, FROM_DATE, TO_DATE, PARTY_ID, ELECTRICITY, facilityIds);
 	}
 }

@@ -31,16 +31,25 @@ public class EneoIntegration {
 	}
 
 	/**
-	 * Asks and initial question to a given assistant
+	 * Asks a given assistant the initial question, which also starts a new session in Eneo. The id of the started session
+	 * is part of the response.
 	 *
-	 * @param  assistantId The ID of the assistant to ask
-	 * @param  input       The question to ask
-	 * @return             The response from the assistant or null if problems occurred during assistant interaction
+	 * @param  assistantId    The ID of the assistant to ask
+	 * @param  input          The question to ask
+	 * @param  fileReferences List references to files that the assistant shall base its answer on
+	 * @return                The response from the assistant or an <code>Optional.empty()</code> if problems occurred
+	 *                        during assistant interaction
 	 */
-	public AskResponse askAssistant(final String assistantId, final String input) {
-		LOG.debug("Asking assistant initial question");
-		final var question = mapper.toAskAssistant(input);
-		return client.askAssistant(assistantId, question);
+	public Optional<AskResponse> askAssistant(final String assistantId, final String input, final List<String> fileReferences) {
+		try {
+			final var question = mapper.toAskAssistant(input, fileReferences);
+
+			LOG.debug("Asking assistant initial question");
+			return Optional.of(client.askAssistant(assistantId, question));
+		} catch (final Exception e) { // Swallow exception here and let frontend decide how to handle problem
+			LOG.warn("Exception when starting assistant session", e);
+			return Optional.empty();
+		}
 	}
 
 	/**
@@ -53,7 +62,7 @@ public class EneoIntegration {
 	 * @return                The response from the assistant or an <code>Optional.empty()</code> if problems occurred
 	 *                        during assistant interaction
 	 */
-	public Optional<AskResponse> askFollowUp(final String assistantId, final String sessionId, final String input, List<String> fileReferences) {
+	public Optional<AskResponse> askFollowUp(final String assistantId, final String sessionId, final String input, final List<String> fileReferences) {
 		try {
 			final var question = mapper.toAskAssistant(input, fileReferences);
 
@@ -129,8 +138,8 @@ public class EneoIntegration {
 	 * Deletes a file from Eneo
 	 *
 	 * @param  id The ID of the file to delete
-	 * @return    Signal if the file was successfully deleted or not (a 404 is treated as success since the file is
-	 *            already gone)
+	 * @return    Signal if the file was successfully deleted or not (a 404 is treated as success since the file is already
+	 *            gone)
 	 */
 	public boolean deleteFile(final String id) {
 		try {
