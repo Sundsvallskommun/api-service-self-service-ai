@@ -3,6 +3,7 @@ package se.sundsvall.selfserviceai.integration.installedbase;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseResponse;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledbaseIntegrationTest {
@@ -99,6 +101,24 @@ class InstalledbaseIntegrationTest {
 		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Installed base response can not be interpreted as it contains more than one match (size is 2)");
+	}
+
+	@Test
+	void getInstalledbaseWhenCounterpartAnswersNotFound() {
+		// Arrange — a 404 is how installedbase answers for a counterpart the customer has no engagement with, so that
+		// counterpart is skipped while the others are still fetched
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenThrow(Problem.valueOf(NOT_FOUND, "No customer engagements matched the search criteria!"));
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID)).thenReturn(new InstalledBaseResponse()
+			.installedBaseCustomers(List.of(new InstalledBaseCustomer().customerNumber(CUSTOMER_NBR))));
+
+		// Act
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
+
+		// Assert and verify
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
+		assertThat(result).containsOnlyKeys(CUSTOMER_ENGAGEMENT_ORG_ID2);
+		assertThat(result.get(CUSTOMER_ENGAGEMENT_ORG_ID2).getCustomerNumber()).isEqualTo(CUSTOMER_NBR);
 	}
 
 	@Test

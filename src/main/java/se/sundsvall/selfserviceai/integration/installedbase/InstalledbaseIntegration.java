@@ -2,18 +2,21 @@ package se.sundsvall.selfserviceai.integration.installedbase;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
 public class InstalledbaseIntegration {
@@ -46,12 +49,22 @@ public class InstalledbaseIntegration {
 	/**
 	 * A failure here is propagated, as an installed base that could not be fetched must not be mistaken for a customer
 	 * without installed base. The installed base is the backbone of the information given to the assistant, so a session
-	 * without it is useless and must be reported as failed rather than as ready.
+	 * without it is useless and must be reported as failed rather than as ready. The one exception is a 404, which is how
+	 * the installedbase service answers when the customer has no engagement with the counterpart, i.e. a customer without
+	 * installed base at that counterpart.
 	 */
 	private Entry<String, InstalledBaseCustomer> getInstalledbase(String municipalityId, String partyId, String customerEngagementOrgId) {
-		final var response = ofNullable(installedbaseClient.getInstalledbase(municipalityId, customerEngagementOrgId, partyId))
-			.map(InstalledBaseResponse::getInstalledBaseCustomers)
-			.orElse(emptyList());
+		final List<InstalledBaseCustomer> response;
+		try {
+			response = ofNullable(installedbaseClient.getInstalledbase(municipalityId, customerEngagementOrgId, partyId))
+				.map(InstalledBaseResponse::getInstalledBaseCustomers)
+				.orElse(emptyList());
+		} catch (final ThrowableProblem e) {
+			if (e.getStatus() == NOT_FOUND) {
+				return null;
+			}
+			throw e;
+		}
 
 		if (response.size() > 1) {
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_MULTIPLE_MATCHES.formatted(response.size()));
