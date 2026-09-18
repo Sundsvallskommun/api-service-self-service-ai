@@ -1,10 +1,14 @@
 package se.sundsvall.selfserviceai.service;
 
+import generated.se.sundsvall.eneo.AskResponse;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
+import generated.se.sundsvall.measurementdata.Data;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -28,17 +32,18 @@ import se.sundsvall.selfserviceai.integration.eneo.mapper.EneoMapper;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.InvoiceDecorator;
 import se.sundsvall.selfserviceai.integration.eneo.mapper.MeasurementDecorator;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
+import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.installedbase.InstalledbaseIntegration;
 import se.sundsvall.selfserviceai.integration.invoices.InvoicesIntegration;
 import se.sundsvall.selfserviceai.integration.lime.LimeIntegration;
 import se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration;
-import se.sundsvall.selfserviceai.service.mapper.AssistantMapper;
 
 import static java.time.ZoneId.systemDefault;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.apache.commons.collections4.MapUtils.isNotEmpty;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -47,6 +52,7 @@ import static se.sundsvall.selfserviceai.api.model.SessionStatus.FAILED;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.PENDING;
 import static se.sundsvall.selfserviceai.api.model.SessionStatus.READY;
 import static se.sundsvall.selfserviceai.integration.db.mapper.DatabaseMapper.toSessionEntity;
+import static se.sundsvall.selfserviceai.integration.measurementdata.MeasurementDataIntegration.CATEGORIES;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toQuestionResponse;
 import static se.sundsvall.selfserviceai.service.mapper.AssistantMapper.toSessionResponse;
 import static se.sundsvall.selfserviceai.service.util.StringUtils.sanitizeAndCompress;
@@ -56,6 +62,24 @@ public class AssistantService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AssistantService.class);
 	private static final String ERROR_SESSION_NOT_FOUND = "Session with id '%s' could not be found";
+	private static final String STATUS_SUCCESS = "Successfully initialized";
+	private static final String STATUS_PARTIAL = "Initialized without data from: %s";
+	private static final String STATUS_FAILED = "Initialization failed. Error message is '%s'. Filter logs on log id '%s' for more information.";
+
+	/**
+	 * The outcome of fetching information from one source during the population of a session.
+	 *
+	 * @param source  name of the source, e.g. "invoices" or "measurementdata/ELECTRICITY"
+	 * @param success true if the source answered, false if the fetch failed
+	 * @param count   number of items the source returned
+	 * @param millis  time the fetch took
+	 */
+	record SourceOutcome(String source, boolean success, int count, long millis) {
+		@Override
+		public String toString() {
+			return "%s=%s (%d ms)".formatted(source, success ? String.valueOf(count) : "FAILED", millis);
+		}
+	}
 
 	private final AgreementIntegration agreementIntegration;
 	private final InstalledbaseIntegration installedbaseIntegration;
@@ -92,20 +116,52 @@ public class AssistantService {
 		this.sessionRepository = sessionRepository;
 	}
 
-	private static <T> List<T> safeCall(final String source, final Supplier<List<T>> supplier) {
+	private static long millisSince(final long startNanos) {
+		return NANOSECONDS.toMillis(System.nanoTime() - startNanos);
+	}
+
+	/**
+	 * Fetches information from one of the sources that enrich the installed base. A failure is logged and recorded in
+	 * the outcome instead of being thrown, so that a failure in one source does not prevent enrichment from the others.
+	 * The recorded outcome is what makes the missing data visible in the session status, instead of silently leaving the
+	 * assistant with less information than the customer expects.
+	 */
+	private static <T> List<T> fetch(final List<SourceOutcome> outcomes, final String source, final Supplier<List<T>> supplier) {
+		final var start = System.nanoTime();
 		try {
-			return ofNullable(supplier.get()).orElse(emptyList());
+			final var result = ofNullable(supplier.get()).orElse(emptyList());
+			outcomes.add(new SourceOutcome(source, true, result.size(), millisSince(start)));
+			return result;
 		} catch (final Exception e) {
-			LOG.warn("Could not fetch information from '{}': {}", source, sanitizeForLogging(e.getMessage()));
+			outcomes.add(new SourceOutcome(source, false, 0, millisSince(start)));
+			LOG.warn("Could not fetch information from '{}' after {} ms: {}", source, millisSince(start), sanitizeForLogging(e.getMessage()));
 			return emptyList();
 		}
 	}
 
-	public SessionResponse createSession(final String municipalityId, final String partyId) {
-		final var session = eneoIntegration.askAssistant(eneoProperties.assistantId(), "Påbörjar session för party id '%s'".formatted(partyId));
-		sessionRepository.save(toSessionEntity(municipalityId, session.getSessionId(), partyId));
+	private static String toStatus(final List<SourceOutcome> outcomes) {
+		final var failedSources = outcomes.stream()
+			.filter(outcome -> !outcome.success())
+			.map(SourceOutcome::source)
+			.toList();
 
-		return toSessionResponse(eneoProperties.assistantId(), session);
+		return failedSources.isEmpty() ? STATUS_SUCCESS : STATUS_PARTIAL.formatted(String.join(", ", failedSources));
+	}
+
+	/**
+	 * Creates a session locally. The session in Eneo is started by the first question (see {@link #askQuestion}), as
+	 * starting it here would require an initial question that nobody reads but that costs a full assistant answer, i.e.
+	 * some ten seconds that the customer would wait for before the population of the session even begins.
+	 *
+	 * @param  municipalityId id of the municipality that owns the session
+	 * @param  partyId        party id of the customer that the session is created for
+	 * @return                the created session
+	 */
+	public SessionResponse createSession(final String municipalityId, final String partyId) {
+		final var sessionId = UUID.randomUUID();
+		sessionRepository.save(toSessionEntity(municipalityId, sessionId, partyId));
+
+		return toSessionResponse(eneoProperties.assistantId(), sessionId);
 	}
 
 	@Async
@@ -125,23 +181,29 @@ public class AssistantService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, ERROR_SESSION_NOT_FOUND.formatted(sessionId)));
 
 		final var partyId = sessionRequest.getPartyId();
+		final var outcomes = new ArrayList<SourceOutcome>();
+		final var start = System.nanoTime();
 
 		try {
+			// The installed base is not wrapped: a failure here fails the session, as an installed base that could not be
+			// fetched must not be mistaken for a customer without installed base
+			final var installedBaseStart = System.nanoTime();
 			final var installedBases = installedbaseIntegration.getInstalledbases(municipalityId, partyId, sessionRequest.getCustomerEngagementOrgIds());
+			outcomes.add(new SourceOutcome("installedbase", true, ofNullable(installedBases).map(Map::size).orElse(0), millisSince(installedBaseStart)));
 
 			if (isNotEmpty(installedBases)) {
-				uploadAndAttachFile(sessionId, municipalityId, sessionRequest, installedBases);
+				uploadAndAttachFile(sessionId, municipalityId, sessionRequest, installedBases, outcomes);
 			} else {
 				final var sanitizedPartyId = sanitizeAndCompress(partyId);
 				LOG.warn("No installed base information found for customer '{}' and counterparts {}", sanitizedPartyId, sanitizeAndCompress(sessionRequest.getCustomerEngagementOrgIds()));
 				sessionPersistenceService.completeInitialization(sessionId.toString(),
 					"No installed base information found for customer '%s' and counterparts %s".formatted(partyId, sessionRequest.getCustomerEngagementOrgIds()));
 			}
+			LOG.info("Session '{}' populated in {} ms: {}", sessionId, millisSince(start), outcomes);
 		} catch (final Exception e) {
-			LOG.error("Exception thrown when populating session with customer information", e);
+			LOG.error("Exception thrown when populating session '{}' after {} ms: {}", sessionId, millisSince(start), outcomes, e);
 			// Update with failed information
-			sessionPersistenceService.completeInitialization(sessionId.toString(),
-				"Initialization failed. Error message is '%s'. Filter logs on log id '%s' for more information.".formatted(e.getMessage(), RequestId.get()));
+			sessionPersistenceService.completeInitialization(sessionId.toString(), STATUS_FAILED.formatted(e.getMessage(), RequestId.get()));
 		}
 	}
 
@@ -156,14 +218,17 @@ public class AssistantService {
 	 * @param municipalityId id of the municipality that owns the session
 	 * @param sessionRequest the request that initiated the population
 	 * @param installedBases the installed base information to build the file content from
+	 * @param outcomes       the outcome of every source that has been fetched so far, extended by this method
 	 */
-	private void uploadAndAttachFile(final UUID sessionId, final String municipalityId, final SessionRequest sessionRequest, final Map<String, InstalledBaseCustomer> installedBases) {
-		final var eneoModel = buildEneoModel(municipalityId, sessionRequest.getPartyId(), installedBases);
+	private void uploadAndAttachFile(final UUID sessionId, final String municipalityId, final SessionRequest sessionRequest, final Map<String, InstalledBaseCustomer> installedBases, final List<SourceOutcome> outcomes) {
+		final var eneoModel = buildEneoModel(municipalityId, sessionRequest.getPartyId(), installedBases, outcomes);
+		final var uploadStart = System.nanoTime();
 		final var fileId = eneoIntegration.uploadFile(eneoModel);
+		outcomes.add(new SourceOutcome("eneo-upload", true, 1, millisSince(uploadStart)));
 		var isAttached = false;
 
 		try {
-			isAttached = sessionPersistenceService.attachFile(sessionId.toString(), fileId, eneoModel.getCustomerNumber(), "Successfully initialized");
+			isAttached = sessionPersistenceService.attachFile(sessionId.toString(), fileId, eneoModel.getCustomerNumber(), toStatus(outcomes));
 
 			if (!isAttached) {
 				LOG.info("Session '{}' was removed while it was being populated with customer information", sessionId);
@@ -175,23 +240,32 @@ public class AssistantService {
 		}
 	}
 
-	private EneoModel buildEneoModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases) {
+	private EneoModel buildEneoModel(final String municipalityId, final String partyId, final Map<String, InstalledBaseCustomer> installedBases, final List<SourceOutcome> outcomes) {
 		final var eneoModel = eneoMapper.toEneoModel(installedBases);
 
-		// Enrich all facility with agreement, invoice and measurement information. Each integration call is wrapped
-		// individually so a failure in one source does not prevent enrichment from the others.
+		// Enrich all facility with agreement, invoice and measurement information. Each integration call is fetched
+		// individually so a failure in one source does not prevent enrichment from the others, and every outcome is
+		// recorded so that a missing source ends up in the session status
 		final var facilities = ofNullable(eneoModel.getFacilities()).orElse(emptyList());
 
-		final var invoices = safeCall("invoices", () -> invoicesIntegration.getInvoices(municipalityId, partyId));
+		final var invoices = fetch(outcomes, "invoices", () -> invoicesIntegration.getInvoices(municipalityId, partyId));
 		final var decoratedInvoices = invoices.stream()
 			.map(InvoiceDecorator::toDecoratedInvoice)
 			.toList();
 
-		AgreementDecorator.addAgreements(facilities, safeCall("agreements", () -> agreementIntegration.getAgreements(municipalityId, partyId)));
+		AgreementDecorator.addAgreements(facilities, fetch(outcomes, "agreements", () -> agreementIntegration.getAgreements(municipalityId, partyId)));
 		InvoiceDecorator.addInvoices(facilities, decoratedInvoices);
-		MeasurementDecorator.addMeasurements(facilities, safeCall("measurementdata", () -> measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities)));
+		MeasurementDecorator.addMeasurements(facilities, fetchMeasurements(municipalityId, partyId, facilities, outcomes));
 
 		return eneoModel;
+	}
+
+	private List<Data> fetchMeasurements(final String municipalityId, final String partyId, final List<Facility> facilities, final List<SourceOutcome> outcomes) {
+		return CATEGORIES.stream()
+			.flatMap(category -> fetch(outcomes, "measurementdata/" + category, () -> ofNullable(measurementDataIntegration.getMeasurementData(municipalityId, partyId, facilities, category))
+				.map(List::of)
+				.orElse(emptyList())).stream())
+			.toList();
 	}
 
 	public SessionStatusResponse isSessionReady(final String municipalityId, final UUID sessionId) {
@@ -212,6 +286,8 @@ public class AssistantService {
 		}
 		return SessionStatusResponse.builder()
 			.withStatus(READY.name())
+			.withDetail(STATUS_SUCCESS.equals(session.getStatus()) ? null : session.getStatus()) // Tells the frontend when the assistant is ready but has less data than expected
+			.withEneoSessionId(session.getEneoSessionId()) // Lets the frontend talk to Eneo directly once the first question has started the session there
 			.build();
 	}
 
@@ -230,13 +306,45 @@ public class AssistantService {
 			return toQuestionResponse("Assistant initialization failed, please create a new session");
 		}
 
-		final var eneoResponse = eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getSessionId(), question, session.getFiles().stream().map(FileEntity::getFileId).toList());
+		final var fileIds = session.getFiles().stream().map(FileEntity::getFileId).toList();
+		final var eneoResponse = isNull(session.getEneoSessionId())
+			? startEneoSession(session, question, fileIds)
+			: eneoIntegration.askFollowUp(eneoProperties.assistantId(), session.getEneoSessionId(), question, fileIds);
+
 		if (eneoResponse.isPresent()) {
 			session.setLastAccessed(OffsetDateTime.now(systemDefault()));
 			sessionRepository.save(session);
 		}
 
-		return eneoResponse.map(AssistantMapper::toQuestionResponse).orElse(null);
+		return eneoResponse
+			.map(askResponse -> toQuestionResponse(session.getSessionId(), askResponse))
+			.orElse(null);
+	}
+
+	/**
+	 * Asks the first question of a session, which starts the session in Eneo, and connects the started Eneo session to
+	 * the session. The first writer wins if two first questions race, and the Eneo session that lost is removed again, as
+	 * nothing else would ever remove it.
+	 *
+	 * @param  session  the session to start in Eneo
+	 * @param  question the first question
+	 * @param  fileIds  ids of the files that the assistant shall base its answer on
+	 * @return          the response from the assistant, or empty if the assistant could not be reached
+	 */
+	private Optional<AskResponse> startEneoSession(final SessionEntity session, final String question, final List<String> fileIds) {
+		final var eneoResponse = eneoIntegration.askAssistant(eneoProperties.assistantId(), question, fileIds);
+
+		eneoResponse.map(AskResponse::getSessionId).map(UUID::toString).ifPresent(eneoSessionId -> {
+			final var attachedEneoSessionId = sessionPersistenceService.attachEneoSession(session.getSessionId(), eneoSessionId);
+
+			if (attachedEneoSessionId.filter(eneoSessionId::equals).isEmpty()) {
+				LOG.info("Eneo session '{}' is not the one connected to session '{}', removing it", eneoSessionId, session.getSessionId());
+				eneoIntegration.deleteSession(eneoProperties.assistantId(), eneoSessionId);
+			}
+			attachedEneoSessionId.ifPresent(session::setEneoSessionId);
+		});
+
+		return eneoResponse;
 	}
 
 	@Async
@@ -324,9 +432,9 @@ public class AssistantService {
 	 */
 	private boolean saveChatHistory(final SessionEntity sessionEntity) {
 		try {
-			// Only save chat history if session has been successfully initialized (i.e. the session has been possible to use)
-			if (nonNull(sessionEntity.getInitialized())) {
-				eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getSessionId())
+			// Only save chat history if the session has been started in Eneo, i.e. at least one question has been asked
+			if (nonNull(sessionEntity.getInitialized()) && nonNull(sessionEntity.getEneoSessionId())) {
+				eneoIntegration.getSession(eneoProperties.assistantId(), sessionEntity.getEneoSessionId())
 					.ifPresent(session -> limeIntegration.saveChatHistory(sessionEntity.getPartyId(), sessionEntity.getCustomerNbr(), session));
 			}
 			return true;
@@ -341,18 +449,27 @@ public class AssistantService {
 
 	/**
 	 * Removes a session and its files, first in Eneo and thereafter in the database. The removals in Eneo are performed
-	 * outside of any transaction, as a row in the file table always represents a file that still exists in Eneo.
+	 * outside of any transaction, as a row in the file table always represents a file that still exists in Eneo. The
+	 * session itself only exists in Eneo if a first question has been asked.
+	 * <p>
+	 * The session in Eneo is removed before its files, as Eneo refuses to remove a file that is still attached to a chat
+	 * (409, Eneo error code 9044). Removing the files first would therefore never succeed, and the session would be
+	 * retried forever. A session that is already gone in Eneo counts as removed, so a retry after a failed file removal
+	 * gets past the session and on to the files.
 	 *
 	 * @param sessionEntity session to remove
 	 */
 	private void deleteSession(final SessionEntity sessionEntity) {
-		final var removedFileIds = sessionEntity.getFiles().stream()
-			.map(FileEntity::getFileId)
-			.filter(eneoIntegration::deleteFile)
-			.toList();
+		final var sessionRemovedInEneo = isNull(sessionEntity.getEneoSessionId()) // A session that never got a first question has nothing to remove in Eneo
+			|| eneoIntegration.deleteSession(eneoProperties.assistantId(), sessionEntity.getEneoSessionId());
 
-		final var allFilesRemoved = removedFileIds.size() == sessionEntity.getFiles().size();
-		final var sessionRemovedInEneo = allFilesRemoved && eneoIntegration.deleteSession(eneoProperties.assistantId(), sessionEntity.getSessionId());
+		// Files are only attempted once the chat that holds them is gone, otherwise Eneo would refuse every one of them
+		final var removedFileIds = sessionRemovedInEneo
+			? sessionEntity.getFiles().stream()
+				.map(FileEntity::getFileId)
+				.filter(eneoIntegration::deleteFile)
+				.toList()
+			: List.<String>of();
 
 		sessionPersistenceService.finalizeDeletion(sessionEntity.getSessionId(), removedFileIds, sessionRemovedInEneo);
 	}

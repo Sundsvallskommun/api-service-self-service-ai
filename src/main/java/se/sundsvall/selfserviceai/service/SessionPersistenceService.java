@@ -119,6 +119,24 @@ public class SessionPersistenceService {
 	}
 
 	/**
+	 * Connects the session that the first question started in Eneo with the session it was asked in. The first writer
+	 * wins, so that two concurrent first questions leave the session with exactly one Eneo session.
+	 *
+	 * @param  sessionId     id of the session to connect the Eneo session to
+	 * @param  eneoSessionId id of the session in Eneo
+	 * @return               the Eneo session id that the session holds after the call, or empty if the session no longer
+	 *                       exists. Differs from the sent in id when another writer got there first.
+	 */
+	@Transactional
+	public Optional<String> attachEneoSession(final String sessionId, final String eneoSessionId) {
+		// The race between two first questions is settled by the conditional update in the database, not in memory
+		if (sessionRepository.attachEneoSessionIfMissing(sessionId, eneoSessionId) == 1) {
+			return Optional.of(eneoSessionId);
+		}
+		return sessionRepository.findEneoSessionIdForUpdateBySessionId(sessionId);
+	}
+
+	/**
 	 * Updates the status of a session.
 	 *
 	 * @param sessionId id of the session to update

@@ -19,6 +19,7 @@
         initialized datetime(6),
         last_accessed datetime(6),
         customer_nbr varchar(255),
+        eneo_session_id varchar(255),
         municipality_id varchar(255) not null,
         party_id varchar(255) not null,
         session_id varchar(255) not null,

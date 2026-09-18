@@ -26,26 +26,28 @@ import static java.util.Optional.ofNullable;
 public class AssistantMapper {
 	private AssistantMapper() {}
 
-	public static SessionResponse toSessionResponse(final String assistantId, final AskResponse askResponse) {
-		return ofNullable(askResponse)
-			.map(askResponse1 -> SessionResponse.builder()
-				.withAssistantId(assistantId)
-				.withSessionId(ofNullable(askResponse1.getSessionId()).map(UUID::toString).orElse(null))
-				.build())
-			.orElse(SessionResponse.builder()
-				.withAssistantId(assistantId)
-				.build());
+	public static SessionResponse toSessionResponse(final String assistantId, final UUID sessionId) {
+		return SessionResponse.builder()
+			.withAssistantId(assistantId)
+			.withSessionId(ofNullable(sessionId).map(UUID::toString).orElse(null))
+			.build();
 	}
 
-	public static QuestionResponse toQuestionResponse(final AskResponse askResponse) {
+	/**
+	 * @param  sessionId   id of the session as known by the caller, i.e. our id and not the id of the session in Eneo
+	 * @param  askResponse the response from Eneo
+	 * @return             the response to the caller, carrying both our session id and the id of the session in Eneo
+	 */
+	public static QuestionResponse toQuestionResponse(final String sessionId, final AskResponse askResponse) {
 		return ofNullable(askResponse)
 			.map(askResponse1 -> QuestionResponse.builder()
 				.withAnswer(askResponse1.getAnswer())
+				.withEneoSessionId(ofNullable(askResponse1.getSessionId()).map(UUID::toString).orElse(null))
 				.withFiles(toFiles(askResponse1.getFiles()))
 				.withModel(toModel(askResponse1.getModel()))
 				.withQuestion(askResponse1.getQuestion())
 				.withReferences(toReferences(askResponse1.getReferences()))
-				.withSessionId(ofNullable(askResponse1.getSessionId()).map(UUID::toString).orElse(null))
+				.withSessionId(sessionId)
 				.withTools(toTools(askResponse1.getTools()))
 				.build())
 			.orElse(null);

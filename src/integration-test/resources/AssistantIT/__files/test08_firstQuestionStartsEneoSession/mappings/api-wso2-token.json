@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPath": "/wso2-token"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "common/responses/api-wso2-token-response.json",
+		"status": 200
+	},
+	"name": "api-wso2-token"
+}

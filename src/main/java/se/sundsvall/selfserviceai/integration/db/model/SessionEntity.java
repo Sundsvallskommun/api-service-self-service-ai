@@ -33,8 +33,11 @@ import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionEntity {
 
-	@Id // No automatic generated value as this should be set to uuid from the Eneo create session response
+	@Id // No automatic generated value as this is set by the service when the session is created
 	private String sessionId;
+
+	@Column(name = "eneo_session_id")
+	private String eneoSessionId; // Set when the first question starts the session in Eneo, null until then
 
 	@Column(name = "municipality_id", nullable = false)
 	private String municipalityId;

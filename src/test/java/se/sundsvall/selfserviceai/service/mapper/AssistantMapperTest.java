@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AssistantMapperTest {
+	private static final String OUR_SESSION_ID = "9406e9e3-e2bf-4b5a-9237-2925b396f096";
 
 	@Mock
 	private AskResponse askResponseMock;
@@ -65,17 +66,13 @@ class AssistantMapperTest {
 		final var assistantId = "assistantId";
 		final var sessionId = UUID.randomUUID();
 
-		when(askResponseMock.getSessionId()).thenReturn(sessionId);
-
 		// Act
-		final var result = AssistantMapper.toSessionResponse(assistantId, askResponseMock);
+		final var result = AssistantMapper.toSessionResponse(assistantId, sessionId);
 
 		// Assert and verify
 		assertThat(result).hasNoNullFieldsOrProperties();
 		assertThat(result.getAssistantId()).isEqualTo(assistantId);
 		assertThat(result.getSessionId()).isEqualTo(sessionId.toString());
-
-		verify(askResponseMock).getSessionId();
 	}
 
 	@Test
@@ -105,12 +102,13 @@ class AssistantMapperTest {
 		when(toolsMock.getAssistants()).thenReturn(List.of(assistantMock));
 
 		// Act
-		final var result = AssistantMapper.toQuestionResponse(askResponseMock);
+		final var result = AssistantMapper.toQuestionResponse(OUR_SESSION_ID, askResponseMock);
 
 		// Assert and verify
 		assertThat(result).hasNoNullFieldsOrProperties();
 		assertThat(result.getAnswer()).isEqualTo(answer);
-		assertThat(result.getSessionId()).isEqualTo(sessionId.toString());
+		assertThat(result.getSessionId()).isEqualTo(OUR_SESSION_ID);
+		assertThat(result.getEneoSessionId()).isEqualTo(sessionId.toString());
 		assertThat(result.getQuestion()).isEqualTo(question);
 
 		verifyAskResponseMockInteractions();
@@ -125,7 +123,7 @@ class AssistantMapperTest {
 	@Test
 	void toQuestionResponseFromNull() {
 		// Act and assert
-		assertThat(AssistantMapper.toQuestionResponse((AskResponse) null)).isNull();
+		assertThat(AssistantMapper.toQuestionResponse(OUR_SESSION_ID, null)).isNull();
 	}
 
 	@Test

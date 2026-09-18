@@ -40,6 +40,7 @@ class SessionEntityTest {
 	void testBuilderMethods() {
 		final var created = OffsetDateTime.now().minusHours(1);
 		final var customerNbr = "customerNbr";
+		final var eneoSessionId = "eneoSessionId";
 		final var files = List.of(FileEntity.builder().build());
 		final var initialized = OffsetDateTime.now().minusMinutes(59);
 		final var lastAccessed = OffsetDateTime.now().minusMinutes(55);
@@ -51,6 +52,7 @@ class SessionEntityTest {
 		final var bean = SessionEntity.builder()
 			.withCreated(created)
 			.withCustomerNbr(customerNbr)
+			.withEneoSessionId(eneoSessionId)
 			.withFiles(files)
 			.withInitialized(initialized)
 			.withLastAccessed(lastAccessed)
@@ -63,6 +65,7 @@ class SessionEntityTest {
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getCustomerNbr()).isEqualTo(customerNbr);
+		assertThat(bean.getEneoSessionId()).isEqualTo(eneoSessionId);
 		assertThat(bean.getFiles()).isEqualTo(files);
 		assertThat(bean.getInitialized()).isEqualTo(initialized);
 		assertThat(bean.getLastAccessed()).isEqualTo(lastAccessed);

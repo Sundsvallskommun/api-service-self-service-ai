@@ -21,6 +21,7 @@ import se.sundsvall.selfserviceai.integration.eneo.model.InformationFile;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.EneoModel;
 import se.sundsvall.selfserviceai.service.util.JsonBuilder;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,20 +70,23 @@ class EneoIntegrationTest {
 			.question(input)
 			.answer(answer);
 
-		when(eneoMapperMock.toAskAssistant(input)).thenReturn(new AskAssistant().question(input));
+		final var fileId = "9c55c2be-9739-4af4-89dd-201a507ce261";
+
+		when(eneoMapperMock.toAskAssistant(input, List.of(fileId))).thenReturn(new AskAssistant().question(input).files(List.of(UUID.fromString(fileId))));
 		when(eneoClientMock.askAssistant(eq(assistantId), askAssistantCaptor.capture())).thenReturn(response);
 
-		final var result = integration.askAssistant(assistantId, input);
+		final var result = integration.askAssistant(assistantId, input, List.of(fileId));
 		final var askAssistant = askAssistantCaptor.getValue();
 		assertThat(askAssistant.getQuestion()).isEqualTo(input);
-		assertThat(result).isEqualTo(response);
+		assertThat(askAssistant.getFiles()).containsExactly(UUID.fromString(fileId));
+		assertThat(result).isPresent().hasValue(response);
 
-		verify(eneoMapperMock).toAskAssistant(input);
+		verify(eneoMapperMock).toAskAssistant(input, List.of(fileId));
 		verify(eneoClientMock).askAssistant(assistantId, askAssistant);
 	}
 
 	/**
-	 * Test scenario where the client throws an exception
+	 * Test scenario where the client throws an exception, which is swallowed and left for the frontend to handle
 	 */
 	@Test
 	void askAssistant_2() {
@@ -90,15 +94,15 @@ class EneoIntegrationTest {
 		final var input = "input";
 		final var exception = new RuntimeException("Something went wrong");
 
-		when(eneoMapperMock.toAskAssistant(input)).thenReturn(new AskAssistant().question(input));
+		when(eneoMapperMock.toAskAssistant(input, emptyList())).thenReturn(new AskAssistant().question(input));
 		when(eneoClientMock.askAssistant(eq(assistantId), askAssistantCaptor.capture())).thenThrow(exception);
 
-		final var e = assertThrows(RuntimeException.class, () -> integration.askAssistant(assistantId, input));
+		final var result = integration.askAssistant(assistantId, input, emptyList());
 		final var askAssistant = askAssistantCaptor.getValue();
 		assertThat(askAssistant.getQuestion()).isEqualTo(input);
-		assertThat(e).isSameAs(exception);
+		assertThat(result).isEmpty();
 
-		verify(eneoMapperMock).toAskAssistant(input);
+		verify(eneoMapperMock).toAskAssistant(input, emptyList());
 		verify(eneoClientMock).askAssistant(assistantId, askAssistant);
 	}
 

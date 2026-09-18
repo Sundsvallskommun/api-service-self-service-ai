@@ -2,25 +2,24 @@ package se.sundsvall.selfserviceai.integration.installedbase;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
 public class InstalledbaseIntegration {
-	private static final Logger LOG = LoggerFactory.getLogger(InstalledbaseIntegration.class);
 	private static final String ERROR_MULTIPLE_MATCHES = "Installed base response can not be interpreted as it contains more than one match (size is %s)";
 
 	private final InstalledbaseClient installedbaseClient;
@@ -47,21 +46,30 @@ public class InstalledbaseIntegration {
 			.collect(toMap(Entry::getKey, Entry::getValue));
 	}
 
+	/**
+	 * A failure here is propagated, as an installed base that could not be fetched must not be mistaken for a customer
+	 * without installed base. The installed base is the backbone of the information given to the assistant, so a session
+	 * without it is useless and must be reported as failed rather than as ready. The one exception is a 404, which is how
+	 * the installedbase service answers when the customer has no engagement with the counterpart, i.e. a customer without
+	 * installed base at that counterpart.
+	 */
 	private Entry<String, InstalledBaseCustomer> getInstalledbase(String municipalityId, String partyId, String customerEngagementOrgId) {
+		final List<InstalledBaseCustomer> response;
 		try {
-			final var response = ofNullable(installedbaseClient.getInstalledbase(municipalityId, customerEngagementOrgId, partyId))
+			response = ofNullable(installedbaseClient.getInstalledbase(municipalityId, customerEngagementOrgId, partyId))
 				.map(InstalledBaseResponse::getInstalledBaseCustomers)
 				.orElse(emptyList());
-
-			if (response.size() > 1) {
-				throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_MULTIPLE_MATCHES.formatted(response.size()));
+		} catch (final ThrowableProblem e) {
+			if (e.getStatus() == NOT_FOUND) {
+				return null;
 			}
-
-			return response.isEmpty() ? null : Map.entry(customerEngagementOrgId, response.getFirst());
-		} catch (final Exception e) {
-			// A failure for one counterpart must not block enrichment from the others — log and skip this counterpart.
-			LOG.warn("Could not fetch installed base for counterpart '{}': {}", sanitizeForLogging(customerEngagementOrgId), sanitizeForLogging(e.getMessage()));
-			return null;
+			throw e;
 		}
+
+		if (response.size() > 1) {
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_MULTIPLE_MATCHES.formatted(response.size()));
+		}
+
+		return response.isEmpty() ? null : Map.entry(customerEngagementOrgId, response.getFirst());
 	}
 }

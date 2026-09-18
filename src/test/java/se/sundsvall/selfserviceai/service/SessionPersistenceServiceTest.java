@@ -10,7 +10,9 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import se.sundsvall.selfserviceai.integration.db.FileRepository;
 import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
@@ -18,6 +20,7 @@ import se.sundsvall.selfserviceai.integration.db.model.FileEntity;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace.NONE;
+import static org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
 /**
@@ -40,6 +43,9 @@ class SessionPersistenceServiceTest {
 	// Created but not yet initialized, without files
 	private static final String PENDING_SESSION_ID = "a6602aba-0b21-4abf-a869-60c583570129";
 
+	// Failed in initialization, never started in Eneo
+	private static final String FAILED_SESSION_ID = "8212c515-6f7a-4e1c-a6b4-a2e265f018ed";
+
 	// Initialized and accessed, with two files
 	private static final String INITIALIZED_SESSION_ID = "4dc21d5e-8a70-45fb-b225-367fcd383a2e";
 	private static final List<String> INITIALIZED_SESSION_FILE_IDS = List.of("5ef193cd-96a7-4861-a33d-e01528618f2e", "2f60ca4c-828b-4f4e-818f-432d53d61f83");
@@ -49,6 +55,9 @@ class SessionPersistenceServiceTest {
 
 	@Autowired
 	private SessionRepository sessionRepository;
+
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
 	@Autowired
 	private FileRepository fileRepository;
@@ -100,6 +109,52 @@ class SessionPersistenceServiceTest {
 
 		assertThat(result).isFalse();
 		assertThat(fileRepository.existsById(fileId.toString())).isFalse();
+	}
+
+	@Test
+	void attachEneoSession() {
+		final var eneoSessionId = UUID.randomUUID().toString();
+
+		final var result = sessionPersistenceService.attachEneoSession(FAILED_SESSION_ID, eneoSessionId);
+
+		assertThat(result).hasValue(eneoSessionId);
+		assertThat(sessionRepository.findById(FAILED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(eneoSessionId));
+	}
+
+	@Test
+	void attachEneoSessionWhenAlreadyAttached() {
+		// The first writer wins, so the already connected Eneo session is kept and returned
+		final var result = sessionPersistenceService.attachEneoSession(INITIALIZED_SESSION_ID, UUID.randomUUID().toString());
+
+		assertThat(result).hasValue(INITIALIZED_SESSION_ID);
+		assertThat(sessionRepository.findById(INITIALIZED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(INITIALIZED_SESSION_ID));
+	}
+
+	@Test
+	void attachEneoSessionWhenAnotherWriterWonAfterTheSessionWasLoaded() {
+		// The entity is loaded into the persistence context first, as the request does before the first question is asked
+		// (open-in-view), and another request then wins the race in its own transaction. The loser must see the winner's
+		// Eneo session, not the null that is still on the entity in memory.
+		final var winner = UUID.randomUUID().toString();
+		final var loser = UUID.randomUUID().toString();
+
+		final var result = new TransactionTemplate(transactionManager).execute(status -> {
+			assertThat(sessionRepository.findById(FAILED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isNull());
+
+			final var otherRequest = new TransactionTemplate(transactionManager);
+			otherRequest.setPropagationBehavior(PROPAGATION_REQUIRES_NEW);
+			otherRequest.executeWithoutResult(otherStatus -> sessionPersistenceService.attachEneoSession(FAILED_SESSION_ID, winner));
+
+			return sessionPersistenceService.attachEneoSession(FAILED_SESSION_ID, loser);
+		});
+
+		assertThat(result).hasValue(winner);
+		assertThat(sessionRepository.findById(FAILED_SESSION_ID)).hasValueSatisfying(session -> assertThat(session.getEneoSessionId()).isEqualTo(winner));
+	}
+
+	@Test
+	void attachEneoSessionToRemovedSession() {
+		assertThat(sessionPersistenceService.attachEneoSession(UUID.randomUUID().toString(), UUID.randomUUID().toString())).isEmpty();
 	}
 
 	@Test
