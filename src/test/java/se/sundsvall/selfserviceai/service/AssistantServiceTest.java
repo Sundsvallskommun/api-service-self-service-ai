@@ -697,6 +697,8 @@ class AssistantServiceTest {
 		verify(sessionRepositoryMock).save(sessionEntityCaptor.capture());
 
 		assertThat(result.getAnswer()).isEqualTo("answer");
+		assertThat(result.getEneoSessionId()).isEqualTo(otherEneoSessionId); // The winner's Eneo session, not the one that was just removed
+		assertThat(sessionEntity.getEneoSessionId()).isEqualTo(otherEneoSessionId);
 		assertThat(sessionEntityCaptor.getValue().getEneoSessionId()).isEqualTo(otherEneoSessionId);
 	}
 

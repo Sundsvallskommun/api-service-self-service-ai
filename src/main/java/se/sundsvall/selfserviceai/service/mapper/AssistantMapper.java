@@ -34,15 +34,18 @@ public class AssistantMapper {
 	}
 
 	/**
-	 * @param  sessionId   id of the session as known by the caller, i.e. our id and not the id of the session in Eneo
-	 * @param  askResponse the response from Eneo
-	 * @return             the response to the caller, carrying both our session id and the id of the session in Eneo
+	 * @param  sessionId     id of the session as known by the caller, i.e. our id and not the id of the session in Eneo
+	 * @param  eneoSessionId id of the session in Eneo that is connected to the session. Taken from the session and not
+	 *                       from the response, as the response of a first question that lost the race against another
+	 *                       first question names an Eneo session that has been removed again
+	 * @param  askResponse   the response from Eneo
+	 * @return               the response to the caller, carrying both our session id and the id of the session in Eneo
 	 */
-	public static QuestionResponse toQuestionResponse(final String sessionId, final AskResponse askResponse) {
+	public static QuestionResponse toQuestionResponse(final String sessionId, final String eneoSessionId, final AskResponse askResponse) {
 		return ofNullable(askResponse)
 			.map(askResponse1 -> QuestionResponse.builder()
 				.withAnswer(askResponse1.getAnswer())
-				.withEneoSessionId(ofNullable(askResponse1.getSessionId()).map(UUID::toString).orElse(null))
+				.withEneoSessionId(eneoSessionId)
 				.withFiles(toFiles(askResponse1.getFiles()))
 				.withModel(toModel(askResponse1.getModel()))
 				.withQuestion(askResponse1.getQuestion())
