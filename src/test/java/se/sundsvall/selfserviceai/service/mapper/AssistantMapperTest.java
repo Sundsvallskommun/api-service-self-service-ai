@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AssistantMapperTest {
 	private static final String OUR_SESSION_ID = "9406e9e3-e2bf-4b5a-9237-2925b396f096";
+	private static final String ENEO_SESSION_ID = "81e73c0b-76dd-455e-bbf3-cc5060aca723";
 
 	@Mock
 	private AskResponse askResponseMock;
@@ -88,7 +89,6 @@ class AssistantMapperTest {
 	void toQuestionResponseFromAskResponse() {
 		// Arrange
 		final var answer = "yes if this is an answer.";
-		final var sessionId = UUID.randomUUID();
 		final var question = "is this a question?";
 
 		when(askResponseMock.getAnswer()).thenReturn(answer);
@@ -97,18 +97,17 @@ class AssistantMapperTest {
 		when(askResponseMock.getQuestion()).thenReturn(question);
 		when(askResponseMock.getReferences()).thenReturn(List.of(referenceMock));
 		when(referenceMock.getMetadata()).thenReturn(metadataMock);
-		when(askResponseMock.getSessionId()).thenReturn(sessionId);
 		when(askResponseMock.getTools()).thenReturn(toolsMock);
 		when(toolsMock.getAssistants()).thenReturn(List.of(assistantMock));
 
 		// Act
-		final var result = AssistantMapper.toQuestionResponse(OUR_SESSION_ID, askResponseMock);
+		final var result = AssistantMapper.toQuestionResponse(OUR_SESSION_ID, ENEO_SESSION_ID, askResponseMock);
 
 		// Assert and verify
 		assertThat(result).hasNoNullFieldsOrProperties();
 		assertThat(result.getAnswer()).isEqualTo(answer);
 		assertThat(result.getSessionId()).isEqualTo(OUR_SESSION_ID);
-		assertThat(result.getEneoSessionId()).isEqualTo(sessionId.toString());
+		assertThat(result.getEneoSessionId()).isEqualTo(ENEO_SESSION_ID); // From the session, not from the response
 		assertThat(result.getQuestion()).isEqualTo(question);
 
 		verifyAskResponseMockInteractions();
@@ -123,7 +122,7 @@ class AssistantMapperTest {
 	@Test
 	void toQuestionResponseFromNull() {
 		// Act and assert
-		assertThat(AssistantMapper.toQuestionResponse(OUR_SESSION_ID, null)).isNull();
+		assertThat(AssistantMapper.toQuestionResponse(OUR_SESSION_ID, ENEO_SESSION_ID, null)).isNull();
 	}
 
 	@Test
@@ -573,7 +572,6 @@ class AssistantMapperTest {
 		verify(askResponseMock).getFiles();
 		verify(askResponseMock).getQuestion();
 		verify(askResponseMock).getReferences();
-		verify(askResponseMock).getSessionId();
 		verify(askResponseMock).getTools();
 	}
 

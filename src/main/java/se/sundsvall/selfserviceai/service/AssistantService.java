@@ -317,7 +317,7 @@ public class AssistantService {
 		}
 
 		return eneoResponse
-			.map(askResponse -> toQuestionResponse(session.getSessionId(), askResponse))
+			.map(askResponse -> toQuestionResponse(session.getSessionId(), session.getEneoSessionId(), askResponse)) // The Eneo session of the entity, which is the winner's if this first question lost the race
 			.orElse(null);
 	}
 
