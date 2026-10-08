@@ -3,6 +3,7 @@ package se.sundsvall.selfserviceai.integration.installedbase;
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
 import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseResponse;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -73,6 +74,67 @@ class InstalledbaseIntegrationTest {
 	}
 
 	@Test
+	void getInstalledbasesLeavesOutEndedInstalledBases() {
+		// Arrange — installedbase also returns facilities the customer no longer has, which the assistant must not know of
+		final var today = LocalDate.now();
+		final var withoutEndDate = new InstalledBaseItem().facilityId("facilityId1");
+		final var endingToday = new InstalledBaseItem().facilityId("facilityId2").facilityCommitmentEndDate(today);
+		final var endingTomorrow = new InstalledBaseItem().facilityId("facilityId3").facilityCommitmentEndDate(today.plusDays(1));
+		final var endedYesterday = new InstalledBaseItem().facilityId("facilityId4").facilityCommitmentEndDate(today.minusDays(1));
+		final var endedLongAgo = new InstalledBaseItem().facilityId("facilityId5").facilityCommitmentEndDate(LocalDate.of(2008, 10, 31));
+
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenReturn(new InstalledBaseResponse()
+			.addInstalledBaseCustomersItem(new InstalledBaseCustomer()
+				.customerNumber(CUSTOMER_NBR)
+				.partyId(PARTY_ID)
+				.items(List.of(endedLongAgo, withoutEndDate, endedYesterday, endingToday, endingTomorrow))));
+
+		// Act
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, Set.of(CUSTOMER_ENGAGEMENT_ORG_ID1));
+
+		// Assert and verify
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		assertThat(result).containsOnlyKeys(CUSTOMER_ENGAGEMENT_ORG_ID1);
+		assertThat(result.get(CUSTOMER_ENGAGEMENT_ORG_ID1).getCustomerNumber()).isEqualTo(CUSTOMER_NBR);
+		assertThat(result.get(CUSTOMER_ENGAGEMENT_ORG_ID1).getItems()).containsExactly(withoutEndDate, endingToday, endingTomorrow);
+	}
+
+	@Test
+	void getInstalledbasesLeavesOutCounterpartWithoutActiveInstalledBase() {
+		// Arrange — a counterpart where every installed base has ended is no different from one without installed base
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenReturn(new InstalledBaseResponse()
+			.addInstalledBaseCustomersItem(new InstalledBaseCustomer()
+				.customerNumber(CUSTOMER_NBR)
+				.addItemsItem(new InstalledBaseItem().facilityId("facilityId1").facilityCommitmentEndDate(LocalDate.now().minusDays(1)))));
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID)).thenReturn(new InstalledBaseResponse()
+			.addInstalledBaseCustomersItem(new InstalledBaseCustomer()
+				.customerNumber(CUSTOMER_NBR)
+				.addItemsItem(new InstalledBaseItem().facilityId("facilityId2"))));
+
+		// Act
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);
+
+		// Assert and verify
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID);
+		assertThat(result).containsOnlyKeys(CUSTOMER_ENGAGEMENT_ORG_ID2);
+	}
+
+	@Test
+	void getInstalledbasesWhenCustomerHasNoInstalledBase() {
+		// Arrange
+		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenReturn(new InstalledBaseResponse()
+			.addInstalledBaseCustomersItem(new InstalledBaseCustomer().customerNumber(CUSTOMER_NBR).items(null)));
+
+		// Act
+		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, Set.of(CUSTOMER_ENGAGEMENT_ORG_ID1));
+
+		// Assert and verify
+		verify(clientMock).getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID);
+		assertThat(result).isEmpty();
+	}
+
+	@Test
 	void getInstalledbasesWhenEmptyResponse() {
 		// Arrange
 		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenReturn(new InstalledBaseResponse());
@@ -109,7 +171,7 @@ class InstalledbaseIntegrationTest {
 		// counterpart is skipped while the others are still fetched
 		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID1, PARTY_ID)).thenThrow(Problem.valueOf(NOT_FOUND, "No customer engagements matched the search criteria!"));
 		when(clientMock.getInstalledbase(MUNICIPALITY_ID, CUSTOMER_ENGAGEMENT_ORG_ID2, PARTY_ID)).thenReturn(new InstalledBaseResponse()
-			.installedBaseCustomers(List.of(new InstalledBaseCustomer().customerNumber(CUSTOMER_NBR))));
+			.installedBaseCustomers(List.of(new InstalledBaseCustomer().customerNumber(CUSTOMER_NBR).addItemsItem(new InstalledBaseItem().facilityId("facilityId1")))));
 
 		// Act
 		final var result = integration.getInstalledbases(MUNICIPALITY_ID, PARTY_ID, CUSTOMER_ENGAGEMENT_ORG_IDS);

@@ -9,27 +9,12 @@
 		"urlPath": "/measurementdata/2281/measurement-data",
 		"queryParameters": {
 			"facilityIds": {
-				"includes": [
+				"hasExactly": [
 					{
 						"equalTo": "735999109220108018"
 					},
 					{
-						"equalTo": "735999109220108025"
-					},
-					{
 						"equalTo": "735999109222306054"
-					},
-					{
-						"equalTo": "735999109245102077"
-					},
-					{
-						"equalTo": "735999109260307051"
-					},
-					{
-						"equalTo": "735999109260722045"
-					},
-					{
-						"equalTo": "735999109260723028"
 					},
 					{
 						"equalTo": "735999109260723035"
