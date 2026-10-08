@@ -1,7 +1,10 @@
 package se.sundsvall.selfserviceai.integration.installedbase;
 
 import generated.se.sundsvall.installedbase.InstalledBaseCustomer;
+import generated.se.sundsvall.installedbase.InstalledBaseItem;
 import generated.se.sundsvall.installedbase.InstalledBaseResponse;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,9 +14,11 @@ import org.springframework.stereotype.Component;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 
+import static java.time.ZoneId.systemDefault;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -29,14 +34,17 @@ public class InstalledbaseIntegration {
 	}
 
 	/**
-	 * The method retrieves all installed bases that the customer matching the provided party id has registered for each
-	 * provided customer engagement org id in the specified municipality
+	 * The method retrieves the active installed bases that the customer matching the provided party id has registered for
+	 * each provided customer engagement org id in the specified municipality. The underlying service also returns installed
+	 * bases whose commitment has ended, i.e. facilities the customer no longer has, and those are left out as the assistant
+	 * must only know of the facilities that are active. A counterpart where the customer has no active installed base is
+	 * left out altogether.
 	 *
 	 * @param  municipalityId           id for the municipality to filter response on
 	 * @param  partyId                  party id for customer to fetch installed bases for
 	 * @param  customerEngagementOrgIds list of counterparts to filter installed bases on
 	 * @return                          a map where key is the customerEngagementOrgId and value is the response from
-	 *                                  underlying service
+	 *                                  underlying service, reduced to the active installed bases
 	 */
 	public Map<String, InstalledBaseCustomer> getInstalledbases(String municipalityId, String partyId, Set<String> customerEngagementOrgIds) {
 		return ofNullable(customerEngagementOrgIds).orElse(emptySet())
@@ -70,6 +78,28 @@ public class InstalledbaseIntegration {
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_MULTIPLE_MATCHES.formatted(response.size()));
 		}
 
-		return response.isEmpty() ? null : Map.entry(customerEngagementOrgId, response.getFirst());
+		return response.stream()
+			.findFirst()
+			.map(InstalledbaseIntegration::withActiveItemsOnly)
+			.filter(customer -> !customer.getItems().isEmpty())
+			.map(customer -> Map.entry(customerEngagementOrgId, customer))
+			.orElse(null);
+	}
+
+	private static InstalledBaseCustomer withActiveItemsOnly(final InstalledBaseCustomer customer) {
+		return customer.items(ofNullable(customer.getItems()).orElse(emptyList()).stream()
+			.filter(Objects::nonNull)
+			.filter(InstalledbaseIntegration::isActive)
+			.collect(toCollection(ArrayList::new)));
+	}
+
+	/**
+	 * An installed base is active until its commitment has ended, so one without a commitment end date, or whose end date
+	 * is today or later, is active.
+	 */
+	private static boolean isActive(final InstalledBaseItem item) {
+		return ofNullable(item.getFacilityCommitmentEndDate())
+			.map(endDate -> !endDate.isBefore(LocalDate.now(systemDefault())))
+			.orElse(true);
 	}
 }
