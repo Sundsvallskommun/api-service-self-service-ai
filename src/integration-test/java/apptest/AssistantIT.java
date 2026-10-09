@@ -1,5 +1,22 @@
 package apptest;
 
+import java.time.Duration;
+import java.util.List;
+import java.util.UUID;
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+import se.sundsvall.dept44.test.AbstractAppTest;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+import se.sundsvall.selfserviceai.Application;
+import se.sundsvall.selfserviceai.integration.db.FileRepository;
+import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
+import se.sundsvall.selfserviceai.integration.db.SessionRepository;
+
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,25 +30,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.time.Duration;
-import java.util.List;
-import java.util.UUID;
-
-import org.awaitility.Awaitility;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
-
-import se.sundsvall.dept44.test.AbstractAppTest;
-import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
-import se.sundsvall.selfserviceai.Application;
-import se.sundsvall.selfserviceai.integration.db.FileRepository;
-import se.sundsvall.selfserviceai.integration.db.HistoryRepository;
-import se.sundsvall.selfserviceai.integration.db.SessionRepository;
 
 @WireMockAppTestSuite(files = "classpath:/AssistantIT/", classes = Application.class)
 @Sql({
@@ -103,7 +101,7 @@ class AssistantIT extends AbstractAppTest {
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
-				.withExpectedResponse(RESPONSE_FILE)
+			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
 
