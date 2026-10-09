@@ -29,5 +29,5 @@ public class SessionRequest {
 	@ArraySchema(schema = @Schema(description = "Organization id specifying the counterparty to fetch customer's engagements for", examples = "5566123456"), minItems = 1)
 	@NotNull
 	@Size(min = 1, message = "list must contain at least 1 entry")
-	private Set<@ValidOrganizationNumber(message = "list members must match the regular expression ^([1235789][\\d][2-9]\\d{7})$") String> customerEngagementOrgIds;
+	private Set<@ValidOrganizationNumber(message = "list members must match the regular expression ^([1235-9][\\d][2-9]\\d{7})$") String> customerEngagementOrgIds;
 }
