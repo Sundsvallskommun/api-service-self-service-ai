@@ -95,6 +95,7 @@ class InvoiceDecoratorTest {
 		assertThat(result.getTotalAmount()).isEqualTo(toBigDecimal(invoice.getTotalAmount(), DECIMAL_POINTS));
 		assertThat(result.getVatEligibleAmount()).isEqualTo(toBigDecimal(invoice.getVatEligibleAmount(), DECIMAL_POINTS));
 		assertThat(result.getInvoiceRows()).hasSize(3);
+		assertThat(result.getCustomerType()).isEqualTo(invoice.getCustomerType().name());
 	}
 
 	@Test
@@ -115,6 +116,10 @@ class InvoiceDecoratorTest {
 		assertThat(result.getProductName()).isEqualTo(invoiceDetail.getProductName());
 		assertThat(result.getPeriodFrom()).isEqualTo(invoiceDetail.getFromDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 		assertThat(result.getPeriodTo()).isEqualTo(invoiceDetail.getToDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+		assertThat(result.getInvoiceUnitPrice()).isEqualTo(toBigDecimal(invoiceDetail.getInvoiceUnitPrice(), DECIMAL_POINTS));
+		assertThat(result.getInvoiceUnitPriceVatExcluded()).isEqualTo(toBigDecimal(invoiceDetail.getInvoiceUnitPriceVatExcluded(), DECIMAL_POINTS));
+		assertThat(result.getInvoiceUnitPriceCurrency()).isEqualTo(invoiceDetail.getInvoiceUnitPriceCurrency());
+		assertThat(result.getInvoiceUnitPriceUnit()).isEqualTo(invoiceDetail.getInvoiceUnitPriceUnit());
 	}
 
 	@Test
