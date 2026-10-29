@@ -33,6 +33,8 @@ import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Facility;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.Invoice;
 import se.sundsvall.selfserviceai.integration.eneo.model.filecontent.InvoiceRow;
 
+import static generated.se.sundsvall.invoices.CustomerInvoice.CustomerTypeEnum.ENTERPRISE;
+
 public class TestFactory {
 	private TestFactory() {}
 
@@ -463,7 +465,11 @@ public class TestFactory {
 			.description("description")
 			.productCode("productCode")
 			.productName("productName")
-			.unit("unit");
+			.unit("unit")
+			.invoiceUnitPrice(BigDecimal.valueOf(167.67))
+			.invoiceUnitPriceVatExcluded(BigDecimal.valueOf(134.14))
+			.invoiceUnitPriceCurrency("öre")
+			.invoiceUnitPriceUnit("kwh");
 	}
 
 	public static InvoiceRow createInvoiceRow() {
@@ -494,6 +500,7 @@ public class TestFactory {
 
 	public static CustomerInvoice createCustomerInvoice() {
 		return new CustomerInvoice()
+			.customerType(ENTERPRISE)
 			.facilityIds(List.of(IB1_FACILITY_ID))
 			.amountVatExcluded(new BigDecimal(IB1_INVOICE1_AMOUNT_VAT_EXCLUDED))
 			.amountVatIncluded(new BigDecimal(IB1_INVOICE1_AMOUNT_VAT_INCLUDED))
