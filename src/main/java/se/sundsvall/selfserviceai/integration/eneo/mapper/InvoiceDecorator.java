@@ -72,6 +72,7 @@ public class InvoiceDecorator {
 			.withQuantity(toBigDecimal(invoiceDetail.getQuantity(), QUANTITY_DECIMAL_POINTS))
 			.withUnit(invoiceDetail.getUnit())
 			.withUnitPrice(toBigDecimal(invoiceDetail.getUnitPrice(), DECIMAL_POINTS))
+			.withUnitPriceVatExcluded(toBigDecimal(invoiceDetail.getUnitPriceVatExcluded(), DECIMAL_POINTS))
 			.withInvoiceUnitPrice(toBigDecimal(invoiceDetail.getInvoiceUnitPrice(), DECIMAL_POINTS))
 			.withInvoiceUnitPriceVatExcluded(toBigDecimal(invoiceDetail.getInvoiceUnitPriceVatExcluded(), DECIMAL_POINTS))
 			.withInvoiceUnitPriceCurrency(invoiceDetail.getInvoiceUnitPriceCurrency())

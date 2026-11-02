@@ -111,6 +111,7 @@ class InvoiceDecoratorTest {
 		assertThat(result.getQuantity()).isEqualTo(toBigDecimal(invoiceDetail.getQuantity(), QUANTITY_DECIMAL_POINTS));
 		assertThat(result.getUnit()).isEqualTo(invoiceDetail.getUnit());
 		assertThat(result.getUnitPrice()).isEqualTo(toBigDecimal(invoiceDetail.getUnitPrice(), DECIMAL_POINTS));
+		assertThat(result.getUnitPriceVatExcluded()).isEqualTo(toBigDecimal(invoiceDetail.getUnitPriceVatExcluded(), DECIMAL_POINTS));
 		assertThat(result.getDescription()).isEqualTo(invoiceDetail.getDescription());
 		assertThat(result.getProductCode()).isEqualTo(invoiceDetail.getProductCode());
 		assertThat(result.getProductName()).isEqualTo(invoiceDetail.getProductName());

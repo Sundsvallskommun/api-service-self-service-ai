@@ -466,6 +466,8 @@ public class TestFactory {
 			.productCode("productCode")
 			.productName("productName")
 			.unit("unit")
+			.unitPrice(BigDecimal.valueOf(1.68))
+			.unitPriceVatExcluded(BigDecimal.valueOf(1.34))
 			.invoiceUnitPrice(BigDecimal.valueOf(167.67))
 			.invoiceUnitPriceVatExcluded(BigDecimal.valueOf(134.14))
 			.invoiceUnitPriceCurrency("öre")

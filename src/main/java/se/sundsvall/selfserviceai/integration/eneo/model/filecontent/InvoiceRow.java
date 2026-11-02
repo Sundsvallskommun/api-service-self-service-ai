@@ -29,6 +29,8 @@ public class InvoiceRow {
 
 	private BigDecimal unitPrice;
 
+	private BigDecimal unitPriceVatExcluded;
+
 	private BigDecimal invoiceUnitPrice;
 
 	private BigDecimal invoiceUnitPriceVatExcluded;
