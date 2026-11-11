@@ -53,6 +53,7 @@ class InvoiceTest {
 		final var status = "status";
 		final var totalAmount = BigDecimal.valueOf(678);
 		final var vatEligibleAmount = BigDecimal.valueOf(901);
+		final var customerType = "ENTERPRISE";
 
 		final var bean = Invoice.builder()
 			.withAmountVatExcluded(amountVatExcluded)
@@ -72,6 +73,7 @@ class InvoiceTest {
 			.withStatus(status)
 			.withTotalAmount(totalAmount)
 			.withVatEligibleAmount(vatEligibleAmount)
+			.withCustomerType(customerType)
 			.build();
 
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
@@ -91,6 +93,7 @@ class InvoiceTest {
 		assertThat(bean.getStatus()).isEqualTo(status);
 		assertThat(bean.getTotalAmount()).isEqualByComparingTo(totalAmount);
 		assertThat(bean.getVatEligibleAmount()).isEqualTo(vatEligibleAmount);
+		assertThat(bean.getCustomerType()).isEqualTo(customerType);
 	}
 
 	@Test

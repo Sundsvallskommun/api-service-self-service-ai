@@ -42,6 +42,8 @@ public class Invoice {
 
 	private String organizationNumber;
 
+	private String customerType;
+
 	private boolean pdfAvailable;
 
 	private BigDecimal rounding;

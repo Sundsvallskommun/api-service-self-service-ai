@@ -5,7 +5,7 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.5"
+  version: "9.6"
 servers:
   - url: https://invoices-af-invoices.apps.ocp201.sundsvall.se
     description: Generated server url
@@ -916,16 +916,16 @@ components:
     Problem:
       type: object
       properties:
+        title:
+          type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
         type:
           type: string
           format: uri
-        title:
-          type: string
-        detail:
-          type: string
         status:
           type: integer
           format: int32
@@ -944,30 +944,11 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        instance:
-          type: string
-          format: uri
-        detail:
-          type: string
-        causeAsProblem:
-          $ref: "#/components/schemas/ThrowableProblem"
-    ThrowableProblem:
-      type: object
-      properties:
-        type:
-          type: string
-          format: uri
-        title:
-          type: string
-        status:
-          type: integer
-          format: int32
         detail:
           type: string
         instance:
           type: string
           format: uri
-        causeAsProblem: {}
     Violation:
       type: object
       properties:
@@ -1042,12 +1023,12 @@ components:
           type: boolean
           description: Is VAT reversed
           examples:
-            - "false"
+            - false
         pdfAvailable:
           type: boolean
           description: Is invoice-pdf available
           examples:
-            - "false"
+            - false
         currency:
           type: string
           description: Currency
@@ -1251,6 +1232,33 @@ components:
           description: Unit-price
           examples:
             - 271.3
+        unitPriceVatExcluded:
+          type: number
+          description: Unit-price excluding VAT
+          examples:
+            - 217.04
+        invoiceUnitPrice:
+          type: number
+          description: "Unit-price as presented on the invoice, in the currency and\
+            \ unit given by invoiceUnitPriceCurrency and invoiceUnitPriceUnit"
+          examples:
+            - 27130.0
+        invoiceUnitPriceVatExcluded:
+          type: number
+          description: "Unit-price excluding VAT as presented on the invoice, in the\
+            \ currency and unit given by invoiceUnitPriceCurrency and invoiceUnitPriceUnit"
+          examples:
+            - 21704.0
+        invoiceUnitPriceCurrency:
+          type: string
+          description: Currency that the invoice unit-prices are expressed in
+          examples:
+            - öre
+        invoiceUnitPriceUnit:
+          type: string
+          description: Unit that the invoice unit-prices are expressed per
+          examples:
+            - kWh
         description:
           type: string
           description: Description of detail
@@ -1483,7 +1491,7 @@ components:
           type: boolean
           description: Is pdf-version of invoice available
           examples:
-            - "true"
+            - true
         details:
           type: array
           items:
